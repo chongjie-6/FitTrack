@@ -36,20 +36,21 @@ export default function Home() {
     console.log(values);
   };
   return (
-    <div className="flex items-center justify-center mt-52">
+    <div className="flex flex-col items-center justify-center mt-48">
+      <h1 className="text-3xl font-semibold">Login</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onFormSubmit)}
-          className="space-y-8 w-sm sm:w-md"
+          className="space-y-4 w-xs md:w-md"
         >
           <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your username..." {...field} />
+                  <Input placeholder="Enter your email..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
