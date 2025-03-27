@@ -118,7 +118,16 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    @apply font-sans
+  }
 }
 @theme{
   --color-dark: #121212;
+}
+
+@layer components{
+  .form-container{
+    @apply flex flex-col items-center justify-center h-screen -translate-y-20
+  }
 }

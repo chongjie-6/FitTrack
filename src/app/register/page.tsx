@@ -14,9 +14,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState } from "react";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const router = useRouter()
   const [, setError] = useState("");
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email" }),
@@ -40,7 +41,7 @@ export default function Register() {
   });
 
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
-    const response = await fetch("/api/login", {
+    const response = await fetch("/api/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +57,7 @@ export default function Register() {
     await router.push("/login");
   };
   return (
-    <div className="flex flex-col items-center justify-center mt-20">
+    <div className="form-container">
       <div className="text-center w-xs sm:w-lg">
         <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md">
           <h1 className="text-3xl font-semibold">Register</h1>
@@ -111,7 +112,9 @@ export default function Register() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Sign Up</Button>
+              <Button type="submit" className="w-full">
+                Sign Up
+              </Button>
             </form>
           </Form>
         </section>

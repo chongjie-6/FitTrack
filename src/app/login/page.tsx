@@ -12,70 +12,98 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 export default function Home() {
+  const router = useRouter();
+  const [, setError] = useState("");
   const formSchema = z.object({
-    username: z
-      .string()
-      .min(2, { message: "Username must contain more than 2 characters" })
-      .max(30, { message: "Username must contain less than 30 characters" }),
-    password: z
-      .string()
-      .min(8, { message: "Password must contain more than 8 characters" })
-      .max(30, { message: "Password must contain less than 30 characters" }),
+    email: z.string().email({ message: "Please enter a valid email" }),
+    password: z.string(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
 
-  const onFormSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      setError(data.data);
+      return;
+    }
+    await router.push("/dashboard");
   };
   return (
-    <div className="flex flex-col items-center justify-center mt-48">
-      <h1 className="text-3xl font-semibold">Login</h1>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onFormSubmit)}
-          className="space-y-4 w-xs md:w-md"
-        >
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your email..." {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password..."
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
+    <div className="form-container ">
+      <div className="text-center w-xs sm:w-lg">
+        <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md">
+          <h1 className="text-3xl font-semibold">Login</h1>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onFormSubmit)}
+              className="space-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter your email..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter your password..."
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full">
+                Log In
+              </Button>
+            </form>
+          </Form>
+        </section>
+        <div className="flex flex-col items-center mt-5 sm:border-gray-200 sm:border-2 sm:p-5 rounded-md">
+          <p>Don&apos;t have an account? </p>
+          <Link
+            href={"/register"}
+            className="text-blue-500 hover:text-blue-400"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
