@@ -32,7 +32,7 @@ export default function Dashboard() {
           return (
             <div
               key={workout.id}
-              className="p-3 border rounded bg-white shadow-sm text-black w-xs sm:w-md"
+              className="p-3 border rounded bg-gray-200 shadow-sm text-black w-xs sm:w-md"
             >
               <div className="inline-flex justify-between font-medium w-full">
                 <h2>{workout.name}</h2>
