@@ -17,7 +17,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const router = useRouter()
+  const router = useRouter();
   const [, setError] = useState("");
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email" }),
@@ -25,10 +25,14 @@ export default function Register() {
       .string()
       .min(8, { message: "Password must contain more than 8 characters" })
       .max(30, { message: "Password must contain less than 30 characters" }),
-    full_name: z
+    first_name: z
       .string()
-      .min(2, { message: "Name must be longer than 2 characters" })
-      .max(30, { message: "Name must be shorter than 30 characters" }),
+      .min(2, { message: "First name must be longer than 2 characters" })
+      .max(30, { message: "First name must be shorter than 30 characters" }),
+    last_name: z
+      .string()
+      .min(2, { message: "Last name must be longer than 2 characters" })
+      .max(30, { message: "Last name must be shorter than 30 characters" }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -36,7 +40,8 @@ export default function Register() {
     defaultValues: {
       email: "",
       password: "",
-      full_name: "",
+      first_name: "",
+      last_name: "",
     },
   });
 
@@ -54,12 +59,12 @@ export default function Register() {
       setError(data.data);
       return;
     }
-    await router.push("/login");
+    router.push("/email_confirmation");
   };
   return (
     <div className="form-container">
       <div className="text-center w-xs sm:w-lg">
-        <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md">
+        <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md mt-20 sm:mt-0">
           <h1 className="text-3xl font-semibold">Register</h1>
           <p className="py-5 text-gray-200">
             Register now to start tracking your workouts today!
@@ -101,12 +106,25 @@ export default function Register() {
               />
               <FormField
                 control={form.control}
-                name="full_name"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Full Name" {...field} />
+                      <Input placeholder="First Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="last_name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Last Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

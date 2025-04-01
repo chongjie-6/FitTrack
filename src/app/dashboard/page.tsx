@@ -1,34 +1,33 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 export default function Dashboard() {
-  // random data for now, we will update with actual database entries
-  const workouts = [
-    {
-      id: 1,
-      name: "Push Workout",
-      description: "This is my Push workout",
-      date: new Date().toLocaleDateString(),
-      exercises: {},
-    },
-    {
-      id: 2,
-      name: "Pull Workout",
-      description: "This is my Pull workout",
-      date: new Date().toLocaleDateString(),
-      exercises: {},
-    },
-    {
-      id: 3,
-      name: "Leg Workout",
-      description: "This is my Leg workout",
-      date: new Date().toLocaleDateString(),
-      exercises: {},
-    },
-  ];
+  const [data, setData] = useState();
+  // fetch workouts
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      try {
+        const response = await fetch("/api/workouts", {
+          method: "GET",
+          credentials: "include",
+        });
+        const workouts = await response.json();
 
+        if (!response.ok) {
+          throw new Error(
+            "Could not fetch your workouts, Please try again later."
+          );
+        }
+        setData(workouts);
+      } catch (e) {
+        console.log("Error: ", e);
+      }
+    };
+    fetchWorkouts();
+  }, []);
   return (
     <div className="flex flex-col items-center justify-center mt-20">
       <div className="space-y-2">
-        {workouts.map((workout) => {
+        {/* {data.map((workout) => {
           return (
             <div
               key={workout.id}
@@ -44,7 +43,7 @@ export default function Dashboard() {
               </h3>
             </div>
           );
-        })}
+        })} */}
       </div>
     </div>
   );

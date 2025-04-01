@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-  const [, setError] = useState("");
+  const [error, setError] = useState("");
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email" }),
     password: z.string(),
@@ -46,7 +46,7 @@ export default function Home() {
       setError(data.data);
       return;
     }
-    await router.push("/dashboard");
+    router.push("/dashboard");
   };
   return (
     <div className="form-container ">
@@ -88,6 +88,7 @@ export default function Home() {
                   </FormItem>
                 )}
               />
+              {<h3 className="text-red-400">{error}</h3>}
               <Button type="submit" className="w-full">
                 Log In
               </Button>

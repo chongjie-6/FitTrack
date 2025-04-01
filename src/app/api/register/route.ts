@@ -2,8 +2,8 @@ import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
   const data = await request.json();
-  const {email, password, full_name} = data
-  
+  const { email, password, first_name, last_name } = data
+
   // Basic validation
   if (!email) {
     return Response.json(
@@ -17,15 +17,30 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
-  if (!full_name) {
+  if (!first_name) {
     return Response.json(
-      { success: false, data: "Please provide an valid name" },
+      { success: false, data: "Please provide an valid first name" },
+      { status: 400 }
+    );
+  }
+  if (!first_name) {
+    return Response.json(
+      { success: false, data: "Please provide an valid last name" },
       { status: 400 }
     );
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp(data);
+  const { error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        first_name: first_name,
+        last_name: last_name,
+      }
+    }
+  });
 
   if (error) {
     return Response.json(
