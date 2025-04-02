@@ -7,4 +7,14 @@ CREATE TABLE TEMPLATES (
 );
 ALTER TABLE TEMPLATES ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated users can create templates" ON SESSIONS FOR ALL TO AUTHENTICATED 
+CREATE POLICY "Authenticated users can create templates" ON TEMPLATES FOR ALL TO AUTHENTICATED USING (
+    (
+        SELECT
+            AUTH.UID()
+    ) = USER_ID
+) WITH CHECK (
+    (
+        SELECT
+            AUTH.UID()
+    ) = USER_ID
+);

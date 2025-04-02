@@ -17,4 +17,14 @@ CREATE TABLE session_sets (
 ALTER TABLE
     session_sets ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated users can create sessions" ON SESSIONS FOR ALL TO AUTHENTICATED;
+CREATE POLICY "Authenticated users can create sets for their sessions" ON session_sets FOR ALL TO AUTHENTICATED USING (
+    (
+        SELECT
+            AUTH.UID()
+    ) = USER_ID
+) WITH CHECK (
+    (
+        SELECT
+            AUTH.UID()
+    ) = USER_ID
+);

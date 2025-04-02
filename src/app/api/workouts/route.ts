@@ -10,8 +10,8 @@ export async function GET() {
     }
 
     // If the user is logged in, then we can fetch from database
-    const {data: workouts, error: workoutError} = await supabase.from("sessions").select("*").eq("user_id", user.id)
-    console.log(workouts);
+    const {data: workouts, error: workoutError} = await supabase.from("sessions").select("*").eq("user_id", user.id).order("session_end_date", {ascending:false})
+
     // Error response
     if (workoutError){
         return Response.json({message: "There was an error fetching your workouts"}, {status: 500})

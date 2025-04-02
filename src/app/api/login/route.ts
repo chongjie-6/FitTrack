@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(data);
-
+  console.log(error)
   if (error) {
     if (error.message === "Invalid login credentials") {
       return Response.json(

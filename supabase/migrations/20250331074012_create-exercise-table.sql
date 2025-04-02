@@ -9,4 +9,14 @@ CREATE TABLE exercises (
 ALTER TABLE
     exercises ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated users can create exercises" ON SESSIONS FOR ALL TO AUTHENTICATED;
+CREATE POLICY "Authenticated users can create exercises" ON EXERCISES FOR ALL TO AUTHENTICATED USING (
+    (
+        SELECT
+            AUTH.UID()
+    ) = USER_ID
+) WITH CHECK (
+    (
+        SELECT
+            AUTH.UID()
+    ) = USER_ID
+);

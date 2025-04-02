@@ -1,5 +1,6 @@
 CREATE TABLE sessions (
     session_id uuid DEFAULT gen_random_uuid(),
+    session_name text NULL,
     session_start_date timestamptz NOT NULL DEFAULT now(),
     session_end_date timestamptz NULL,
     session_notes text NULL,
