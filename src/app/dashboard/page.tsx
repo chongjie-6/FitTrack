@@ -12,6 +12,10 @@ export default function Dashboard() {
   const [weightsThisMonth, setWeightsThisMonth] = useState<null | number>();
   const [workoutsThisYear, setWorkoutsThisYear] = useState<null | number>();
   const [user, setUser] = useState<User | null>();
+
+  const handleCardClick = (session_id: string) => {
+    router.push(`/workouts/${session_id}`);
+  };
   useEffect(() => {
     const userValidation = async () => {
       try {
@@ -120,14 +124,11 @@ export default function Dashboard() {
       <section className="items-start flex-col mb-10 space-y-2 w-xs sm:w-xl">
         <h1 className="text-3xl font-semibold">Dashboard</h1>
         <div className="inline-flex justify-between items-center w-full text-gray-300 text-sm">
-          <h1 className="block sm:hidden">
+          <h1 className="text-sm sm:text-lg">
             Welcome Back {user && user.user_metadata.first_name}!
           </h1>
-          <h1 className="hidden sm:block w-2xs">
-            Welcome Back {user && user.user_metadata.first_name}! Ready to start
-            another workout?
-          </h1>
-          <button className="p-3 bg-gray-500 rounded-2xl hover:bg-gray-700">
+
+          <button className="p-3 bg-gray-500 rounded-2xl hover:bg-gray-700 cursor-pointer">
             Start Workout
           </button>
         </div>
@@ -170,7 +171,8 @@ export default function Dashboard() {
                 return (
                   <div
                     key={sessions.session_id}
-                    className="p-4 border rounded bg-gray-200 shadow-sm text-black "
+                    className="p-4 border rounded bg-gray-200 shadow-sm text-black cursor-pointer"
+                    onClick={() => handleCardClick(sessions.session_id)}
                   >
                     <div className="inline-flex justify-between font-medium w-full">
                       <h2>{sessions.session_name}</h2>
