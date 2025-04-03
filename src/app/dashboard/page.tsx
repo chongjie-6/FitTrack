@@ -4,6 +4,7 @@ import { Session } from "@/utils/types/types";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
+import Skeleton from "@/components/ui/skeleton";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function Dashboard() {
   const [weightsThisMonth, setWeightsThisMonth] = useState<null | number>();
   const [workoutsThisYear, setWorkoutsThisYear] = useState<null | number>();
   const [user, setUser] = useState<User | null>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleCardClick = (session_id: string) => {
     router.push(`/workouts/${session_id}`);
@@ -118,6 +120,7 @@ export default function Dashboard() {
     fetchWorkoutsThisMonth();
     fetchWorkoutsThisYear();
     fetchWeightsLifted();
+    setIsLoading(false);
   }, []);
   return (
     <div className="flex flex-col mt-20 items-center">
@@ -166,33 +169,38 @@ export default function Dashboard() {
       <section>
         <div className="space-y-3 w-xs sm:w-xl">
           <h1 className="text-3xl font-semibold">Workouts</h1>
-          {sessions
-            ? sessions.map((sessions) => {
-                return (
-                  <div
-                    key={sessions.session_id}
-                    className="p-4 border rounded bg-gray-200 shadow-sm text-black cursor-pointer"
-                    onClick={() => handleCardClick(sessions.session_id)}
-                  >
-                    <div className="inline-flex justify-between font-medium w-full">
-                      <h2>{sessions.session_name}</h2>
-                      <h2>
-                        {sessions.session_start_date
-                          ? (new Date(sessions.session_end_date).getTime() -
-                              new Date(sessions.session_start_date).getTime()) /
-                              60000 +
-                            " mins"
-                          : ""}
-                      </h2>
-                    </div>
-
-                    <h3 className="text-gray-700 font-medium text-sm w-2xs">
-                      {new Date(sessions.session_end_date).toDateString()}
-                    </h3>
+          {sessions && !isLoading ? (
+            sessions.map((sessions) => {
+              return (
+                <div
+                  key={sessions.session_id}
+                  className="p-4 border rounded bg-gray-200 shadow-sm text-black cursor-pointer"
+                  onClick={() => handleCardClick(sessions.session_id)}
+                >
+                  <div className="inline-flex justify-between font-medium w-full">
+                    <h2>{sessions.session_name}</h2>
+                    <h2>
+                      {sessions.session_start_date
+                        ? (new Date(sessions.session_end_date).getTime() -
+                            new Date(sessions.session_start_date).getTime()) /
+                            60000 +
+                          " mins"
+                        : ""}
+                    </h2>
                   </div>
-                );
-              })
-            : ""}
+                  <h3 className="text-gray-700 font-medium text-sm w-2xs">
+                    {new Date(sessions.session_end_date).toDateString()}
+                  </h3>
+                </div>
+              );
+            })
+          ) : (
+            <div className="space-y-3">
+              <Skeleton></Skeleton>
+              <Skeleton></Skeleton>
+              <Skeleton></Skeleton>
+            </div>
+          )}
         </div>
       </section>
     </div>

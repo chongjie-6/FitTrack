@@ -32,6 +32,13 @@ export default function Home() {
     },
   });
 
+  const onLoginClick = () => {
+    const loginButton = document.getElementById("login_btn");
+    if (loginButton) {
+      loginButton.innerHTML = "Logging you in...";
+    }
+  };
+
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
     const response = await fetch("/api/login", {
       method: "POST",
@@ -44,8 +51,14 @@ export default function Home() {
 
     if (!response.ok || !data.success) {
       setError(data.data);
+      const loginButton = document.getElementById("login_btn");
+      if (loginButton) {
+        loginButton.innerHTML = "Log In";
+      }
+
       return;
     }
+
     router.push("/dashboard");
   };
   return (
@@ -89,7 +102,12 @@ export default function Home() {
                 )}
               />
               {<h3 className="text-red-400">{error}</h3>}
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full"
+                id="login_btn"
+                onClick={onLoginClick}
+              >
                 Log In
               </Button>
             </form>

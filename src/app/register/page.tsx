@@ -18,7 +18,15 @@ import { useRouter } from "next/navigation";
 
 export default function Register() {
   const router = useRouter();
-  const [, setError] = useState("");
+  const [error, setError] = useState("");
+
+  const onRegisterClick = () => {
+    const registerButton = document.getElementById("register_btn");
+    if (registerButton) {
+      registerButton.innerHTML = "Registering user...";
+    }
+  };
+
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email" }),
     password: z
@@ -57,6 +65,10 @@ export default function Register() {
 
     if (!response.ok || !data.success) {
       setError(data.data);
+      const registerButton = document.getElementById("register_btn");
+      if (registerButton) {
+        registerButton.innerHTML = "Sign Up";
+      }
       return;
     }
     router.push("/email_confirmation");
@@ -69,6 +81,7 @@ export default function Register() {
           <p className="py-5 text-gray-200">
             Register now to start tracking your workouts today!
           </p>
+          {<h3 className="text-red-400">{error}</h3>}
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onFormSubmit)}
@@ -130,7 +143,12 @@ export default function Register() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full"
+                id="register_btn"
+                onClick={onRegisterClick}
+              >
                 Sign Up
               </Button>
             </form>

@@ -42,6 +42,16 @@ export async function POST(request: Request) {
     }
   });
 
+  if (error && error.status == 422){
+    return Response.json(
+      {
+        success: false,
+        data: "User with that email already exists.",
+      },
+      { status: 422 }
+    );
+  }
+
   if (error) {
     return Response.json(
       {
