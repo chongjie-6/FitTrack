@@ -11,9 +11,11 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
     }
 
     
-    console.log(session_id)
     // If the user is logged in, then we can fetch from database
-    const {data: workouts, error: workoutError} = await supabase.from("session_sets").select("*").eq("session_id", session_id).order("set_number", {ascending:false})
+    const {data: workouts, error: workoutError} = await supabase.from("session_sets")
+    .select("*")
+    .eq("session_id", session_id)
+    .order("set_number", {ascending:false})
 
     // Error response
     if (workoutError){

@@ -1,7 +1,6 @@
 -- Seed file for Fitness App
 -- Insert test users into auth.users
 -- This will trigger the function to populate the users table
--- Insert test users into auth.users
 INSERT INTO
   auth.users (
     instance_id,
@@ -176,6 +175,34 @@ VALUES
     'abdf6a65-c4b4-4552-a9bf-818aee68ff7a'
   );
 
+-- Insert workouts for each user
+INSERT INTO
+  workouts(
+    workout_id,
+    workout_name,
+    workout_description,
+    user_id
+  )
+VALUES
+  (
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'Push Day',
+    'Upper body pushing exercises',
+    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
+  ),
+  (
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'Pull Day',
+    'Upper body pulling exercises',
+    'f6508257-5947-4835-a711-979cf0330777'
+  ),
+  (
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'Leg Day',
+    'Lower body workout',
+    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+  );
+
 -- Insert exercises for each user
 INSERT INTO
   exercises (
@@ -243,38 +270,11 @@ VALUES
     'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
   );
 
--- Insert templates for each user
-INSERT INTO
-  templates (
-    template_id,
-    template_name,
-    template_description,
-    user_id
-  )
-VALUES
-  (
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'Push Day',
-    'Upper body pushing exercises',
-    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
-  ),
-  (
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    'Pull Day',
-    'Upper body pulling exercises',
-    'f6508257-5947-4835-a711-979cf0330777'
-  ),
-  (
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
-    'Leg Day',
-    'Lower body workout',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
-  );
-
 -- Insert workout sessions
 INSERT INTO
   sessions (
     session_id,
+    workout_id,
     session_name,
     session_start_date,
     session_end_date,
@@ -285,40 +285,45 @@ VALUES
   -- Chongjie's sessions
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'Push Workout',
-    '2025-04-2 08:00:00',
-    '2025-04-2 10:15:00',
+    '2025-04-02 08:00:00',
+    '2025-04-02 10:15:00',
     'Great workout, increased bench by 5kg',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
     'Leg Workout',
-    '2025-04-1 07:30:00',
-    '2025-04-1 08:45:00',
+    '2025-04-01 07:30:00',
+    '2025-04-01 08:45:00',
     'Feeling stronger on squats',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   -- Jesse's sessions
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'Push Workout',
-    '2025-03-16 17:00:00',
-    '2025-03-16 18:00:00',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'Pull Workout',
+    '2025-04-03 17:00:00',
+    '2025-04-03 18:00:00',
     'Did 3 pull-ups unassisted!',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'Push Workout',
-    '2025-03-19 18:00:00',
-    '2025-03-19 19:15:00',
+    '2025-04-19 18:00:00',
+    '2025-04-19 19:15:00',
     'Core is getting stronger',
-    'f6508257-5947-4835-a711-979cf0330777'
+    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   -- Khanh's sessions
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'Push Workout',
     '2025-03-17 12:00:00',
     '2025-03-17 13:00:00',
@@ -327,6 +332,7 @@ VALUES
   ),
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'Push Workout',
     '2025-03-20 11:30:00',
     '2025-03-20 12:45:00',
@@ -334,7 +340,56 @@ VALUES
     'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
   );
 
--- Insert sets for each session
+-- Insert session exercises
+INSERT INTO
+  session_exercises (
+    session_exercise_id,
+    session_id,
+    exercise_id,
+    session_exercise_order
+  )
+VALUES
+  -- Chongjie's session exercises
+  (
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    1
+  ),
+  (
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    1
+  ),
+  -- Jesse's session exercises
+  (
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
+    1
+  ),
+  (
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
+    1
+  ),
+  -- Khanh's session exercises
+  (
+    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
+    1
+  ),
+  (
+    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
+    1
+  );
+
+-- Insert sets for each session exercise
 INSERT INTO
   session_sets (
     set_id,
@@ -342,9 +397,7 @@ INSERT INTO
     set_weight,
     set_reps,
     set_rest_time,
-    exercise_id,
-    session_id,
-    user_id
+    session_exercise_id
   )
 VALUES
   -- Chongjie's bench press sets
@@ -354,9 +407,7 @@ VALUES
     80,
     10,
     90,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
@@ -364,9 +415,7 @@ VALUES
     85,
     8,
     90,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
@@ -374,9 +423,7 @@ VALUES
     90,
     6,
     120,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   -- Chongjie's squat sets
   (
@@ -385,9 +432,7 @@ VALUES
     100,
     8,
     120,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
@@ -395,9 +440,7 @@ VALUES
     110,
     6,
     120,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16',
@@ -405,9 +448,7 @@ VALUES
     115,
     4,
     150,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
   ),
   -- Jesse's pull-up sets
   (
@@ -416,9 +457,7 @@ VALUES
     0,
     3,
     60,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'f6508257-5947-4835-a711-979cf0330777'
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
@@ -426,9 +465,7 @@ VALUES
     0,
     2,
     60,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'f6508257-5947-4835-a711-979cf0330777'
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
@@ -436,9 +473,7 @@ VALUES
     0,
     2,
     60,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'f6508257-5947-4835-a711-979cf0330777'
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21'
   ),
   -- Jesse's plank sets (weight is null, using time instead)
   (
@@ -447,9 +482,7 @@ VALUES
     NULL,
     60,
     30,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
-    'f6508257-5947-4835-a711-979cf0330777'
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a25',
@@ -457,9 +490,7 @@ VALUES
     NULL,
     45,
     30,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
-    'f6508257-5947-4835-a711-979cf0330777'
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a26',
@@ -467,9 +498,7 @@ VALUES
     NULL,
     30,
     30,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
-    'f6508257-5947-4835-a711-979cf0330777'
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
   ),
   -- Khanh's bicep curl sets
   (
@@ -478,9 +507,7 @@ VALUES
     15,
     12,
     60,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
@@ -488,9 +515,7 @@ VALUES
     17,
     10,
     60,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
@@ -498,9 +523,7 @@ VALUES
     20,
     8,
     60,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31'
   ),
   -- Khanh's shoulder press sets
   (
@@ -509,9 +532,7 @@ VALUES
     25,
     10,
     90,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a35',
@@ -519,9 +540,7 @@ VALUES
     27,
     8,
     90,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32'
   ),
   (
     'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a36',
@@ -529,7 +548,5 @@ VALUES
     30,
     6,
     90,
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32'
   );

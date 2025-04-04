@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function SessionPage() {
   const { session_id } = useParams();
-  
+
   useEffect(() => {
     const fetchWorkoutSession = async () => {
       const response = await fetch(`/api/workouts/${session_id}`, {
@@ -12,7 +12,7 @@ export default function SessionPage() {
         credentials: "include",
       });
       const data = await response.json();
-      console.log(data)
+      console.log(data);
     };
     fetchWorkoutSession();
   }, []);

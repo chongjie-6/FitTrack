@@ -1,4 +1,4 @@
-CREATE TABLE exercises (
+CREATE TABLE EXERCISES (
     exercise_id uuid DEFAULT gen_random_uuid(),
     exercise_name text NULL,
     exercise_description text null,

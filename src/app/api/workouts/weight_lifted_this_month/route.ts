@@ -10,16 +10,18 @@ export async function GET() {
     }
 
     // If the user is logged in, then we can fetch from database
-    // Select all sessions from this month and join session sets
-    const { data, error } = await supabase
-    .from("session_sets")
-    .select("sessions!inner(session_start_date), set_weight")
-    .eq("user_id", user.id)
-    .gte("sessions.session_start_date", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
+    // select all sessions that a user has done this month
+    const {data, error} = await supabase.from("sessions").select("session_id").eq("user_id",user.id).gte("session_start_date", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
+    
+    // convert into an array of values
+    const session_ids = data?.map(session => session.session_id) || [];
 
+    // select all set_weights for sets done in the last month 
+    const session_data = await supabase.from("session_exercises").select("session_sets(set_weight)").in("session_id", session_ids)
+    
     // Error response
     if (error){
         return Response.json({message: "Error fetching count"}, {status: 500})
     }
-    return Response.json({sucess: true, data: data}, {status: 200})
+    return Response.json({sucess: true, data: session_data.data}, {status: 200})
 }
