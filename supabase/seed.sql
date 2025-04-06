@@ -23,60 +23,6 @@ INSERT INTO
 VALUES
   (
     '00000000-0000-0000-0000-000000000000',
-    'fd76e705-84df-42da-9a71-1fc6a0e215a4',
-    'playwright@easy-task.com',
-    '$2a$10$wlgX6zexWB9xE5NhgKUBGuK35ZqXRC6xb/KeVd5WWgu2fYCh8/k62',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    'authenticated',
-    'authenticated',
-    '{"provider":"email","providers":["email"]}',
-    '{"sub": "fd76e705-84df-42da-9a71-1fc6a0e215a4","email": "playwright@easy-task.com","last_name": "Test","first_name": "Playwright","email_verified": true,"phone_verified": false}',
-    '',
-    '',
-    '',
-    '',
-    NULL
-  ),
-  (
-    '00000000-0000-0000-0000-000000000000',
-    'f6508257-5947-4835-a711-979cf0330777',
-    'jcru0005@student.monash.edu',
-    '$2a$10$wlgX6zexWB9xE5NhgKUBGuK35ZqXRC6xb/KeVd5WWgu2fYCh8/k62',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    'authenticated',
-    'authenticated',
-    '{"provider":"email","providers":["email"]}',
-    '{"sub": "f6508257-5947-4835-a711-979cf0330777","email": "jcru0005@student.monash.edu","last_name": "C","first_name": "Jesse","email_verified": true,"phone_verified": false}',
-    '',
-    '',
-    '',
-    '',
-    NULL
-  ),
-  (
-    '00000000-0000-0000-0000-000000000000',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b',
-    'klee0081@student.monash.edu',
-    '$2a$10$wlgX6zexWB9xE5NhgKUBGuK35ZqXRC6xb/KeVd5WWgu2fYCh8/k62',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    'authenticated',
-    'authenticated',
-    '{"provider":"email","providers":["email"]}',
-    '{"sub": "f2c1be6b-25da-40f3-8fe1-8ec45ed5319b","email": "klee0081@student.monash.edu","last_name": "L","first_name": "Khanh","email_verified": true,"phone_verified": false}',
-    '',
-    '',
-    '',
-    '',
-    NULL
-  ),
-  (
-    '00000000-0000-0000-0000-000000000000',
     '378fc432-b330-46dc-87ff-62bb2f24ccbb',
     'oagu0001@student.monash.edu',
     '$2a$10$wlgX6zexWB9xE5NhgKUBGuK35ZqXRC6xb/KeVd5WWgu2fYCh8/k62',
@@ -125,36 +71,6 @@ INSERT INTO
   )
 VALUES
   (
-    'fd76e705-84df-42da-9a71-1fc6a0e215a4',
-    'fd76e705-84df-42da-9a71-1fc6a0e215a4',
-    'email',
-    '{"sub": "fd76e705-84df-42da-9a71-1fc6a0e215a4","email": "playwright@easy-task.com","last_name": "Test","first_name": "Playwright","email_verified": true,"phone_verified": false}',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    'bfe88d4c-f64b-4407-aab2-d321bb3724e8'
-  ),
-  (
-    'f6508257-5947-4835-a711-979cf0330777',
-    'f6508257-5947-4835-a711-979cf0330777',
-    'email',
-    '{"sub": "f6508257-5947-4835-a711-979cf0330777","email": "jcru0005@student.monash.edu","last_name": "C","first_name": "Jesse","email_verified": true,"phone_verified": false}',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    'd7dda800-8692-42e4-a7fb-6ec1d200a5e3'
-  ),
-  (
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b',
-    'email',
-    '{"sub": "f2c1be6b-25da-40f3-8fe1-8ec45ed5319b","email": "klee0081@student.monash.edu","last_name": "L","first_name": "Khanh","email_verified": true,"phone_verified": false}',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    '2024-09-24 10:07:51.296459 +00:00',
-    'ab2dab34-2d67-48b5-8edf-83dfa35f70cd'
-  ),
-  (
     '378fc432-b330-46dc-87ff-62bb2f24ccbb',
     '378fc432-b330-46dc-87ff-62bb2f24ccbb',
     'email',
@@ -175,7 +91,7 @@ VALUES
     'abdf6a65-c4b4-4552-a9bf-818aee68ff7a'
   );
 
--- Insert workouts for each user
+-- Insert workouts for users
 INSERT INTO
   workouts(
     workout_id,
@@ -184,23 +100,37 @@ INSERT INTO
     user_id
   )
 VALUES
+  -- Elijah's workouts
   (
     'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'Upper Body',
+    'Focus on chest, shoulders, and triceps',
+    '378fc432-b330-46dc-87ff-62bb2f24ccbb'
+  ),
+  (
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'Lower Body',
+    'Quads, hamstrings, and calves',
+    '378fc432-b330-46dc-87ff-62bb2f24ccbb'
+  ),
+  -- Chongjie's workouts
+  (
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
     'Push Day',
     'Upper body pushing exercises',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
     'Pull Day',
     'Upper body pulling exercises',
-    'f6508257-5947-4835-a711-979cf0330777'
+    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
     'Leg Day',
     'Lower body workout',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   );
 
 -- Insert exercises for each user
@@ -212,6 +142,25 @@ INSERT INTO
     user_id
   )
 VALUES
+  -- Elijah's exercises
+  (
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01',
+    'Barbell Rows',
+    'Bent over row with barbell',
+    '378fc432-b330-46dc-87ff-62bb2f24ccbb'
+  ),
+  (
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02',
+    'Leg Press',
+    'Machine press for quads and hamstrings',
+    '378fc432-b330-46dc-87ff-62bb2f24ccbb'
+  ),
+  (
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03',
+    'Overhead Press',
+    'Standing press with barbell',
+    '378fc432-b330-46dc-87ff-62bb2f24ccbb'
+  ),
   -- Chongjie's exercises
   (
     'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
@@ -231,43 +180,23 @@ VALUES
     'Lift barbell from floor to hip level',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
-  -- Jesse's exercises
   (
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
     'Pull-up',
     'Vertical pulling movement',
-    'f6508257-5947-4835-a711-979cf0330777'
+    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
     'Push-up',
     'Horizontal pushing movement from floor',
-    'f6508257-5947-4835-a711-979cf0330777'
+    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16',
     'Plank',
     'Core stabilization exercise',
-    'f6508257-5947-4835-a711-979cf0330777'
-  ),
-  -- Khanh's exercises
-  (
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'Bicep Curl',
-    'Curl dumbbell toward shoulder',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
-  ),
-  (
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'Shoulder Press',
-    'Press weight overhead from shoulders',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
-  ),
-  (
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
-    'Lat Pulldown',
-    'Pull bar down to chest level',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
+    '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   );
 
 -- Insert workout sessions
@@ -282,10 +211,29 @@ INSERT INTO
     user_id
   )
 VALUES
+  -- Elijah's sessions
+  (
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'Morning Upper Body',
+    '2025-04-01 06:30:00',
+    '2025-04-01 07:45:00',
+    'Great pump today',
+    '378fc432-b330-46dc-87ff-62bb2f24ccbb'
+  ),
+  (
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'Leg Session',
+    '2025-04-03 17:00:00',
+    '2025-04-03 18:30:00',
+    'Pushing for new PR',
+    '378fc432-b330-46dc-87ff-62bb2f24ccbb'
+  ),
   -- Chongjie's sessions
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
     'Push Workout',
     '2025-04-02 08:00:00',
     '2025-04-02 10:15:00',
@@ -294,50 +242,30 @@ VALUES
   ),
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
     'Leg Workout',
     '2025-04-01 07:30:00',
     '2025-04-01 08:45:00',
     'Feeling stronger on squats',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
-  -- Jesse's sessions
   (
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
     'Pull Workout',
-    '2025-04-03 17:00:00',
-    '2025-04-03 18:00:00',
-    'Did 3 pull-ups unassisted!',
+    '2025-04-04 16:00:00',
+    '2025-04-04 17:30:00',
+    'Back is feeling stronger',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
     'Push Workout',
-    '2025-04-19 18:00:00',
-    '2025-04-19 19:15:00',
-    'Core is getting stronger',
+    '2025-03-25 09:00:00',
+    '2025-03-25 10:30:00',
+    'Chest feels great',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
-  ),
-  -- Khanh's sessions
-  (
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'Push Workout',
-    '2025-03-17 12:00:00',
-    '2025-03-17 13:00:00',
-    'Arms are pumped',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
-  ),
-  (
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    'Push Workout',
-    '2025-03-20 11:30:00',
-    '2025-03-20 12:45:00',
-    'Shoulder press felt good',
-    'f2c1be6b-25da-40f3-8fe1-8ec45ed5319b'
   );
 
 -- Insert session exercises
@@ -349,6 +277,25 @@ INSERT INTO
     session_exercise_order
   )
 VALUES
+  -- Elijah's session exercises
+  (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01',
+    1
+  ),
+  (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03',
+    2
+  ),
+  (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02',
+    1
+  ),
   -- Chongjie's session exercises
   (
     'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
@@ -357,36 +304,46 @@ VALUES
     1
   ),
   (
-    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
+    2
+  ),
+  (
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
     'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
     1
   ),
-  -- Jesse's session exercises
   (
-    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
     1
   ),
   (
-    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
-    1
-  ),
-  -- Khanh's session exercises
-  (
-    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    1
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    2
   ),
   (
-    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1
+  ),
+  (
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
+    2
+  ),
+  (
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    'b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16',
+    3
   );
 
 -- Insert sets for each session exercise
@@ -400,9 +357,84 @@ INSERT INTO
     session_exercise_id
   )
 VALUES
+  -- Elijah's barbell rows sets
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01',
+    1,
+    70,
+    12,
+    90,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01'
+  ),
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02',
+    2,
+    75,
+    10,
+    90,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01'
+  ),
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03',
+    3,
+    80,
+    8,
+    120,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a01'
+  ),
+  -- Elijah's overhead press sets
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a04',
+    1,
+    50,
+    10,
+    90,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02'
+  ),
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a05',
+    2,
+    55,
+    8,
+    90,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02'
+  ),
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a06',
+    3,
+    60,
+    6,
+    120,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a02'
+  ),
+  -- Elijah's leg press sets
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a07',
+    1,
+    150,
+    12,
+    120,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03'
+  ),
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a08',
+    2,
+    170,
+    10,
+    120,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03'
+  ),
+  (
+    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a09',
+    3,
+    190,
+    8,
+    150,
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a03'
+  ),
   -- Chongjie's bench press sets
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1,
     80,
     10,
@@ -410,7 +442,7 @@ VALUES
     'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
     2,
     85,
     8,
@@ -418,135 +450,185 @@ VALUES
     'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
     3,
     90,
     6,
     120,
     'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
+  -- Chongjie's push-up sets
+  (
+    'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    1,
+    0,
+    20,
+    60,
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  (
+    'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
+    2,
+    0,
+    15,
+    60,
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  (
+    'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a16',
+    3,
+    0,
+    15,
+    60,
+    'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
   -- Chongjie's squat sets
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    'e2eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1,
     100,
     8,
     120,
-    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
+    'e2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
     2,
     110,
     6,
     120,
-    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a16',
+    'e2eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
     3,
     115,
     4,
     150,
-    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+    'a2eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
-  -- Jesse's pull-up sets
+  -- Chongjie's pull-up sets
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a21',
+    'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1,
     0,
-    3,
-    60,
-    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21'
+    8,
+    90,
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
+    'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
     2,
     0,
-    2,
-    60,
-    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21'
+    6,
+    90,
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a23',
+    'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
     3,
     0,
-    2,
-    60,
-    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a21'
+    5,
+    90,
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
   ),
-  -- Jesse's plank sets (weight is null, using time instead)
+  -- Chongjie's deadlift sets
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a24',
+    'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    1,
+    120,
+    8,
+    180,
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  (
+    'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
+    2,
+    130,
+    6,
+    180,
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  (
+    'e3eebc99-9c0b-4ef8-bb6d-6bb9bd380a16',
+    3,
+    140,
+    4,
+    180,
+    'a3eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  -- Chongjie's bench press sets (other session)
+  (
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+    1,
+    75,
+    10,
+    90,
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
+  ),
+  (
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
+    2,
+    80,
+    8,
+    90,
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
+  ),
+  (
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
+    3,
+    85,
+    6,
+    120,
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
+  ),
+  -- Chongjie's push-up sets (other session)
+  (
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a14',
+    1,
+    0,
+    15,
+    60,
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  (
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a15',
+    2,
+    0,
+    12,
+    60,
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  (
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a16',
+    3,
+    0,
+    10,
+    60,
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a12'
+  ),
+  -- Chongjie's plank sets
+  (
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a17',
     1,
     NULL,
     60,
     30,
-    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a25',
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a18',
     2,
     NULL,
     45,
     30,
-    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13'
   ),
   (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a26',
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a19',
     3,
     NULL,
     30,
     30,
-    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a22'
-  ),
-  -- Khanh's bicep curl sets
-  (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a31',
-    1,
-    15,
-    12,
-    60,
-    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31'
-  ),
-  (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a32',
-    2,
-    17,
-    10,
-    60,
-    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31'
-  ),
-  (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
-    3,
-    20,
-    8,
-    60,
-    'a5eebc99-9c0b-4ef8-bb6d-6bb9bd380a31'
-  ),
-  -- Khanh's shoulder press sets
-  (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a34',
-    1,
-    25,
-    10,
-    90,
-    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32'
-  ),
-  (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a35',
-    2,
-    27,
-    8,
-    90,
-    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32'
-  ),
-  (
-    'e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a36',
-    3,
-    30,
-    6,
-    90,
-    'a6eebc99-9c0b-4ef8-bb6d-6bb9bd380a32'
+    'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13'
   );

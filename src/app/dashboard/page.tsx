@@ -100,7 +100,6 @@ export default function Dashboard() {
           throw new Error("Could not fetch your workouts weights this month.");
         }
         const session_sets = workouts.data;
-        console.log(session_sets)
         let totalWeight = 0;
         // Loop through each session and sum up the weights 
         session_sets.forEach(

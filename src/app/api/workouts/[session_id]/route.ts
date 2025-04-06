@@ -9,13 +9,13 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
     if (error || !user) {
       redirect('/login')
     }
-
     
     // If the user is logged in, then we can fetch from database
-    const {data: workouts, error: workoutError} = await supabase.from("session_sets")
-    .select("*")
+    // Get all the exercises for this workout
+    const {data: workouts, error: workoutError} = await supabase.from("sessions")
+    .select("session_name, session_notes, session_start_date, session_end_date, session_exercises(*,exercises(*), session_sets(*))")
     .eq("session_id", session_id)
-    .order("set_number", {ascending:false})
+
 
     // Error response
     if (workoutError){
