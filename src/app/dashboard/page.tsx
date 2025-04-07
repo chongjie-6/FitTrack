@@ -15,6 +15,15 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>();
   const [isLoading, setIsLoading] = useState(true);
 
+  const determineWorkoutTime = (hour: number) => {
+    if (hour < 12) {
+      return "Morning Workout";
+    } else if (hour < 4) {
+      return "Midday Workout";
+    } else {
+      return "Night Workout";
+    }
+  };
   const handleCardClick = (session_id: string) => {
     router.push(`/workouts/${session_id}`);
   };
@@ -101,7 +110,7 @@ export default function Dashboard() {
         }
         const session_sets = workouts.data;
         let totalWeight = 0;
-        // Loop through each session and sum up the weights 
+        // Loop through each session and sum up the weights
         session_sets.forEach(
           (session: { session_sets: { set_weight: number }[] }) => {
             session.session_sets.forEach((set) => {
@@ -123,7 +132,7 @@ export default function Dashboard() {
     setIsLoading(false);
   }, []);
   return (
-    <div className="flex flex-col mt-20 items-center">
+    <div className="flex flex-col mt-20 items-center mb-5">
       <section className="items-start flex-col mb-10 space-y-2 w-xs sm:w-xl">
         <h1 className="text-3xl font-semibold">Dashboard</h1>
         <div className="inline-flex justify-between items-center w-full text-gray-300 text-sm">
@@ -136,7 +145,7 @@ export default function Dashboard() {
           </button>
         </div>
         <div className="grid grid-cols-3 text-sm sm:text-md gap-x-1 sm:gap-x-5">
-          <div className="border-2 p-5 rounded-3xl">
+          <div className="border-2 p-3 sm:p-5 rounded-3xl ">
             <h2 className="font-medium">Workouts</h2>
             <h3>
               <span className="text-2xl sm:text-4xl font-bold pr-2">
@@ -145,7 +154,7 @@ export default function Dashboard() {
               This Month
             </h3>
           </div>
-          <div className="border-2 p-5 rounded-3xl">
+          <div className="border-2 p-3 sm:p-5 rounded-3xl">
             <h2 className="font-medium">Workouts</h2>
             <h3>
               <span className="text-2xl sm:text-4xl font-bold pr-2">
@@ -154,8 +163,8 @@ export default function Dashboard() {
               This Year
             </h3>
           </div>
-          <div className="border-2 p-5 rounded-3xl">
-            <h2 className="font-medium">Weight</h2>
+          <div className="border-2 p-3 sm:p-5 rounded-3xl">
+            <h2 className="font-medium overflow-wrap">Weight</h2>
             <h3>
               <span className="text-2xl sm:text-4xl font-bold pr-2">
                 {weightsThisMonth}
@@ -178,13 +187,19 @@ export default function Dashboard() {
                   onClick={() => handleCardClick(sessions.session_id)}
                 >
                   <div className="inline-flex justify-between font-medium w-full">
-                    <h2>{sessions.session_name}</h2>
                     <h2>
-                      {sessions.session_start_date
+                      {sessions.session_name === ""
+                        ? determineWorkoutTime(
+                            new Date(sessions.session_start_date).getHours()
+                          )
+                        : sessions.session_name}
+                    </h2>
+                    <h2>
+                      {sessions.session_end_date
                         ? (new Date(sessions.session_end_date).getTime() -
                             new Date(sessions.session_start_date).getTime()) /
                             60000 +
-                          " mins"
+                          " min"
                         : ""}
                     </h2>
                   </div>

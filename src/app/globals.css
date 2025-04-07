@@ -131,6 +131,6 @@
     @apply flex flex-col items-center justify-center h-screen -translate-y-20
   }
   .workout_page_labels{
-    @apply border-2 p-2 border-gray-500 w-xs sm:w-xl
+    @apply border-1 p-2 border-gray-500 w-xs sm:w-xl
   }
 }

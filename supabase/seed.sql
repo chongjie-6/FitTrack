@@ -234,10 +234,10 @@ VALUES
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
-    'Push Workout',
+    '',
     '2025-04-02 08:00:00',
     '2025-04-02 10:15:00',
-    'Great workout, increased bench by 5kg',
+    '',
     '0d2b54fe-4b28-40f8-adfc-c269c75e3154'
   ),
   (
@@ -436,7 +436,7 @@ VALUES
   (
     'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     1,
-    80,
+    100,
     10,
     90,
     'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
@@ -444,7 +444,7 @@ VALUES
   (
     'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380a12',
     2,
-    85,
+    100,
     8,
     90,
     'a1eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'

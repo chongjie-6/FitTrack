@@ -1,11 +1,34 @@
 "use client";
-import { Session, SessionInfo, SessionSet } from "@/utils/types/types";
-import { useParams } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
+import { Session, SessionInfo } from "@/utils/types/types";
+import { User } from "@supabase/supabase-js";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function SessionPage() {
+  const router = useRouter();
+  const [, setUser] = useState<User | null>();
   const { session_id } = useParams();
   const [sessionInfo, setSessionInfo] = useState<Session & SessionInfo>();
+
+  // Use effect to validate user
+  useEffect(() => {
+    const userValidation = async () => {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase.auth.getUser();
+        if (error || !data?.user) {
+          router.push("/login");
+        }
+        setUser(data.user);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    userValidation();
+  }, [router]);
+
+  // Use Effect to fetch workout session corresponding to session_id
   useEffect(() => {
     const fetchWorkoutSession = async () => {
       const response = await fetch(`/api/workouts/${session_id}`, {
@@ -17,11 +40,17 @@ export default function SessionPage() {
       setSessionInfo(data.data[0]);
     };
     fetchWorkoutSession();
-  }, []);
+  }, [session_id]);
   return (
-    <div className="flex flex-col items-center justify-center ">
+    <div className="flex flex-col items-center justify-center mt-20">
       <section>
-        <h1 className="workout_page_labels">{sessionInfo?.session_name}</h1>
+        <h1
+          className={`workout_page_labels ${
+            sessionInfo ? "text-white" : "text-gray-500"
+          }`}
+        >
+          {sessionInfo ? sessionInfo.session_name : "Name"}
+        </h1>
         <h2 className="workout_page_labels">{sessionInfo?.session_notes}</h2>
         <h2 className="workout_page_labels">
           {sessionInfo &&
@@ -37,7 +66,10 @@ export default function SessionPage() {
           sessionInfo.session_exercises.map((exercise) => {
             return (
               // Map over all of our exercises for this sessions
-              <div key={exercise.exercise_id} className="flex flex-col workout_page_labels">
+              <div
+                key={exercise.exercise_id}
+                className="flex flex-col workout_page_labels"
+              >
                 <h3>{exercise.exercises.exercise_name}</h3>
                 <h3>{exercise.exercises.exercise_description}</h3>
                 {exercise.session_sets.map((set) => {
