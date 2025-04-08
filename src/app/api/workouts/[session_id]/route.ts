@@ -16,7 +16,6 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
     .select("session_name, session_notes, session_start_date, session_end_date, session_exercises(*,exercises(*), session_sets(*))")
     .eq("session_id", session_id)
 
-
     // Error response
     if (workoutError){
         return Response.json({message: "There was an error fetching your workouts"}, {status: 500})

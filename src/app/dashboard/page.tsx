@@ -11,7 +11,7 @@ export default function Dashboard() {
   const [sessions, setSessions] = useState<Array<Session>>();
   const [workoutsThisMonth, setWorkoutsThisMonth] = useState<null | number>();
   const [weightsThisMonth, setWeightsThisMonth] = useState<null | number>();
-  const [workoutsThisYear, setWorkoutsThisYear] = useState<null | number>();
+  const [hoursThisMonth, setHoursThisMonth] = useState<null | number>();
   const [user, setUser] = useState<User | null>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -80,18 +80,35 @@ export default function Dashboard() {
         console.log("Error: ", e);
       }
     };
-    const fetchWorkoutsThisYear = async () => {
+    const fetchMinutesThisMonth = async () => {
       try {
-        const response = await fetch("/api/workouts/workouts_this_year", {
+        const response = await fetch("/api/workouts/minutes_this_month", {
           method: "GET",
           credentials: "include",
         });
-        const workouts = await response.json();
+        const data = await response.json();
+        const workouts = data.data;
 
         if (!response.ok) {
-          throw new Error("Could not fetch your workouts for this year.");
+          throw new Error("Could not fetch your minutes for this month.");
         }
-        setWorkoutsThisYear(workouts.data);
+
+        // for each workout this month calculate the duration
+        const total = workouts.reduce(
+          (
+            sum: number,
+            workout: { session_start_date: string; session_end_date: string }
+          ) => {
+            return (
+              sum +
+              (new Date(workout.session_end_date).getTime() -
+                new Date(workout.session_start_date).getTime()) /
+                60000
+            );
+          },
+          0
+        );
+        setHoursThisMonth(total / 60);
       } catch (e) {
         console.log("Error: ", e);
       }
@@ -127,88 +144,80 @@ export default function Dashboard() {
 
     fetchWorkouts();
     fetchWorkoutsThisMonth();
-    fetchWorkoutsThisYear();
+    fetchMinutesThisMonth();
     fetchWeightsLifted();
     setIsLoading(false);
   }, []);
   return (
-    <div className="flex flex-col mt-20 items-center mb-5">
-      <section className="items-start flex-col mb-10 space-y-2 w-xs sm:w-xl">
+    <div className="p-5 sm:p-10 flex flex-col justify-center w-full max-w-3xl mx-auto">
+      <section className="w-full mb-8">
         <h1 className="text-3xl font-semibold">Dashboard</h1>
-        <div className="inline-flex justify-between items-center w-full text-gray-300 text-sm">
-          <h1 className="text-sm sm:text-lg">
-            Welcome Back {user && user.user_metadata.first_name}!
+        <div className="flex justify-between items-center text-gray-300 text-sm w-full">
+          <h1 className="text-sm">
+            Welcome Back {user && user.user_metadata.first_name}! Here&apos;s
+            your monthly summary!
           </h1>
-
-          <button className="p-3 bg-gray-500 rounded-2xl hover:bg-gray-700 cursor-pointer">
+          <button className="p-3 bg-gray-500 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer">
             Start Workout
           </button>
         </div>
-        <div className="grid grid-cols-3 text-sm sm:text-md gap-x-1 sm:gap-x-5">
-          <div className="border-2 p-3 sm:p-5 rounded-3xl ">
+        <div className="summary_layout">
+          <div className="summary_box">
             <h2 className="font-medium">Workouts</h2>
-            <h3>
-              <span className="text-2xl sm:text-4xl font-bold pr-2">
-                {workoutsThisMonth}
-              </span>
-              This Month
-            </h3>
+            <div>
+              <span className="summary_main_text">{workoutsThisMonth}</span>
+              <span>This Month</span>
+            </div>
           </div>
-          <div className="border-2 p-3 sm:p-5 rounded-3xl">
-            <h2 className="font-medium">Workouts</h2>
-            <h3>
-              <span className="text-2xl sm:text-4xl font-bold pr-2">
-                {workoutsThisYear}
-              </span>
-              This Year
-            </h3>
+          <div className="summary_box">
+            <h2 className="font-medium">Training Time</h2>
+            <div>
+              <span className="summary_main_text">{hoursThisMonth}h</span>
+              <span>This Month</span>
+            </div>
           </div>
-          <div className="border-2 p-3 sm:p-5 rounded-3xl">
-            <h2 className="font-medium overflow-wrap">Weight</h2>
-            <h3>
-              <span className="text-2xl sm:text-4xl font-bold pr-2">
-                {weightsThisMonth}
-              </span>
-              Kgs Lifted
-            </h3>
+          <div className="summary_box">
+            <h2 className="font-medium">Weight</h2>
+            <div>
+              <span className="summary_main_text">{weightsThisMonth}</span>
+              <span>Kgs Lifted</span>
+            </div>
           </div>
         </div>
       </section>
 
-      <section>
-        <div className="space-y-3 w-xs sm:w-xl">
-          <h1 className="text-3xl font-semibold">Workouts</h1>
+      <section className="w-full">
+        <h1 className="text-3xl font-semibold mb-4">Workouts</h1>
+        <div className="space-y-3">
           {sessions && !isLoading ? (
-            sessions.map((sessions) => {
-              return (
-                <div
-                  key={sessions.session_id}
-                  className="p-4 border rounded bg-gray-200 shadow-sm text-black cursor-pointer"
-                  onClick={() => handleCardClick(sessions.session_id)}
-                >
-                  <div className="inline-flex justify-between font-medium w-full">
-                    <h2>
-                      {sessions.session_name === ""
-                        ? determineWorkoutTime(
-                            new Date(sessions.session_start_date).getHours()
-                          )
-                        : sessions.session_name}
-                    </h2>
-                    <h2>
-                      {sessions.session_end_date
-                        ? (new Date(sessions.session_end_date).getTime() -
-                            new Date(sessions.session_start_date).getTime()) /
-                            60000 +
-                          " min"
-                        : ""}
-                    </h2>
-                  </div>
-                  <h3 className="text-gray-700 font-medium text-sm w-2xs">
-                    {new Date(sessions.session_end_date).toDateString()}
-                  </h3>
+            sessions.map((session) => (
+              <div
+                key={session.session_id}
+                className="border rounded-lg bg-gray-200 shadow-sm text-black cursor-pointer p-3 hover:bg-gray-300 transition-colors duration-200"
+                onClick={() => handleCardClick(session.session_id)}
+              >
+                <div className="flex justify-between font-medium w-full">
+                  <h2>
+                    {session.session_name === ""
+                      ? determineWorkoutTime(
+                          new Date(session.session_start_date).getHours()
+                        )
+                      : session.session_name}
+                  </h2>
+                  <h2>
+                    {session.session_end_date
+                      ? (new Date(session.session_end_date).getTime() -
+                          new Date(session.session_start_date).getTime()) /
+                          60000 +
+                        " min"
+                      : ""}
+                  </h2>
                 </div>
-              );
-            })
+                <h3 className="text-gray-700 font-medium">
+                  {new Date(session.session_end_date).toDateString()}
+                </h3>
+              </div>
+            ))
           ) : (
             <div className="space-y-3">
               <Skeleton></Skeleton>

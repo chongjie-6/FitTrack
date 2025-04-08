@@ -42,8 +42,8 @@ export default function SessionPage() {
     fetchWorkoutSession();
   }, [session_id]);
   return (
-    <div className="flex flex-col items-center justify-center mt-20">
-      <section>
+    <div className="mt-20 w-full mx-auto max-w-xl p-5 sm:p-10">
+      <section className="w-full">
         <h1
           className={`workout_page_labels ${
             sessionInfo ? "text-white" : "text-gray-500"
@@ -61,7 +61,7 @@ export default function SessionPage() {
             new Date(sessionInfo.session_start_date).toLocaleString()}
         </h2>
       </section>
-      <section>
+      <section className="w-full">
         {sessionInfo &&
           sessionInfo.session_exercises.map((exercise) => {
             return (

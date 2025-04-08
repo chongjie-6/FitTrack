@@ -62,58 +62,58 @@ export default function Home() {
     router.push("/dashboard");
   };
   return (
-    <div className="form-container ">
-      <div className="text-center w-xs sm:w-lg">
-        <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md">
-          <h1 className="text-3xl font-semibold">Login</h1>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onFormSubmit)}
-              className="space-y-4"
+    <div className="max-w-2xl w-full h-full mx-auto p-5 mt-20">
+      <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md w-full text-center">
+        <h1 className="text-3xl font-semibold mt-5">Login</h1>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onFormSubmit)}
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your email..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your password..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {<h3 className="text-red-400">{error}</h3>}
+            <Button
+              type="submit"
+              className="w-full sm:mb-5"
+              id="login_btn"
+              onClick={onLoginClick}
             >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your email..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your password..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {<h3 className="text-red-400">{error}</h3>}
-              <Button
-                type="submit"
-                className="w-full"
-                id="login_btn"
-                onClick={onLoginClick}
-              >
-                Log In
-              </Button>
-            </form>
-          </Form>
-        </section>
-        <div className="flex flex-col items-center mt-5 sm:border-gray-200 sm:border-2 sm:p-5 rounded-md">
+              Log In
+            </Button>
+          </form>
+        </Form>
+      </section>
+      <section className="w-full">
+        <div className="flex flex-col items-center sm:border-gray-200 rounded-md sm:border-2 mt-5 py-5">
           <p>Don&apos;t have an account? </p>
           <Link
             href={"/register"}
@@ -122,7 +122,7 @@ export default function Home() {
             Sign Up
           </Link>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

@@ -74,92 +74,90 @@ export default function Register() {
     router.push("/email_confirmation");
   };
   return (
-    <div className="form-container">
-      <div className="text-center w-xs sm:w-lg">
-        <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md mt-20 sm:mt-0">
-          <h1 className="text-3xl font-semibold">Register</h1>
-          <p className="py-5 text-gray-200">
-            Register now to start tracking your workouts today!
-          </p>
-          {<h3 className="text-red-400">{error}</h3>}
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onFormSubmit)}
-              className="space-y-4"
+    <div className="text-center w-full max-w-2xl mx-auto mt-20">
+      <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md mt-20 sm:mt-0 p-5">
+        <h1 className="text-3xl font-semibold">Register</h1>
+        <p className="py-5 text-gray-200">
+          Register now to start tracking your workouts today!
+        </p>
+        {<h3 className="text-red-400">{error}</h3>}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onFormSubmit)}
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your email..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your password..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="first_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="First Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="last_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Last Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              className="w-full"
+              id="register_btn"
+              onClick={onRegisterClick}
             >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your email..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter your password..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="first_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="First Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="last_name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Last Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                className="w-full"
-                id="register_btn"
-                onClick={onRegisterClick}
-              >
-                Sign Up
-              </Button>
-            </form>
-          </Form>
-        </section>
-        <div className="flex flex-col items-center mt-5 sm:border-gray-200 sm:border-2 sm:p-5 rounded-md">
-          <p>Have an account?</p>
-          <Link href={"/login"} className="text-blue-500 hover:text-blue-400">
-            Login
-          </Link>
-        </div>
+              Sign Up
+            </Button>
+          </form>
+        </Form>
+      </section>
+      <div className="flex flex-col items-center mt-5 sm:border-gray-200 sm:border-2 sm:p-5 rounded-md">
+        <p>Have an account?</p>
+        <Link href={"/login"} className="text-blue-500 hover:text-blue-400">
+          Login
+        </Link>
       </div>
     </div>
   );

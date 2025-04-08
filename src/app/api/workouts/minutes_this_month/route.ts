@@ -10,15 +10,15 @@ export async function GET() {
     }
 
     // If the user is logged in, then we can fetch from database
-    const { count, error } = await supabase
+    const { data, error } = await supabase
     .from("sessions")
-    .select("*", { count: "exact" })
+    .select("session_end_date, session_start_date")
     .eq("user_id", user.id)
-    .gte("session_start_date", new Date(new Date().getFullYear(), 1, 1).toISOString());
-
+    .not("session_start_date", "is", null)
+    .gte("session_start_date", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
     // Error response
     if (error){
-        return Response.json({message: "Error fetching count"}, {status: 500})
+        return Response.json({message: "Error fetching minutes"}, {status: 500})
     }
-    return Response.json({sucess: true, data: count}, {status: 200})
+    return Response.json({sucess: true, data: data}, {status: 200})
 }
