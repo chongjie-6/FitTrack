@@ -1,16 +1,4 @@
 "use client";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/utils/supabase/client";
 import { Session, SessionInfo } from "@/utils/types/types";
@@ -18,6 +6,7 @@ import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { DialogBtn } from "@/components/ui/dialogBtn";
 
 export default function SessionPage() {
   const router = useRouter();
@@ -25,7 +14,7 @@ export default function SessionPage() {
   const { session_id } = useParams();
   const [sessionInfo, setSessionInfo] = useState<Session & SessionInfo>();
   const [isLoading, setIsLoading] = useState(true);
-  const [isModal, setIsModal] = useState(false);
+  const [allExercises, setAllExercises] = useState([]);
 
   // Use effect to validate user
   useEffect(() => {
@@ -63,6 +52,23 @@ export default function SessionPage() {
     fetchWorkoutSession();
   }, [session_id]);
 
+  useEffect(() => {
+    // Use Effect to fetch all the exercises
+    const fetchAllExercise = async () => {
+      try {
+        const response = await fetch("/api/exercises", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await response.json();
+        console.log(data);
+        setAllExercises(data.data);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchAllExercise();
+  }, []);
   const addSet = async (session_exercise_id: string, set_number: number) => {
     try {
       console.log(session_exercise_id);
@@ -100,11 +106,6 @@ export default function SessionPage() {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const addExercise = () => {
-    setIsModal(true);
-    console.log("execute");
   };
 
   return (
@@ -263,32 +264,7 @@ export default function SessionPage() {
             <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
           </div>
         )}
-        <button
-          className="mb-6 bg-gray-800 rounded-lg shadow btn p-3 mt-1 w-full text-start"
-          onClick={addExercise}
-        >
-          Add Exercise
-        </button>
-        {isModal && (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline">Show Dialog</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+        <DialogBtn allExercisesProp={allExercises}></DialogBtn>
       </section>
     </div>
   );
