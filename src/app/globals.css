@@ -139,4 +139,7 @@
   .summary_main_text{
     @apply text-4xl font-bold pr-2
   }
+  .btn{
+    @apply text-blue-500 hover:text-blue-400 p-1 mt-1 w-fit
+  }
 }

@@ -1,7 +1,7 @@
 CREATE TABLE sessions (
     session_id uuid DEFAULT gen_random_uuid(),
-    workout_id uuid NOT NULL REFERENCES WORKOUTS ON DELETE CASCADE,
-    session_name text NULL,
+    workout_id uuid NULL REFERENCES WORKOUTS ON DELETE CASCADE,
+    session_name text NOT NULL DEFAULT format(''),
     session_start_date timestamptz NOT NULL DEFAULT now(),
     session_end_date timestamptz NULL,
     session_notes text NULL,

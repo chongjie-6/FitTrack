@@ -234,7 +234,7 @@ VALUES
   (
     'd0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13',
-    '',
+    'Push Workout',
     '2025-04-02 08:00:00',
     '2025-04-02 10:15:00',
     '',
@@ -611,7 +611,7 @@ VALUES
   (
     'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a17',
     1,
-    NULL,
+    0,
     60,
     30,
     'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13'
@@ -619,7 +619,7 @@ VALUES
   (
     'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a18',
     2,
-    NULL,
+    0,
     45,
     30,
     'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13'
@@ -627,7 +627,7 @@ VALUES
   (
     'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380a19',
     3,
-    NULL,
+    0,
     30,
     30,
     'a4eebc99-9c0b-4ef8-bb6d-6bb9bd380a13'

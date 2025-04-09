@@ -1,6 +1,6 @@
 CREATE TABLE EXERCISES (
     exercise_id uuid DEFAULT gen_random_uuid(),
-    exercise_name text NULL,
+    exercise_name text NOT NULL DEFAULT format(''),
     exercise_description text null,
     user_id uuid NOT NULL references users on delete cascade,
     PRIMARY KEY (exercise_id)

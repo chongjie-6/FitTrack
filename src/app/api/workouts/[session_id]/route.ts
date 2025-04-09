@@ -14,7 +14,7 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
     // Get all the exercises for this workout
     const {data: workouts, error: workoutError} = await supabase.from("sessions")
     .select("session_name, session_notes, session_start_date, session_end_date, session_exercises(*,exercises(*), session_sets(*))")
-    .eq("session_id", session_id)
+    .eq("session_id", session_id).single()
 
     // Error response
     if (workoutError){

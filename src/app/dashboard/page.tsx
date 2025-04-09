@@ -4,7 +4,7 @@ import { Session } from "@/utils/types/types";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import Skeleton from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -14,16 +14,7 @@ export default function Dashboard() {
   const [hoursThisMonth, setHoursThisMonth] = useState<null | number>();
   const [user, setUser] = useState<User | null>();
   const [isLoading, setIsLoading] = useState(true);
-
-  const determineWorkoutTime = (hour: number) => {
-    if (hour < 12) {
-      return "Morning Workout";
-    } else if (hour < 4) {
-      return "Midday Workout";
-    } else {
-      return "Night Workout";
-    }
-  };
+  const [, setCreateError] = useState("");
   const handleCardClick = (session_id: string) => {
     router.push(`/workouts/${session_id}`);
   };
@@ -148,6 +139,27 @@ export default function Dashboard() {
     fetchWeightsLifted();
     setIsLoading(false);
   }, []);
+
+  const createWorkout = async () => {
+    try {
+      const response = await fetch("/api/workouts", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        setCreateError(
+          "Could not create your workout. Please try again later."
+        );
+      }
+      const data = await response.json();
+      // Successfully created workout, navigate to newly created workout
+      router.push(`/workouts/${data.data}`);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <div className="p-5 sm:p-10 flex flex-col justify-center w-full max-w-3xl mx-auto">
       <section className="w-full mb-8">
@@ -157,33 +169,44 @@ export default function Dashboard() {
             Welcome Back {user && user.user_metadata.first_name}! Here&apos;s
             your monthly summary!
           </h1>
-          <button className="p-3 bg-gray-500 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer">
+          <button
+            onClick={createWorkout}
+            className="p-3 bg-gray-500 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
+          >
             Start Workout
           </button>
         </div>
-        <div className="summary_layout">
-          <div className="summary_box">
-            <h2 className="font-medium">Workouts</h2>
-            <div>
-              <span className="summary_main_text">{workoutsThisMonth}</span>
-              <span>This Month</span>
+        {weightsThisMonth && hoursThisMonth && workoutsThisMonth ? (
+          <div className="summary_layout">
+            <div className="summary_box">
+              <h2 className="font-medium">Workouts</h2>
+              <div>
+                <span className="summary_main_text">{workoutsThisMonth}</span>
+                <span>This Month</span>
+              </div>
+            </div>
+            <div className="summary_box">
+              <h2 className="font-medium">Training Time</h2>
+              <div>
+                <span className="summary_main_text">{hoursThisMonth}h</span>
+                <span>This Month</span>
+              </div>
+            </div>
+            <div className="summary_box">
+              <h2 className="font-medium">Weight</h2>
+              <div>
+                <span className="summary_main_text">{weightsThisMonth}</span>
+                <span>Kgs Lifted</span>
+              </div>
             </div>
           </div>
-          <div className="summary_box">
-            <h2 className="font-medium">Training Time</h2>
-            <div>
-              <span className="summary_main_text">{hoursThisMonth}h</span>
-              <span>This Month</span>
-            </div>
+        ) : (
+          <div className="summary_layout">
+            <Skeleton className="h-[100px] w-full rounded-xl" />
+            <Skeleton className="h-[100px] w-full rounded-xl" />
+            <Skeleton className="h-[100px] w-full rounded-xl" />
           </div>
-          <div className="summary_box">
-            <h2 className="font-medium">Weight</h2>
-            <div>
-              <span className="summary_main_text">{weightsThisMonth}</span>
-              <span>Kgs Lifted</span>
-            </div>
-          </div>
-        </div>
+        )}
       </section>
 
       <section className="w-full">
@@ -198,11 +221,7 @@ export default function Dashboard() {
               >
                 <div className="flex justify-between font-medium w-full">
                   <h2>
-                    {session.session_name === ""
-                      ? determineWorkoutTime(
-                          new Date(session.session_start_date).getHours()
-                        )
-                      : session.session_name}
+                    {session.session_name}
                   </h2>
                   <h2>
                     {session.session_end_date
@@ -214,15 +233,15 @@ export default function Dashboard() {
                   </h2>
                 </div>
                 <h3 className="text-gray-700 font-medium">
-                  {new Date(session.session_end_date).toDateString()}
+                  {new Date(session.session_start_date).toDateString()}
                 </h3>
               </div>
             ))
           ) : (
-            <div className="space-y-3">
-              <Skeleton></Skeleton>
-              <Skeleton></Skeleton>
-              <Skeleton></Skeleton>
+            <div className="space-y-5">
+              <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
+              <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
+              <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
             </div>
           )}
         </div>
