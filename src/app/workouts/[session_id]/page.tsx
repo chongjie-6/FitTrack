@@ -1,12 +1,12 @@
 "use client";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/utils/supabase/client";
-import { Session, SessionInfo } from "@/utils/types/types";
+import { Exercise, Session, SessionInfo } from "@/utils/types/types";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { DialogBtn } from "@/components/ui/dialogBtn";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function SessionPage() {
   const router = useRouter();
@@ -15,6 +15,13 @@ export default function SessionPage() {
   const [sessionInfo, setSessionInfo] = useState<Session & SessionInfo>();
   const [isLoading, setIsLoading] = useState(true);
   const [allExercises, setAllExercises] = useState([]);
+  const [newSessionExercise, setNewSessionExercise] = useState("");
+  const [modal, setModal] = useState<HTMLDialogElement | null>();
+
+  // Run as soon as it is mounted
+  useEffect(() => {
+    setModal(document.querySelector("dialog"));
+  }, []);
 
   // Use effect to validate user
   useEffect(() => {
@@ -61,7 +68,6 @@ export default function SessionPage() {
           credentials: "include",
         });
         const data = await response.json();
-        console.log(data);
         setAllExercises(data.data);
       } catch (e) {
         console.log(e);
@@ -69,10 +75,9 @@ export default function SessionPage() {
     };
     fetchAllExercise();
   }, []);
+
   const addSet = async (session_exercise_id: string, set_number: number) => {
     try {
-      console.log(session_exercise_id);
-      console.log(set_number);
       const response = await fetch(
         `/api/workouts/${session_id}/${session_exercise_id}`,
         {
@@ -105,6 +110,52 @@ export default function SessionPage() {
       }
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const checkClick = (e: React.MouseEvent<HTMLDialogElement>) => {
+    const modal = document.querySelector("dialog");
+    if (!modal) {
+      return;
+    }
+    // Check if mouse click was outside the modal
+    const dialogDimensions = modal?.getBoundingClientRect();
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY > dialogDimensions?.bottom ||
+      e.clientY < dialogDimensions?.top
+    ) {
+      modal.close();
+    }
+  };
+
+  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    modal?.close();
+    // Prevent default refreshing behaviour
+    e.preventDefault();
+
+    const exercise_count = sessionInfo?.session_exercises.length;
+
+    // When we submit the form, we create an exercise
+    const response = await fetch("/api/exercises", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        session_id,
+        exercise_id: newSessionExercise,
+        exercise_count,
+      }),
+    });
+    const data = await response.json();
+    // Now we have to update the elements on the screen
+    if (sessionInfo) {
+      setSessionInfo({
+        ...sessionInfo,
+        session_exercises: [...sessionInfo?.session_exercises, data.data],
+      });
     }
   };
 
@@ -206,7 +257,7 @@ export default function SessionPage() {
         {sessionInfo && !isLoading ? (
           sessionInfo.session_exercises.map((exercise) => (
             <div
-              key={exercise.exercise_id}
+              key={exercise.session_exercise_id}
               className="mb-6 bg-gray-800 rounded-lg p-4 shadow"
             >
               <div className="border-b border-gray-700 pb-2 mb-3">
@@ -228,17 +279,19 @@ export default function SessionPage() {
               </div>
 
               <div className="space-y-2">
-                {exercise.session_sets.map((set) => (
-                  <div
-                    className="grid grid-cols-4 bg-gray-700 bg-opacity-30 p-2 rounded text-white"
-                    key={set.set_id}
-                  >
-                    <span className="font-mono">{set.set_number}</span>
-                    <span className="font-mono">{set.set_weight}</span>
-                    <span className="font-mono">{set.set_reps}</span>
-                    <span className="font-mono">{set.set_rest_time}s</span>
-                  </div>
-                ))}
+                {exercise &&
+                  exercise.session_sets &&
+                  exercise.session_sets.map((set) => (
+                    <div
+                      className="grid grid-cols-4 bg-gray-700 bg-opacity-30 p-2 rounded text-white"
+                      key={set.set_id}
+                    >
+                      <span className="font-mono">{set.set_number}</span>
+                      <span className="font-mono">{set.set_weight}</span>
+                      <span className="font-mono">{set.set_reps}</span>
+                      <span className="font-mono">{set.set_rest_time}s</span>
+                    </div>
+                  ))}
               </div>
               <button
                 className="btn"
@@ -264,7 +317,34 @@ export default function SessionPage() {
             <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
           </div>
         )}
-        <DialogBtn allExercisesProp={allExercises}></DialogBtn>
+        <button onClick={() => modal?.showModal()}>Add Exercise</button>
+        <dialog
+          data-modal
+          id="modal"
+          onClick={(e) => {
+            checkClick(e);
+          }}
+          className="bg-gray-500 fixed p-5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-h-1/2 max-w-1/2 backdrop:bg-gray-700 backdrop:opacity-80 rounded-md"
+        >
+          <Label className="text-lg">Select an exercise.</Label>
+          <form
+            className="space-y-2 mt-2 font-medium"
+            onSubmit={(e) => handleFormSubmit(e)}
+          >
+            {allExercises.map((exercise: Exercise) => {
+              return (
+                <button
+                  type="submit"
+                  key={exercise.exercise_id}
+                  onClick={() => setNewSessionExercise(exercise.exercise_id)}
+                  className="border-t-2 border-b-2 p-1 px-2 rounded-xl -translate-x-2 hover:bg-gray-700 transition-all duration-75 w-full text-left"
+                >
+                  {exercise.exercise_name}
+                </button>
+              );
+            })}
+          </form>
+        </dialog>
       </section>
     </div>
   );
