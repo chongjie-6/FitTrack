@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+
 export async function GET(request: Request,  { params }: { params: Promise<{ session_id: string }> }) {
     const {session_id} = await params
     
@@ -12,10 +13,9 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
     
     // If the user is logged in, then we can fetch from database
     // Get all the exercises for this workout
-    const {data: workouts, error: workoutError} = await supabase.from("sessions")
-    .select("*")
-    .eq("session_id", session_id).single()
-
+    const {data: workouts, error: workoutError} = await supabase.from("session_exercises")
+    .select("*, exercises(*), session_sets(*)")
+    .eq("session_id", session_id)
     // Error response
     if (workoutError){
         return Response.json({message: "There was an error fetching your workouts"}, {status: 500})

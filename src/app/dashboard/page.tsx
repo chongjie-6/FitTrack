@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Session } from "@/utils/types/types";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tables } from "../../../database.types";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [sessions, setSessions] = useState<Array<Session>>();
+  const [sessions, setSessions] = useState<Array<Tables<"sessions">>>();
   const [workoutsThisMonth, setWorkoutsThisMonth] = useState<null | number>();
   const [weightsThisMonth, setWeightsThisMonth] = useState<null | number>();
   const [hoursThisMonth, setHoursThisMonth] = useState<null | number>();
@@ -220,9 +220,7 @@ export default function Dashboard() {
                 onClick={() => handleCardClick(session.session_id)}
               >
                 <div className="flex justify-between font-medium w-full">
-                  <h2>
-                    {session.session_name}
-                  </h2>
+                  <h2>{session.session_name}</h2>
                   <h2>
                     {session.session_end_date
                       ? (new Date(session.session_end_date).getTime() -

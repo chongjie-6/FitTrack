@@ -2,26 +2,53 @@
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/utils/supabase/client";
-import { Exercise, Session, SessionInfo } from "@/utils/types/types";
 import { User } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { Tables } from "../../../../database.types";
+import SessionCard from "@/components/ui/session_card";
 
 export default function SessionPage() {
   const router = useRouter();
   const [, setUser] = useState<User | null>();
   const { session_id } = useParams();
-  const [sessionInfo, setSessionInfo] = useState<Session & SessionInfo>();
   const [isLoading, setIsLoading] = useState(true);
   const [allExercises, setAllExercises] = useState([]);
   const [newSessionExercise, setNewSessionExercise] = useState("");
-  const [modal, setModal] = useState<HTMLDialogElement | null>();
+  const modalRef = useRef<HTMLDialogElement>(null);
+  const prevExercisesLengthRef = useRef<null | number>(null);
 
-  // Run as soon as it is mounted
+  // Store the session info in a variable
+  const [sessionInfo, setSessionInfo] = useState<Tables<"sessions">>();
+
+  // Store the exercises performed in this session
+  // For each of these exercises performed, join all the corresponding sets
+  const [sessionExercises, setSessionExercises] = useState<
+    Array<
+      Tables<"session_exercises"> & {
+        exercises: Tables<"exercises">;
+        session_sets: Array<Tables<"session_sets">>;
+      }
+    >
+  >();
+
+  // UseEffect to scroll to the newly created exercise when it detects a change in the number of exercises
   useEffect(() => {
-    setModal(document.querySelector("dialog"));
-  }, []);
+    if (
+      prevExercisesLengthRef.current &&
+      sessionExercises &&
+      sessionExercises.length > prevExercisesLengthRef.current
+    ) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+
+    // Update the ref with current length for next comparison
+    prevExercisesLengthRef.current = sessionExercises?.length || null;
+  }, [sessionExercises]);
 
   // Use effect to validate user
   useEffect(() => {
@@ -50,8 +77,6 @@ export default function SessionPage() {
         });
         const data = await response.json();
         setSessionInfo(data.data);
-        console.log(data.data);
-        setIsLoading(false);
       } catch (e) {
         console.log(e);
       }
@@ -76,6 +101,28 @@ export default function SessionPage() {
     fetchAllExercise();
   }, []);
 
+  useEffect(() => {
+    // Use Effect to fetch all the exercises and their corresponding sets for this session
+    const fetchAllExercise = async () => {
+      try {
+        const response = await fetch(
+          `/api/workouts/${session_id}/session_exercises`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        setSessionExercises(data.data);
+        console.log(data.data);
+        setIsLoading(false);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchAllExercise();
+  }, [session_id]);
+
   const addSet = async (session_exercise_id: string, set_number: number) => {
     try {
       const response = await fetch(
@@ -92,10 +139,9 @@ export default function SessionPage() {
       const data = await response.json();
       const updatedSet = data.data;
 
-      if (sessionInfo) {
-        setSessionInfo({
-          ...sessionInfo,
-          session_exercises: sessionInfo?.session_exercises.map((exercise) => {
+      if (sessionExercises) {
+        setSessionExercises(
+          sessionExercises.map((exercise) => {
             if (
               exercise.session_exercise_id === updatedSet.session_exercise_id
             ) {
@@ -105,14 +151,18 @@ export default function SessionPage() {
               };
             }
             return exercise;
-          }),
-        });
+          })
+        );
       }
     } catch (e) {
       console.log(e);
     }
   };
 
+  const handleModalOpen = ()=>{
+    document.body.style.overflow = 'hidden';
+    modalRef.current?.showModal();
+  }
   const checkClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     const modal = document.querySelector("dialog");
     if (!modal) {
@@ -127,15 +177,20 @@ export default function SessionPage() {
       e.clientY < dialogDimensions?.top
     ) {
       modal.close();
+      document.body.style.overflow = ''
     }
   };
 
   const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    modal?.close();
+    if (!modalRef.current) {
+      return;
+    }
+    modalRef.current.close();
+    document.body.style.overflow = ''
     // Prevent default refreshing behaviour
     e.preventDefault();
 
-    const exercise_count = sessionInfo?.session_exercises.length;
+    const exercise_count = sessionExercises?.length;
 
     // When we submit the form, we create an exercise
     const response = await fetch("/api/exercises", {
@@ -150,12 +205,11 @@ export default function SessionPage() {
       }),
     });
     const data = await response.json();
+    console.log(data.data);
+
     // Now we have to update the elements on the screen
-    if (sessionInfo) {
-      setSessionInfo({
-        ...sessionInfo,
-        session_exercises: [...sessionInfo?.session_exercises, data.data],
-      });
+    if (sessionExercises) {
+      setSessionExercises([...sessionExercises, data.data]);
     }
   };
 
@@ -254,58 +308,8 @@ export default function SessionPage() {
       </section>
 
       <section className="w-full">
-        {sessionInfo && !isLoading ? (
-          sessionInfo.session_exercises.map((exercise) => (
-            <div
-              key={exercise.session_exercise_id}
-              className="mb-6 bg-gray-800 rounded-lg p-4 shadow"
-            >
-              <div className="border-b border-gray-700 pb-2 mb-3">
-                <h3 className="text-xl font-medium text-white">
-                  {exercise.exercises.exercise_name}
-                </h3>
-                {exercise.exercises.exercise_description && (
-                  <p className="text-gray-400 text-sm mt-1">
-                    {exercise.exercises.exercise_description}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid grid-cols-4 text-gray-500 text-sm font-medium mb-2 px-2">
-                <span>Set</span>
-                <span>Weight</span>
-                <span>Reps</span>
-                <span>Rest</span>
-              </div>
-
-              <div className="space-y-2">
-                {exercise &&
-                  exercise.session_sets &&
-                  exercise.session_sets.map((set) => (
-                    <div
-                      className="grid grid-cols-4 bg-gray-700 bg-opacity-30 p-2 rounded text-white"
-                      key={set.set_id}
-                    >
-                      <span className="font-mono">{set.set_number}</span>
-                      <span className="font-mono">{set.set_weight}</span>
-                      <span className="font-mono">{set.set_reps}</span>
-                      <span className="font-mono">{set.set_rest_time}s</span>
-                    </div>
-                  ))}
-              </div>
-              <button
-                className="btn"
-                onClick={() =>
-                  addSet(
-                    exercise.session_exercise_id,
-                    exercise.session_sets.length + 1
-                  )
-                }
-              >
-                Add Set
-              </button>
-            </div>
-          ))
+        {sessionExercises && !isLoading ? (
+          sessionExercises.map((exercise) => SessionCard(exercise, addSet))
         ) : (
           <div className="text-center py-10 text-gray-500 space-y-5">
             <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
@@ -317,35 +321,42 @@ export default function SessionPage() {
             <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
           </div>
         )}
-        <button onClick={() => modal?.showModal()}>Add Exercise</button>
-        <dialog
-          data-modal
-          id="modal"
-          onClick={(e) => {
-            checkClick(e);
-          }}
-          className="bg-gray-500 fixed p-5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-h-1/2 max-w-1/2 backdrop:bg-gray-700 backdrop:opacity-80 rounded-md"
-        >
-          <Label className="text-lg">Select an exercise.</Label>
-          <form
-            className="space-y-2 mt-2 font-medium"
-            onSubmit={(e) => handleFormSubmit(e)}
-          >
-            {allExercises.map((exercise: Exercise) => {
-              return (
-                <button
-                  type="submit"
-                  key={exercise.exercise_id}
-                  onClick={() => setNewSessionExercise(exercise.exercise_id)}
-                  className="border-t-2 border-b-2 p-1 px-2 rounded-xl -translate-x-2 hover:bg-gray-700 transition-all duration-75 w-full text-left"
-                >
-                  {exercise.exercise_name}
-                </button>
-              );
-            })}
-          </form>
-        </dialog>
       </section>
+
+      <button className="btn" onClick={handleModalOpen}>
+        Add Exercise
+      </button>
+      <dialog
+        ref={modalRef}
+        data-modal
+        id="modal"
+        onClick={(e) => {
+          checkClick(e);
+        }}
+        className="modal_container animate-fadeIn overflow-y-auto"
+      >
+        <Label className="text-3xl text-shadow-amber-50 shadow-2xl text-gray-200">
+          Select an exercise.
+        </Label>
+        <div className=" bg-white h-0.5 rounded-4xl"></div>
+        <form
+          className="space-y-2 mt-2 font-medium"
+          onSubmit={(e) => handleFormSubmit(e)} 
+        >
+          {allExercises.map((exercise: Tables<"exercises">) => {
+            return (
+              <button
+                type="submit"
+                key={exercise.exercise_id}
+                onClick={() => setNewSessionExercise(exercise.exercise_id)}
+                className="modal_items"
+              >
+                {exercise.exercise_name}
+              </button>
+            );
+          })}
+        </form>
+      </dialog>
     </div>
   );
 }

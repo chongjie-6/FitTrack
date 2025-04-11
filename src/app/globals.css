@@ -112,18 +112,28 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @layer base {
+  
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
   }
-  html {
-    @apply font-sans
+  html{
+    @apply font-serif
   }
 }
 @theme{
   --color-dark: #121212;
+  --animate-fadeIn: fadeInUp 0.25s ease-in-out;
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 }
 
 @layer components{
@@ -141,5 +151,11 @@
   }
   .btn{
     @apply text-blue-500 hover:text-blue-400 p-1 mt-1 w-fit
+  }
+  .modal_container{
+    @apply font-medium bg-black fixed p-5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-3/4 sm:max-h-1/2 sm:max-w-1/2 backdrop:bg-gray-700 backdrop:opacity-80 rounded-md
+  }
+  .modal_items{
+    @apply border-t-2 border-b-2 p-1 px-2 rounded-xl text-white hover:bg-gray-700 transition-all duration-75 w-full text-left
   }
 }
