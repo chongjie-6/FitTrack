@@ -1,12 +1,29 @@
 import { Tables } from "../../../database.types";
 
-export default function SessionCard(
+export default function SessionCard({
+  exercise,
+  addSet,
+  modifySet,
+}: {
   exercise: Tables<"session_exercises"> & {
     exercises: Tables<"exercises">;
     session_sets: Array<Tables<"session_sets">>;
-  },
-  addSet: (session_exercise_id: string, set_number: number) => void
-) {
+  };
+  addSet: (session_exercise_id: string, set_number: number) => void;
+  modifySet: (args: { set_id: string; value: number; field: string }) => void;
+}) {
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    set: Tables<"session_sets">,
+    field: string
+  ) => {
+    modifySet({
+      set_id: set.set_id || "",
+      value: Number(e.target.value),
+      field,
+    });
+  };
+
   return (
     <div
       key={exercise.session_exercise_id}
@@ -34,13 +51,31 @@ export default function SessionCard(
         {exercise &&
           exercise.session_sets.map((set) => (
             <div
-              className="grid grid-cols-4 bg-gray-700 bg-opacity-30 p-2 rounded text-white"
+              className="grid grid-cols-4 bg-gray-700 bg-opacity-30 p-2 rounded text-white font-semibold font-mono "
               key={set.set_id}
             >
-              <span className="font-mono">{set.set_number}</span>
-              <span className="font-mono">{set.set_weight}</span>
-              <span className="font-mono">{set.set_reps}</span>
-              <span className="font-mono">{set.set_rest_time}s</span>
+              <span>{set.set_number}</span>
+              <input
+                onChange={(e) => onChange(e, set, "set_weight")}
+                type="number"
+                className="number_field"
+                defaultValue={set.set_weight}
+                placeholder="0"
+              ></input>
+              <input
+                onChange={(e) => onChange(e, set, "set_reps")}
+                type="number"
+                className="number_field"
+                defaultValue={set.set_reps}
+                placeholder="0"
+              ></input>
+              <input
+                onChange={(e) => onChange(e, set, "set_rest_time")}
+                type="number"
+                className="number_field"
+                defaultValue={set.set_rest_time}
+                placeholder="0"
+              ></input>
             </div>
           ))}
       </div>

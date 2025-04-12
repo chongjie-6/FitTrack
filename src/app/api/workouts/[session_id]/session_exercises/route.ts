@@ -13,9 +13,12 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
     
     // If the user is logged in, then we can fetch from database
     // Get all the exercises for this workout
-    const {data: workouts, error: workoutError} = await supabase.from("session_exercises")
+
+    const { data: workouts, error: workoutError } = await supabase
+    .from("session_exercises")
     .select("*, exercises(*), session_sets(*)")
     .eq("session_id", session_id)
+    .order("set_number", { ascending: true, referencedTable: "session_sets"});
     // Error response
     if (workoutError){
         return Response.json({message: "There was an error fetching your workouts"}, {status: 500})

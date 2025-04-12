@@ -112,6 +112,11 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @layer base {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
   
   * {
     @apply border-border outline-ring/50;
@@ -158,4 +163,8 @@
   .modal_items{
     @apply border-t-2 border-b-2 p-1 px-2 rounded-xl text-white hover:bg-gray-700 transition-all duration-75 w-full text-left
   }
+  .input_field{
+    @apply p-2 w-full border-2 rounded-xl 
+  }
+  
 }

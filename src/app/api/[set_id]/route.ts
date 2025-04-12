@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function POST(request: Request,  { params }: { params: Promise<{ session_id: string, session_exercise_id: string }> }) {
+export async function PUT(request: Request) {
     // Make sure the user is logged in 
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser()
@@ -10,15 +10,14 @@ export async function POST(request: Request,  { params }: { params: Promise<{ se
     }
 
   // If the user is logged in, then we can post to database
-  const {set_number} = await request.json()
-  const { session_exercise_id } = await params
+  const {set_id, value, field} = await request.json();
 
   // Now we can create a session row in the database
-  const { data, error: insertError } = await supabase.from("session_sets").insert({session_exercise_id: session_exercise_id, set_number: set_number}).select().single()
+  const { data, error: updateError } = await supabase.from("session_sets").update({[field]:value}).eq("set_id", set_id).select("*").single()
 
   // Error response
-  if (insertError){
-      return Response.json({message: "There was an error creating your set"}, {status: 500})
+  if (updateError){
+      return Response.json({message: "There was an error modifying your set"}, {status: 500})
   }
   return Response.json({sucess: true, data: data}, {status: 200})
 

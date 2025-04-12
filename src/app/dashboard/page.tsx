@@ -71,6 +71,7 @@ export default function Dashboard() {
         console.log("Error: ", e);
       }
     };
+
     const fetchMinutesThisMonth = async () => {
       try {
         const response = await fetch("/api/workouts/minutes_this_month", {
@@ -99,7 +100,7 @@ export default function Dashboard() {
           },
           0
         );
-        setHoursThisMonth(total / 60);
+        setHoursThisMonth(Math.round((total / 60) * 100) / 100);
       } catch (e) {
         console.log("Error: ", e);
       }
@@ -161,10 +162,10 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-5 sm:p-10 flex flex-col justify-center w-full max-w-3xl mx-auto">
+    <div className="p-5 sm:p-10 flex flex-col justify-center max-w-3xl mx-auto">
       <section className="w-full mb-8">
         <h1 className="text-3xl font-semibold">Dashboard</h1>
-        <div className="flex justify-between items-center text-gray-300 text-sm w-full">
+        <div className="flex justify-between items-center text-gray-300 text-sm">
           <h1 className="text-sm">
             Welcome Back {user && user.user_metadata.first_name}! Here&apos;s
             your monthly summary!
@@ -209,7 +210,7 @@ export default function Dashboard() {
         )}
       </section>
 
-      <section className="w-full">
+      <section>
         <h1 className="text-3xl font-semibold mb-4">Workouts</h1>
         <div className="space-y-3">
           {sessions && !isLoading ? (
@@ -223,10 +224,11 @@ export default function Dashboard() {
                   <h2>{session.session_name}</h2>
                   <h2>
                     {session.session_end_date
-                      ? (new Date(session.session_end_date).getTime() -
-                          new Date(session.session_start_date).getTime()) /
-                          60000 +
-                        " min"
+                      ? Math.round(
+                          (new Date(session.session_end_date).getTime() -
+                            new Date(session.session_start_date).getTime()) /
+                            60000
+                        ) + " min"
                       : ""}
                   </h2>
                 </div>

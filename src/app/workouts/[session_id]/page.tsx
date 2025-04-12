@@ -1,13 +1,13 @@
 "use client";
-import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Tables } from "../../../../database.types";
 import SessionCard from "@/components/ui/session_card";
+import { Modal } from "@/components/ui/modal";
+import { SessionInfoHeader } from "@/components/ui/session_info_header";
 
 export default function SessionPage() {
   const router = useRouter();
@@ -15,7 +15,7 @@ export default function SessionPage() {
   const { session_id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [allExercises, setAllExercises] = useState([]);
-  const [newSessionExercise, setNewSessionExercise] = useState("");
+  const [newSessionExercise, setNewSessionExercise] = useState<string>("");
   const modalRef = useRef<HTMLDialogElement>(null);
   const prevExercisesLengthRef = useRef<null | number>(null);
 
@@ -114,7 +114,6 @@ export default function SessionPage() {
         );
         const data = await response.json();
         setSessionExercises(data.data);
-        console.log(data.data);
         setIsLoading(false);
       } catch (e) {
         console.log(e);
@@ -122,6 +121,29 @@ export default function SessionPage() {
     };
     fetchAllExercise();
   }, [session_id]);
+
+  const stopSession = async () => {
+    try {
+      const response = await fetch(`/api/workouts/${session_id}`, {
+        method: "PUT",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Could not stop your sesssion.");
+      }
+      // Once we stop the session we need to update the UI
+      const data = await response.json();
+
+      if (sessionInfo) {
+        setSessionInfo({
+          ...sessionInfo,
+          session_end_date: data.data.session_end_date,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const addSet = async (session_exercise_id: string, set_number: number) => {
     try {
@@ -134,7 +156,7 @@ export default function SessionPage() {
         }
       );
       if (!response.ok) {
-        console.log(response.json());
+        throw new Error("Could not add your set.");
       }
       const data = await response.json();
       const updatedSet = data.data;
@@ -159,10 +181,47 @@ export default function SessionPage() {
     }
   };
 
-  const handleModalOpen = ()=>{
-    document.body.style.overflow = 'hidden';
+  const modifySet = async ({
+    set_id,
+    value,
+    field,
+  }: {
+    set_id: string;
+    value: number;
+    field: string;
+  }) => {
+    try {
+      const response = await fetch(`/api/${set_id}`, {
+        method: "PUT",
+        credentials: "include",
+        body: JSON.stringify({ set_id: set_id, value: value, field: field }),
+      });
+      if (!response.ok) {
+        throw new Error("Could not end your session.");
+      }
+      const data = await response.json();
+      const updatedSet = data.data;
+      if (sessionExercises) {
+        setSessionExercises(
+          sessionExercises.map((exercise) => {
+            exercise.session_sets.map((set) => {
+              if (set.set_id === updatedSet.set_id) {
+                return updatedSet;
+              }
+            });
+            return exercise;
+          })
+        );
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleModalOpen = () => {
+    document.body.style.overflow = "hidden";
     modalRef.current?.showModal();
-  }
+  };
   const checkClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     const modal = document.querySelector("dialog");
     if (!modal) {
@@ -177,7 +236,7 @@ export default function SessionPage() {
       e.clientY < dialogDimensions?.top
     ) {
       modal.close();
-      document.body.style.overflow = ''
+      document.body.style.overflow = "";
     }
   };
 
@@ -186,7 +245,7 @@ export default function SessionPage() {
       return;
     }
     modalRef.current.close();
-    document.body.style.overflow = ''
+    document.body.style.overflow = "";
     // Prevent default refreshing behaviour
     e.preventDefault();
 
@@ -214,102 +273,21 @@ export default function SessionPage() {
   };
 
   return (
-    <div className="sm:mt-20 w-full mx-auto max-w-3xl p-5 sm:p-10 bg-gray-900 rounded-lg shadow-lg">
-      <section className="w-full mb-8 border-b pb-4">
-        <Link
-          href={"/dashboard"}
-          prefetch={true}
-          className="text-blue-500 hover:text-blue-400 font-bold hidden sm:block"
-        >
-          &lt; Back to Dashboard
-        </Link>
-        <h1
-          className={`text-2xl font-bold my-2 ${
-            sessionInfo ? "text-white" : "text-gray-500"
-          }`}
-        >
-          {sessionInfo ? sessionInfo.session_name : "Workout Session"}
-        </h1>
+    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-screen">
+      {/* Section showing session info */}
+      <SessionInfoHeader sessionInfo={sessionInfo} stopSession={stopSession} />
 
-        {sessionInfo?.session_notes && (
-          <p className="text-gray-300 italic mb-4">
-            {sessionInfo.session_notes}
-          </p>
-        )}
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between text-sm text-gray-400">
-          {sessionInfo && (
-            <>
-              <div className="flex items-center mb-2 sm:mb-0">
-                <svg
-                  className="w-4 h-4 mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                <span>
-                  Start Time:{" "}
-                  {new Date(sessionInfo.session_start_date).toLocaleString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    }
-                  )}
-                </span>
-              </div>
-              {sessionInfo.session_end_date && (
-                <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span>
-                    End Time:{" "}
-                    {new Date(sessionInfo.session_end_date).toLocaleString(
-                      "en-US",
-                      {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      }
-                    )}
-                  </span>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      </section>
-
-      <section className="w-full">
+      {/* Section showing all exercises their sets */}
+      <section>
         {sessionExercises && !isLoading ? (
-          sessionExercises.map((exercise) => SessionCard(exercise, addSet))
+          sessionExercises.map((exercise) => (
+            <SessionCard
+              key={exercise.session_exercise_id}
+              exercise={exercise}
+              addSet={addSet}
+              modifySet={modifySet}
+            />
+          ))
         ) : (
           <div className="text-center py-10 text-gray-500 space-y-5">
             <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
@@ -323,40 +301,17 @@ export default function SessionPage() {
         )}
       </section>
 
+      {/* Button and modal components */}
       <button className="btn" onClick={handleModalOpen}>
         Add Exercise
       </button>
-      <dialog
-        ref={modalRef}
-        data-modal
-        id="modal"
-        onClick={(e) => {
-          checkClick(e);
-        }}
-        className="modal_container animate-fadeIn overflow-y-auto"
-      >
-        <Label className="text-3xl text-shadow-amber-50 shadow-2xl text-gray-200">
-          Select an exercise.
-        </Label>
-        <div className=" bg-white h-0.5 rounded-4xl"></div>
-        <form
-          className="space-y-2 mt-2 font-medium"
-          onSubmit={(e) => handleFormSubmit(e)} 
-        >
-          {allExercises.map((exercise: Tables<"exercises">) => {
-            return (
-              <button
-                type="submit"
-                key={exercise.exercise_id}
-                onClick={() => setNewSessionExercise(exercise.exercise_id)}
-                className="modal_items"
-              >
-                {exercise.exercise_name}
-              </button>
-            );
-          })}
-        </form>
-      </dialog>
+      <Modal
+        modalRef={modalRef}
+        checkClick={checkClick}
+        handleFormSubmit={handleFormSubmit}
+        allExercises={allExercises}
+        setNewSessionExercise={setNewSessionExercise}
+      />
     </div>
   );
 }
