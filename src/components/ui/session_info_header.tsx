@@ -3,11 +3,27 @@ import { Tables } from "../../../database.types";
 import Link from "next/link";
 export function SessionInfoHeader({
   sessionInfo,
-  stopSession,
+  modifySession,
 }: {
   sessionInfo: Tables<"sessions"> | undefined;
-  stopSession: () => void;
+  modifySession: (args: { value: string; field: string }) => void;
 }) {
+  const onChange = (
+    field: string,
+    e?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (field === "session_end_date") {
+      modifySession({
+        value: new Date().toISOString(),
+        field,
+      });
+    } else {
+      modifySession({
+        value: e?.target.value || "",
+        field,
+      });
+    }
+  };
   return (
     <>
       <Link
@@ -21,11 +37,13 @@ export function SessionInfoHeader({
         <>
           <input
             defaultValue={sessionInfo?.session_name}
+            onChange={(e) => onChange("session_name", e)}
             placeholder="Name"
             className="text-2xl font-bold input_field mt-5"
           ></input>
           <textarea
             placeholder="Notes"
+            onChange={(e) => onChange("session_notes", e)}
             defaultValue={sessionInfo?.session_notes || ""}
             className="text-gray-300 italic my-2 input_field max-h-36 field-sizing-content"
           ></textarea>
@@ -98,7 +116,7 @@ export function SessionInfoHeader({
             ) : (
               <button
                 className="btn rounded-xl border-2 ring p-1"
-                onClick={stopSession}
+                onClick={() => onChange("session_end_date")}
               >
                 End Workout
               </button>

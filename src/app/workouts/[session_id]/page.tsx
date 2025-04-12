@@ -8,6 +8,7 @@ import { Tables } from "../../../../database.types";
 import SessionCard from "@/components/ui/session_card";
 import { Modal } from "@/components/ui/modal";
 import { SessionInfoHeader } from "@/components/ui/session_info_header";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function SessionPage() {
   const router = useRouter();
@@ -122,29 +123,6 @@ export default function SessionPage() {
     fetchAllExercise();
   }, [session_id]);
 
-  const stopSession = async () => {
-    try {
-      const response = await fetch(`/api/workouts/${session_id}`, {
-        method: "PATCH",
-        credentials: "include",
-      });
-      if (!response.ok) {
-        throw new Error("Could not stop your sesssion.");
-      }
-      // Once we stop the session we need to update the UI
-      const data = await response.json();
-
-      if (sessionInfo) {
-        setSessionInfo({
-          ...sessionInfo,
-          session_end_date: data.data.session_end_date,
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const addSet = async (session_exercise_id: string, set_number: number) => {
     try {
       const response = await fetch(
@@ -181,42 +159,68 @@ export default function SessionPage() {
     }
   };
 
-  const modifySet = async ({
-    set_id,
-    value,
-    field,
-  }: {
-    set_id: string;
-    value: number;
-    field: string;
-  }) => {
-    try {
-      const response = await fetch(`/api/${set_id}`, {
-        method: "PATCH",
-        credentials: "include",
-        body: JSON.stringify({ set_id: set_id, value: value, field: field }),
-      });
-      if (!response.ok) {
-        throw new Error("Could not end your session.");
+  const modifySet = useDebouncedCallback(
+    async ({
+      set_id,
+      value,
+      field,
+    }: {
+      set_id: string;
+      value: number;
+      field: string;
+    }) => {
+      try {
+        const response = await fetch(`/api/${set_id}`, {
+          method: "PATCH",
+          credentials: "include",
+          body: JSON.stringify({ set_id: set_id, value: value, field: field }),
+        });
+        if (!response.ok) {
+          throw new Error("Could not update your set.");
+        }
+        const data = await response.json();
+        const updatedSet = data.data;
+        if (sessionExercises) {
+          setSessionExercises(
+            sessionExercises.map((exercise) => {
+              exercise.session_sets.map((set) => {
+                if (set.set_id === updatedSet.set_id) {
+                  return updatedSet;
+                }
+              });
+              return exercise;
+            })
+          );
+        }
+      } catch (e) {
+        console.log(e);
       }
-      const data = await response.json();
-      const updatedSet = data.data;
-      if (sessionExercises) {
-        setSessionExercises(
-          sessionExercises.map((exercise) => {
-            exercise.session_sets.map((set) => {
-              if (set.set_id === updatedSet.set_id) {
-                return updatedSet;
-              }
-            });
-            return exercise;
-          })
-        );
+    },
+    400
+  );
+
+  const modifySessionInfo = useDebouncedCallback(
+    async ({ value, field }: { value: string; field: string }) => {
+      try {
+        const response = await fetch(`/api/workouts/${session_id}`, {
+          method: "PATCH",
+          credentials: "include",
+          body: JSON.stringify({ value: value, field: field }),
+        });
+        if (!response.ok) {
+          throw new Error("Could not update your session.");
+        }
+        const data = await response.json();
+        const updatedSession = data.data;
+        if (sessionInfo) {
+          setSessionInfo(updatedSession);
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+    },
+    400
+  );
 
   const handleModalOpen = () => {
     document.body.style.overflow = "hidden";
@@ -275,7 +279,10 @@ export default function SessionPage() {
   return (
     <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-screen">
       {/* Section showing session info */}
-      <SessionInfoHeader sessionInfo={sessionInfo} stopSession={stopSession} />
+      <SessionInfoHeader
+        sessionInfo={sessionInfo}
+        modifySession={modifySessionInfo}
+      />
 
       {/* Section showing all exercises their sets */}
       <section>
