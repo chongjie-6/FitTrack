@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function PUT(request: Request) {
+export async function PATCH(request: Request) {
     // Make sure the user is logged in 
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser()

@@ -125,7 +125,7 @@ export default function SessionPage() {
   const stopSession = async () => {
     try {
       const response = await fetch(`/api/workouts/${session_id}`, {
-        method: "PUT",
+        method: "PATCH",
         credentials: "include",
       });
       if (!response.ok) {
@@ -192,7 +192,7 @@ export default function SessionPage() {
   }) => {
     try {
       const response = await fetch(`/api/${set_id}`, {
-        method: "PUT",
+        method: "PATCH",
         credentials: "include",
         body: JSON.stringify({ set_id: set_id, value: value, field: field }),
       });

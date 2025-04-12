@@ -24,7 +24,7 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
 
 }
 
-export async function PUT({ params }: { params: Promise<{ session_id: string }> }) {
+export async function PATCH({ params }: { params: Promise<{ session_id: string }> }) {
   const {session_id} = await params
   
   // Make sure the user is logged in 
