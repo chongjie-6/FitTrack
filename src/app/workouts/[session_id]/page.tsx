@@ -1,14 +1,14 @@
 "use client";
-import { Skeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Tables } from "../../../../database.types";
-import SessionCard from "@/components/ui/session_card";
 import { Modal } from "@/components/ui/modal";
 import { SessionInfoHeader } from "@/components/ui/session_info_header";
 import { useDebouncedCallback } from "use-debounce";
+import { Skeleton_page } from "@/components/ui/skeleton_page";
+import { SessionExercises } from "@/components/ui/session_exercises";
 
 export default function SessionPage() {
   const router = useRouter();
@@ -70,9 +70,11 @@ export default function SessionPage() {
 
   useEffect(() => {
     // Use Effect to fetch workout session corresponding to session_id
+    const controller = new AbortController();
     const fetchWorkoutSession = async () => {
       try {
         const response = await fetch(`/api/workouts/${session_id}`, {
+          signal: controller.signal,
           method: "GET",
           credentials: "include",
         });
@@ -83,13 +85,16 @@ export default function SessionPage() {
       }
     };
     fetchWorkoutSession();
+    return () => controller.abort();
   }, [session_id]);
 
   useEffect(() => {
+    const controller = new AbortController();
     // Use Effect to fetch all the exercises
     const fetchAllExercise = async () => {
       try {
         const response = await fetch("/api/exercises", {
+          signal: controller.signal,
           method: "GET",
           credentials: "include",
         });
@@ -100,15 +105,18 @@ export default function SessionPage() {
       }
     };
     fetchAllExercise();
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     // Use Effect to fetch all the exercises and their corresponding sets for this session
     const fetchAllExercise = async () => {
       try {
         const response = await fetch(
           `/api/workouts/${session_id}/session_exercises`,
           {
+            signal: controller.signal,
             method: "GET",
             credentials: "include",
           }
@@ -121,13 +129,16 @@ export default function SessionPage() {
       }
     };
     fetchAllExercise();
+    return () => controller.abort();
   }, [session_id]);
 
   const addSet = async (session_exercise_id: string, set_number: number) => {
+    const controller = new AbortController();
     try {
       const response = await fetch(
         `/api/workouts/${session_id}/${session_exercise_id}`,
         {
+          signal: controller.signal,
           method: "POST",
           credentials: "include",
           body: JSON.stringify({ set_number: set_number }),
@@ -138,10 +149,9 @@ export default function SessionPage() {
       }
       const data = await response.json();
       const updatedSet = data.data;
-
       if (sessionExercises) {
-        setSessionExercises(
-          sessionExercises.map((exercise) => {
+        setSessionExercises((prev) =>
+          prev?.map((exercise) => {
             if (
               exercise.session_exercise_id === updatedSet.session_exercise_id
             ) {
@@ -154,23 +164,59 @@ export default function SessionPage() {
           })
         );
       }
+      return () => controller.abort();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const removeSet = async (delete_set_id: string) => {
+    const controller = new AbortController();
+    try {
+      const response = await fetch(`/api/${delete_set_id}`, {
+        signal: controller.signal,
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Could not delete your set.");
+      }
+      const data = await response.json();
+      const deletedSet = data.data;
+      if (sessionExercises) {
+        setSessionExercises((prev) =>
+          prev?.map((exercise) => {
+            if (
+              exercise.session_exercise_id === deletedSet.session_exercise_id
+            ) {
+              return {
+                ...exercise,
+                session_sets: exercise.session_sets.filter(
+                  (set) => set.set_id !== delete_set_id
+                ),
+              };
+            }
+            return exercise;
+          })
+        );
+      }
+
+      return () => controller.abort();
     } catch (e) {
       console.log(e);
     }
   };
 
   const modifySet = useDebouncedCallback(
-    async ({
-      set_id,
-      value,
-      field,
-    }: {
-      set_id: string;
-      value: number;
-      field: string;
-    }) => {
+    async (
+      set_id: string,
+      value: number,
+      field: "set_weight" | "set_reps" | "set_rest_time"
+    ) => {
+      const controller = new AbortController();
       try {
         const response = await fetch(`/api/${set_id}`, {
+          signal: controller.signal,
           method: "PATCH",
           credentials: "include",
           body: JSON.stringify({ set_id: set_id, value: value, field: field }),
@@ -192,17 +238,20 @@ export default function SessionPage() {
             })
           );
         }
+        return () => controller.abort();
       } catch (e) {
         console.log(e);
       }
     },
-    400
+    200
   );
 
   const modifySessionInfo = useDebouncedCallback(
     async ({ value, field }: { value: string; field: string }) => {
+      const controller = new AbortController();
       try {
         const response = await fetch(`/api/workouts/${session_id}`, {
+          signal: controller.signal,
           method: "PATCH",
           credentials: "include",
           body: JSON.stringify({ value: value, field: field }),
@@ -215,6 +264,7 @@ export default function SessionPage() {
         if (sessionInfo) {
           setSessionInfo(updatedSession);
         }
+        return () => controller.abort();
       } catch (e) {
         console.log(e);
       }
@@ -256,7 +306,9 @@ export default function SessionPage() {
     const exercise_count = sessionExercises?.length;
 
     // When we submit the form, we create an exercise
+    const controller = new AbortController();
     const response = await fetch("/api/exercises", {
+      signal: controller.signal,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -274,10 +326,11 @@ export default function SessionPage() {
     if (sessionExercises) {
       setSessionExercises([...sessionExercises, data.data]);
     }
+    return () => controller.abort();
   };
 
   return (
-    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-screen">
+    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-full">
       {/* Section showing session info */}
       <SessionInfoHeader
         sessionInfo={sessionInfo}
@@ -287,24 +340,14 @@ export default function SessionPage() {
       {/* Section showing all exercises their sets */}
       <section>
         {sessionExercises && !isLoading ? (
-          sessionExercises.map((exercise) => (
-            <SessionCard
-              key={exercise.session_exercise_id}
-              exercise={exercise}
-              addSet={addSet}
-              modifySet={modifySet}
-            />
-          ))
+          <SessionExercises
+            sessionExercises={sessionExercises}
+            addSet={addSet}
+            removeSet={removeSet}
+            modifySet={modifySet}
+          />
         ) : (
-          <div className="text-center py-10 text-gray-500 space-y-5">
-            <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
-            <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
-            <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
-            <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
-            <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
-            <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
-            <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
-          </div>
+          <Skeleton_page />
         )}
       </section>
 
@@ -312,6 +355,7 @@ export default function SessionPage() {
       <button className="btn" onClick={handleModalOpen}>
         Add Exercise
       </button>
+
       <Modal
         modalRef={modalRef}
         checkClick={checkClick}

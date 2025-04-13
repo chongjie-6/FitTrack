@@ -36,11 +36,12 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ sessio
   const {field, value} = await req.json()
   
   // If the user is logged in, then we can post to database
-  const {data: session_end_date, error: workoutError} = await supabase.from("sessions").update({[field]: value}).eq("session_id",session_id).select("*").single()
+  const {data: session_data, error: workoutError} = await supabase.from("sessions").update({[field]: value}).eq("session_id",session_id).select("*").single()
+  console.log(session_data)
   // Error response
   if (workoutError){
       return Response.json({message: "There was an error ending your session"}, {status: 500})
   }
-  return Response.json({sucess: true, data: session_end_date}, {status: 200})
+  return Response.json({sucess: true, data: session_data}, {status: 200})
 
 }

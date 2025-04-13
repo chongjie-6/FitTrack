@@ -5,6 +5,8 @@ import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tables } from "../../../database.types";
+import { Summary } from "@/components/ui/summary";
+import { AllSessionInfo } from "@/components/ui/all_session_info";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -178,29 +180,11 @@ export default function Dashboard() {
           </button>
         </div>
         {weightsThisMonth && hoursThisMonth && workoutsThisMonth ? (
-          <div className="summary_layout">
-            <div className="summary_box">
-              <h2 className="font-medium">Workouts</h2>
-              <div>
-                <span className="summary_main_text">{workoutsThisMonth}</span>
-                <span>This Month</span>
-              </div>
-            </div>
-            <div className="summary_box">
-              <h2 className="font-medium">Training Time</h2>
-              <div>
-                <span className="summary_main_text">{hoursThisMonth}h</span>
-                <span>This Month</span>
-              </div>
-            </div>
-            <div className="summary_box">
-              <h2 className="font-medium">Weight</h2>
-              <div>
-                <span className="summary_main_text">{weightsThisMonth}</span>
-                <span>Kgs Lifted</span>
-              </div>
-            </div>
-          </div>
+          <Summary
+            workoutsThisMonth={workoutsThisMonth}
+            hoursThisMonth={hoursThisMonth}
+            weightsThisMonth={weightsThisMonth}
+          />
         ) : (
           <div className="summary_layout">
             <Skeleton className="h-[100px] w-full rounded-xl" />
@@ -214,29 +198,10 @@ export default function Dashboard() {
         <h1 className="text-3xl font-semibold mb-4">Workouts</h1>
         <div className="space-y-3">
           {sessions && !isLoading ? (
-            sessions.map((session) => (
-              <div
-                key={session.session_id}
-                className="border rounded-lg bg-gray-200 shadow-sm text-black cursor-pointer p-3 hover:bg-gray-300 transition-colors duration-200"
-                onClick={() => handleCardClick(session.session_id)}
-              >
-                <div className="flex justify-between font-medium w-full">
-                  <h2>{session.session_name}</h2>
-                  <h2>
-                    {session.session_end_date
-                      ? Math.round(
-                          (new Date(session.session_end_date).getTime() -
-                            new Date(session.session_start_date).getTime()) /
-                            60000
-                        ) + " min"
-                      : ""}
-                  </h2>
-                </div>
-                <h3 className="text-gray-700 font-medium">
-                  {new Date(session.session_start_date).toDateString()}
-                </h3>
-              </div>
-            ))
+            <AllSessionInfo
+              sessions={sessions}
+              handleCardClick={handleCardClick}
+            />
           ) : (
             <div className="space-y-5">
               <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
