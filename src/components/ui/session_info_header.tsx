@@ -29,7 +29,7 @@ export function SessionInfoHeader({
       <Link
         href={"/dashboard"}
         prefetch={true}
-        className="text-blue-500 hover:text-blue-400 font-bold hidden sm:block"
+        className="text-blue-500 hover:text-blue-400 font-bold hidden sm:block w-fit"
       >
         &lt; Back to Dashboard
       </Link>

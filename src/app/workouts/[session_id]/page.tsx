@@ -227,8 +227,8 @@ export default function SessionPage() {
         const data = await response.json();
         const updatedSet = data.data;
         if (sessionExercises) {
-          setSessionExercises(
-            sessionExercises.map((exercise) => {
+          setSessionExercises((prev) =>
+            prev?.map((exercise) => {
               exercise.session_sets.map((set) => {
                 if (set.set_id === updatedSet.set_id) {
                   return updatedSet;
@@ -269,13 +269,14 @@ export default function SessionPage() {
         console.log(e);
       }
     },
-    400
+    200
   );
 
   const handleModalOpen = () => {
     document.body.style.overflow = "hidden";
     modalRef.current?.showModal();
   };
+
   const checkClick = (e: React.MouseEvent<HTMLDialogElement>) => {
     const modal = document.querySelector("dialog");
     if (!modal) {
@@ -330,7 +331,7 @@ export default function SessionPage() {
   };
 
   return (
-    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-full">
+    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-full min-h-screen">
       {/* Section showing session info */}
       <SessionInfoHeader
         sessionInfo={sessionInfo}

@@ -123,9 +123,11 @@ export default function Dashboard() {
         let totalWeight = 0;
         // Loop through each session and sum up the weights
         session_sets.forEach(
-          (session: { session_sets: { set_weight: number }[] }) => {
+          (session: {
+            session_sets: { set_weight: number; set_reps: number }[];
+          }) => {
             session.session_sets.forEach((set) => {
-              totalWeight += set.set_weight || 0;
+              totalWeight += set.set_weight * set.set_reps || 0;
             });
           }
         );

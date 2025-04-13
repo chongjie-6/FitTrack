@@ -30,7 +30,6 @@ export async function POST(req: Request) {
   }
 
   const {session_id, exercise_id, exercise_count} = await req.json();
-  console.log(session_id, exercise_count, exercise_id)
   // If the user is logged in, then we can post to database
   const {data, error: workoutError} = await supabase.from("session_exercises").insert({session_id:session_id, exercise_id:exercise_id, session_exercise_order: exercise_count}).select("*, exercises(*)").single()
   // Error response

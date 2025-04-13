@@ -8,6 +8,15 @@ export function AllSessionInfo({
   sessions: Array<Tables<"sessions">>;
   handleCardClick: (session_id: string) => void;
 }) {
+  const determineWorkoutTime = (hour: number) => {
+    if (hour < 12) {
+      return "Morning Workout";
+    } else if (hour < 4) {
+      return "Midday Workout";
+    } else {
+      return "Night Workout";
+    }
+  };
   return (
     <>
       {" "}
@@ -18,7 +27,10 @@ export function AllSessionInfo({
           onClick={() => handleCardClick(session.session_id)}
         >
           <div className="flex justify-between font-medium w-full">
-            <h2>{session.session_name}</h2>
+            <h2>
+              {session.session_name ||
+                determineWorkoutTime(new Date(session.session_start_date).getHours())}
+            </h2>
             <h2>
               {session.session_end_date
                 ? Math.round(

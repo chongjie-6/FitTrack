@@ -17,7 +17,7 @@ export async function GET() {
     const session_ids = data?.map(session => session.session_id) || [];
 
     // select all set_weights for sets done in the last month 
-    const session_data = await supabase.from("session_exercises").select("session_sets(set_weight)").in("session_id", session_ids)
+    const session_data = await supabase.from("session_exercises").select("session_sets(set_weight, set_reps)").in("session_id", session_ids)
     
     // Error response
     if (error){
