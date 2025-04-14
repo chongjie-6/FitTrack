@@ -190,13 +190,11 @@ export default function Dashboard() {
           </div>
         )}
 
-        {weightsThisMonth && hoursThisMonth && workoutsThisMonth && (
-          <Summary
-            workoutsThisMonth={workoutsThisMonth}
-            hoursThisMonth={hoursThisMonth}
-            weightsThisMonth={weightsThisMonth}
-          />
-        )}
+        <Summary
+          workoutsThisMonth={workoutsThisMonth}
+          hoursThisMonth={hoursThisMonth}
+          weightsThisMonth={weightsThisMonth}
+        />
       </section>
 
       <section>
@@ -210,7 +208,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {sessions ? (
+          {sessions && sessions?.length > 0 ? (
             <AllSessionInfo
               sessions={sessions}
               handleCardClick={handleCardClick}
