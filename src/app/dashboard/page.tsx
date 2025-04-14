@@ -181,35 +181,42 @@ export default function Dashboard() {
             Start Workout
           </button>
         </div>
-        {weightsThisMonth && hoursThisMonth && workoutsThisMonth ? (
-          <Summary
-            workoutsThisMonth={workoutsThisMonth}
-            hoursThisMonth={hoursThisMonth}
-            weightsThisMonth={weightsThisMonth}
-          />
-        ) : (
+
+        {isLoading && (
           <div className="summary_layout">
             <Skeleton className="h-[100px] w-full rounded-xl" />
             <Skeleton className="h-[100px] w-full rounded-xl" />
             <Skeleton className="h-[100px] w-full rounded-xl" />
           </div>
         )}
+
+        {weightsThisMonth && hoursThisMonth && workoutsThisMonth && (
+          <Summary
+            workoutsThisMonth={workoutsThisMonth}
+            hoursThisMonth={hoursThisMonth}
+            weightsThisMonth={weightsThisMonth}
+          />
+        )}
       </section>
 
       <section>
         <h1 className="text-3xl font-semibold mb-4">Workouts</h1>
         <div className="space-y-3">
-          {sessions && !isLoading ? (
-            <AllSessionInfo
-              sessions={sessions}
-              handleCardClick={handleCardClick}
-            />
-          ) : (
+          {isLoading && (
             <div className="space-y-5">
               <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
               <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
               <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
             </div>
+          )}
+
+          {sessions ? (
+            <AllSessionInfo
+              sessions={sessions}
+              handleCardClick={handleCardClick}
+            />
+          ) : (
+            "You have no sessions."
           )}
         </div>
       </section>
