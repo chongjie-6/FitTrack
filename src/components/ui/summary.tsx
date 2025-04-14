@@ -13,21 +13,21 @@ export function Summary({
       <div className="summary_box">
         <h2 className="font-medium">Workouts</h2>
         <div>
-          <span className="summary_main_text">{workoutsThisMonth}</span>
+          <span className="summary_main_text">{workoutsThisMonth || 0}</span>
           <span>This Month</span>
         </div>
       </div>
       <div className="summary_box">
         <h2 className="font-medium">Training Time</h2>
         <div>
-          <span className="summary_main_text">{hoursThisMonth}h</span>
+          <span className="summary_main_text">{hoursThisMonth || 0}h</span>
           <span>This Month</span>
         </div>
       </div>
       <div className="summary_box">
         <h2 className="font-medium">Weight</h2>
         <div>
-          <span className="summary_main_text">{weightsThisMonth}</span>
+          <span className="summary_main_text">{weightsThisMonth || 0}</span>
           <span>Kgs Lifted</span>
         </div>
       </div>

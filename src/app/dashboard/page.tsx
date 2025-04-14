@@ -216,7 +216,7 @@ export default function Dashboard() {
               handleCardClick={handleCardClick}
             />
           ) : (
-            "You have no sessions."
+            "You have no workouts."
           )}
         </div>
       </section>
