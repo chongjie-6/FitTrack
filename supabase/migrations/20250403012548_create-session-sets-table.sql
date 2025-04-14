@@ -43,3 +43,27 @@ CREATE POLICY "Authenticated users can access their session sets" ON session_set
             )
     )
 );
+
+CREATE FUNCTION public.set_set_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
+SET
+    search_path = public AS $$ BEGIN NEW.set_number = COALESCE(
+        (
+            SELECT
+                MAX(set_number) + 1
+            FROM
+                session_sets
+            WHERE
+                session_exercise_id = NEW.session_exercise_id
+        ),
+        0
+    );
+
+RETURN NEW;
+
+END;
+
+$$;
+
+CREATE TRIGGER set_set_order BEFORE
+INSERT
+    ON session_sets FOR EACH ROW EXECUTE FUNCTION public.set_set_order();

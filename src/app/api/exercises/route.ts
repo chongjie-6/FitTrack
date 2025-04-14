@@ -29,9 +29,9 @@ export async function POST(req: Request) {
     redirect('/login')
   }
 
-  const {session_id, exercise_id, exercise_count} = await req.json();
+  const {session_id, exercise_id} = await req.json();
   // If the user is logged in, then we can post to database
-  const {data, error: workoutError} = await supabase.from("session_exercises").insert({session_id:session_id, exercise_id:exercise_id, session_exercise_order: exercise_count}).select("*, exercises(*)").single()
+  const {data, error: workoutError} = await supabase.from("session_exercises").insert({session_id:session_id, exercise_id:exercise_id}).select("*, exercises(*)").single()
   // Error response
   if (workoutError){
       return Response.json({message: "There was an error adding your exercise."}, {status: 500})

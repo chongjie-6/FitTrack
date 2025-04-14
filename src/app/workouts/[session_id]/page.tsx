@@ -304,8 +304,6 @@ export default function SessionPage() {
     // Prevent default refreshing behaviour
     e.preventDefault();
 
-    const exercise_count = sessionExercises?.length;
-
     // When we submit the form, we create an exercise
     const controller = new AbortController();
     const response = await fetch("/api/exercises", {
@@ -317,7 +315,6 @@ export default function SessionPage() {
       body: JSON.stringify({
         session_id,
         exercise_id: newSessionExercise,
-        exercise_count,
       }),
     });
     const data = await response.json();
@@ -328,6 +325,32 @@ export default function SessionPage() {
       setSessionExercises([...sessionExercises, data.data]);
     }
     return () => controller.abort();
+  };
+
+  const removeExercise = async (session_exercise_id: string) => {
+    const controller = new AbortController();
+    try {
+      const response = await fetch(
+        `/api/workouts/${session_id}/${session_exercise_id}`,
+        {
+          signal: controller.signal,
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        console.log(response);
+      }
+
+      // Need to update state of exercise
+      setSessionExercises((prev) =>
+        prev?.filter((prev) => prev.session_exercise_id != session_exercise_id)
+      );
+      return () => controller.abort();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -342,6 +365,7 @@ export default function SessionPage() {
       <section>
         {sessionExercises && !isLoading ? (
           <SessionExercises
+            removeExercise={removeExercise}
             sessionExercises={sessionExercises}
             addSet={addSet}
             removeSet={removeSet}

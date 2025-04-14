@@ -6,6 +6,7 @@ export function SessionExercises({
   addSet,
   modifySet,
   removeSet,
+  removeExercise,
 }: {
   sessionExercises: Array<
     Tables<"session_exercises"> & {
@@ -20,6 +21,7 @@ export function SessionExercises({
     field: "set_weight" | "set_reps" | "set_rest_time"
   ) => void;
   removeSet: (set_id: string) => void;
+  removeExercise: (session_exercise_id: string) => void;
 }) {
   return (
     <>
@@ -30,6 +32,7 @@ export function SessionExercises({
           addSet={addSet}
           removeSet={removeSet}
           modifySet={modifySet}
+          removeExercise={removeExercise}
         />
       ))}
     </>

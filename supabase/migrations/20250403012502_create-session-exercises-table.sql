@@ -9,15 +9,46 @@ CREATE TABLE session_exercises (
 ALTER TABLE
     session_exercises ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated users can access their session exercises" ON session_exercises 
-FOR ALL TO authenticated
-USING (
+CREATE POLICY "Authenticated users can access their session exercises" ON session_exercises FOR ALL TO authenticated USING (
     session_id IN (
-        SELECT session_id FROM sessions WHERE user_id = auth.uid()
+        SELECT
+            session_id
+        FROM
+            sessions
+        WHERE
+            user_id = auth.uid()
     )
-) 
-WITH CHECK (
+) WITH CHECK (
     session_id IN (
-        SELECT session_id FROM sessions WHERE user_id = auth.uid()
+        SELECT
+            session_id
+        FROM
+            sessions
+        WHERE
+            user_id = auth.uid()
     )
 );
+
+CREATE FUNCTION public.set_exercise_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
+SET
+    search_path = public AS $$ BEGIN NEW.session_exercise_order = COALESCE(
+        (
+            SELECT
+                MAX(session_exercise_order) + 1
+            FROM
+                session_exercises
+            WHERE
+                session_id = NEW.session_id
+        ),
+        0
+    );
+
+RETURN NEW;
+
+END;
+
+$$;
+
+CREATE TRIGGER set_exercise_order BEFORE
+INSERT
+    ON session_exercises FOR EACH ROW EXECUTE FUNCTION public.set_exercise_order();
