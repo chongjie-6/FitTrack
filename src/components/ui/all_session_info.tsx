@@ -19,33 +19,34 @@ export function AllSessionInfo({
   return (
     <>
       {sessions.map((session) => (
-        <Link
-          prefetch={true}
-          key={session.session_id}
-          className="border rounded-lg bg-gray-200 shadow-sm text-black cursor-pointer p-3 hover:bg-gray-300 transition-colors duration-200"
-          href={`/workouts/${session.session_id}`}
-        >
-          <div className="flex justify-between font-medium w-full">
-            <h2>
-              {session.session_name ||
-                determineWorkoutTime(
-                  new Date(session.session_start_date).getHours()
-                )}
-            </h2>
-            <h2>
-              {session.session_end_date
-                ? Math.round(
-                    (new Date(session.session_end_date).getTime() -
-                      new Date(session.session_start_date).getTime()) /
-                      60000
-                  ) + " min"
-                : ""}
-            </h2>
-          </div>
-          <h3 className="text-gray-700 font-medium">
-            {new Date(session.session_start_date).toDateString()}
-          </h3>
-        </Link>
+        <div key={session.session_id} className="w-full">
+          <Link
+            prefetch={true}
+            className="block w-full border rounded-lg bg-gray-200 shadow-sm text-black cursor-pointer p-3 hover:bg-gray-300 transition-colors duration-200"
+            href={`/workouts/${session.session_id}`}
+          >
+            <div className="flex justify-between font-medium w-full">
+              <h2>
+                {session.session_name ||
+                  determineWorkoutTime(
+                    new Date(session.session_start_date).getHours()
+                  )}
+              </h2>
+              <h2>
+                {session.session_end_date
+                  ? Math.round(
+                      (new Date(session.session_end_date).getTime() -
+                        new Date(session.session_start_date).getTime()) /
+                        60000
+                    ) + " min"
+                  : ""}
+              </h2>
+            </div>
+            <h3 className="text-gray-700 font-medium">
+              {new Date(session.session_start_date).toDateString()}
+            </h3>
+          </Link>
+        </div>
       ))}
     </>
   );

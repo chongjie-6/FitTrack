@@ -14,7 +14,6 @@ export async function GET() {
     .from("sessions")
     .select("session_end_date, session_start_date")
     .eq("user_id", user.id)
-    .not("session_end_date", "is", null)
     .gte("session_start_date", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
     // Error response
     if (error){

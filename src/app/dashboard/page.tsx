@@ -55,24 +55,11 @@ export default function Dashboard() {
         console.log("Error: ", e);
       }
     };
+    fetchWorkouts();
+  }, []);
 
-    const fetchWorkoutsThisMonth = async () => {
-      try {
-        const response = await fetch("/api/workouts/workouts_this_month", {
-          method: "GET",
-          credentials: "include",
-        });
-        const workouts = await response.json();
-
-        if (!response.ok) {
-          throw new Error("Could not fetch your workouts for this month.");
-        }
-        setWorkoutsThisMonth(workouts.data);
-      } catch (e) {
-        console.log("Error: ", e);
-      }
-    };
-
+  // fetch minutes this month
+  useEffect(() => {
     const fetchMinutesThisMonth = async () => {
       try {
         const response = await fetch("/api/workouts/minutes_this_month", {
@@ -92,21 +79,30 @@ export default function Dashboard() {
             sum: number,
             workout: { session_start_date: string; session_end_date: string }
           ) => {
-            return (
-              sum +
-              (new Date(workout.session_end_date).getTime() -
-                new Date(workout.session_start_date).getTime()) /
-                60000
-            );
+            if (workout.session_end_date) {
+              return (
+                sum +
+                (new Date(workout.session_end_date).getTime() -
+                  new Date(workout.session_start_date).getTime()) /
+                  60000
+              );
+            } else {
+              return sum;
+            }
           },
           0
         );
         setHoursThisMonth(Math.round((total / 60) * 100) / 100);
+        setWorkoutsThisMonth(workouts.length);
       } catch (e) {
         console.log("Error: ", e);
       }
     };
+    fetchMinutesThisMonth();
+  }, []);
 
+  // fetch weights lifted this month
+  useEffect(() => {
     const fetchWeightsLifted = async () => {
       try {
         const response = await fetch("/api/workouts/weight_lifted_this_month", {
@@ -118,6 +114,7 @@ export default function Dashboard() {
         if (!response.ok) {
           throw new Error("Could not fetch your workouts weights this month.");
         }
+
         const session_sets = workouts.data;
         let totalWeight = 0;
         // Loop through each session and sum up the weights
@@ -130,17 +127,12 @@ export default function Dashboard() {
             });
           }
         );
-
         setWeightsThisMonth(totalWeight);
         setIsSummaryLoading(false);
       } catch (e) {
         console.log("Error: ", e);
       }
     };
-
-    fetchWorkouts();
-    fetchWorkoutsThisMonth();
-    fetchMinutesThisMonth();
     fetchWeightsLifted();
   }, []);
 
