@@ -34,23 +34,6 @@ export default function SessionPage() {
     >
   >();
 
-  // UseEffect to scroll to the newly created exercise when it detects a change in the number of exercises
-  useEffect(() => {
-    if (
-      prevExercisesLengthRef.current &&
-      sessionExercises &&
-      sessionExercises.length > prevExercisesLengthRef.current
-    ) {
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-
-    // Update the ref with current length for next comparison
-    prevExercisesLengthRef.current = sessionExercises?.length || null;
-  }, [sessionExercises]);
-
   // Use effect to validate user
   useEffect(() => {
     const userValidation = async () => {
@@ -80,33 +63,13 @@ export default function SessionPage() {
         });
         const data = await response.json();
         setSessionInfo(data.data);
+        return () => controller.abort();
       } catch (e) {
         console.log(e);
       }
     };
     fetchWorkoutSession();
-    return () => controller.abort();
   }, [session_id]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    // Use Effect to fetch all the exercises
-    const fetchAllExercise = async () => {
-      try {
-        const response = await fetch("/api/exercises", {
-          signal: controller.signal,
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await response.json();
-        setAllExercises(data.data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    fetchAllExercise();
-    return () => controller.abort();
-  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -124,13 +87,50 @@ export default function SessionPage() {
         const data = await response.json();
         setSessionExercises(data.data);
         setIsLoading(false);
+        return () => controller.abort();
       } catch (e) {
         console.log(e);
       }
     };
     fetchAllExercise();
-    return () => controller.abort();
   }, [session_id]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    // Use Effect to fetch all the exercises
+    const fetchAllExercise = async () => {
+      try {
+        const response = await fetch("/api/exercises", {
+          signal: controller.signal,
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await response.json();
+        setAllExercises(data.data);
+        return () => controller.abort();
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    fetchAllExercise();
+  }, []);
+
+  // UseEffect to scroll to the newly created exercise when it detects a change in the number of exercises
+  useEffect(() => {
+    if (
+      prevExercisesLengthRef.current &&
+      sessionExercises &&
+      sessionExercises.length > prevExercisesLengthRef.current
+    ) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+
+    // Update the ref with current length for next comparison
+    prevExercisesLengthRef.current = sessionExercises?.length || null;
+  }, [sessionExercises]);
 
   const addSet = async (session_exercise_id: string, set_number: number) => {
     const controller = new AbortController();

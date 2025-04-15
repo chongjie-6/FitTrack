@@ -51,54 +51,39 @@ export default function Dashboard() {
         }
         setSessions(workouts.data);
         setIsExerciseLoading(false);
+
+        // Once we have fetched all data, we can run a function to update the training time
+        const currentMonth = new Date().getMonth();
+
+        // Filter only the workouts that are started this month
+        const workoutsThisMonth = workouts.data.filter(
+          (workout: Tables<"sessions">) =>
+            workout.session_start_date &&
+            new Date(workout.session_start_date).getMonth() === currentMonth
+        );
+        setWorkoutsThisMonth(workoutsThisMonth.length);
+
+        // Sum up the total training time for this month
+        const totalTrainingTime = workoutsThisMonth.reduce(
+          (sum: number, workout: Tables<"sessions">) => {
+            if (!workout.session_end_date) {
+              return sum;
+            }
+            return (
+              sum +
+              (new Date(workout.session_end_date).getTime() -
+                new Date(workout.session_start_date).getTime()) /
+                60000
+            );
+          },
+          0
+        );
+        setHoursThisMonth(Math.round((totalTrainingTime / 60) * 100) / 100);
       } catch (e) {
         console.log("Error: ", e);
       }
     };
     fetchWorkouts();
-  }, []);
-
-  // fetch minutes this month
-  useEffect(() => {
-    const fetchMinutesThisMonth = async () => {
-      try {
-        const response = await fetch("/api/workouts/minutes_this_month", {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await response.json();
-        const workouts = data.data;
-
-        if (!response.ok) {
-          throw new Error("Could not fetch your minutes for this month.");
-        }
-
-        // for each workout this month calculate the duration
-        const total = workouts.reduce(
-          (
-            sum: number,
-            workout: { session_start_date: string; session_end_date: string }
-          ) => {
-            if (workout.session_end_date) {
-              return (
-                sum +
-                (new Date(workout.session_end_date).getTime() -
-                  new Date(workout.session_start_date).getTime()) /
-                  60000
-              );
-            } else {
-              return sum;
-            }
-          },
-          0
-        );
-        setHoursThisMonth(Math.round((total / 60) * 100) / 100);
-        setWorkoutsThisMonth(workouts.length);
-      } catch (e) {
-        console.log("Error: ", e);
-      }
-    };
-    fetchMinutesThisMonth();
   }, []);
 
   // fetch weights lifted this month
