@@ -1,12 +1,11 @@
 import React from "react";
 import { Tables } from "../../../database.types";
+import Link from "next/link";
 
 export function AllSessionInfo({
   sessions,
-  handleCardClick,
 }: {
   sessions: Array<Tables<"sessions">>;
-  handleCardClick: (session_id: string) => void;
 }) {
   const determineWorkoutTime = (hour: number) => {
     if (hour < 12) {
@@ -20,15 +19,18 @@ export function AllSessionInfo({
   return (
     <>
       {sessions.map((session) => (
-        <div
+        <Link
+          prefetch={true}
           key={session.session_id}
           className="border rounded-lg bg-gray-200 shadow-sm text-black cursor-pointer p-3 hover:bg-gray-300 transition-colors duration-200"
-          onClick={() => handleCardClick(session.session_id)}
+          href={`/workouts/${session.session_id}`}
         >
           <div className="flex justify-between font-medium w-full">
             <h2>
               {session.session_name ||
-                determineWorkoutTime(new Date(session.session_start_date).getHours())}
+                determineWorkoutTime(
+                  new Date(session.session_start_date).getHours()
+                )}
             </h2>
             <h2>
               {session.session_end_date
@@ -43,7 +45,7 @@ export function AllSessionInfo({
           <h3 className="text-gray-700 font-medium">
             {new Date(session.session_start_date).toDateString()}
           </h3>
-        </div>
+        </Link>
       ))}
     </>
   );

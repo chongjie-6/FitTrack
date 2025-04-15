@@ -18,9 +18,6 @@ export default function Dashboard() {
   const [isSummaryLoading, setIsSummaryLoading] = useState(true);
   const [isExerciseLoading, setIsExerciseLoading] = useState(true);
   const [, setCreateError] = useState("");
-  const handleCardClick = (session_id: string) => {
-    router.push(`/workouts/${session_id}`);
-  };
   useEffect(() => {
     const userValidation = async () => {
       try {
@@ -210,12 +207,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {sessions && (
-            <AllSessionInfo
-              sessions={sessions}
-              handleCardClick={handleCardClick}
-            />
-          )}
+          {sessions && <AllSessionInfo sessions={sessions} />}
           {!isExerciseLoading &&
             sessions &&
             sessions?.length <= 0 &&
