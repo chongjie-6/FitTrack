@@ -52,6 +52,7 @@ export default function Dashboard() {
           );
         }
         setSessions(workouts.data);
+        setIsLoading(false);
       } catch (e) {
         console.log("Error: ", e);
       }
@@ -142,7 +143,6 @@ export default function Dashboard() {
     fetchWorkoutsThisMonth();
     fetchMinutesThisMonth();
     fetchWeightsLifted();
-    setIsLoading(false);
   }, []);
 
   const createWorkout = async () => {
