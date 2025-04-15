@@ -10,7 +10,7 @@ import { AllSessionInfo } from "@/components/ui/all_session_info";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [sessions, setSessions] = useState<Array<Tables<"sessions">>>();
+  const [sessions, setSessions] = useState<Array<Tables<"sessions">>>([]);
   const [workoutsThisMonth, setWorkoutsThisMonth] = useState<null | number>();
   const [weightsThisMonth, setWeightsThisMonth] = useState<null | number>();
   const [hoursThisMonth, setHoursThisMonth] = useState<null | number>();
@@ -51,40 +51,42 @@ export default function Dashboard() {
         }
         setSessions(workouts.data);
         setIsExerciseLoading(false);
-
-        // Once we have fetched all data, we can run a function to update the training time
-        const currentMonth = new Date().getMonth();
-
-        // Filter only the workouts that are started this month
-        const workoutsThisMonth = workouts.data.filter(
-          (workout: Tables<"sessions">) =>
-            workout.session_start_date &&
-            new Date(workout.session_start_date).getMonth() === currentMonth
-        );
-        setWorkoutsThisMonth(workoutsThisMonth.length);
-
-        // Sum up the total training time for this month
-        const totalTrainingTime = workoutsThisMonth.reduce(
-          (sum: number, workout: Tables<"sessions">) => {
-            if (!workout.session_end_date) {
-              return sum;
-            }
-            return (
-              sum +
-              (new Date(workout.session_end_date).getTime() -
-                new Date(workout.session_start_date).getTime()) /
-                60000
-            );
-          },
-          0
-        );
-        setHoursThisMonth(Math.round((totalTrainingTime / 60) * 100) / 100);
       } catch (e) {
         console.log("Error: ", e);
       }
     };
     fetchWorkouts();
   }, []);
+
+  useEffect(() => {
+    // Once we have fetched all data, we can run a function to update the training time
+    const currentMonth = new Date().getMonth();
+
+    // Filter only the workouts that are started this month
+    const workoutsThisMonth = sessions.filter(
+      (workout: Tables<"sessions">) =>
+        workout.session_start_date &&
+        new Date(workout.session_start_date).getMonth() === currentMonth
+    );
+    setWorkoutsThisMonth(workoutsThisMonth.length);
+
+    // Sum up the total training time for this month
+    const totalTrainingTime = workoutsThisMonth.reduce(
+      (sum: number, workout: Tables<"sessions">) => {
+        if (!workout.session_end_date) {
+          return sum;
+        }
+        return (
+          sum +
+          (new Date(workout.session_end_date).getTime() -
+            new Date(workout.session_start_date).getTime()) /
+            60000
+        );
+      },
+      0
+    );
+    setHoursThisMonth(Math.round((totalTrainingTime / 60) * 100) / 100);
+  }, [sessions]);
 
   // fetch weights lifted this month
   useEffect(() => {
@@ -119,7 +121,7 @@ export default function Dashboard() {
       }
     };
     fetchWeightsLifted();
-  }, []);
+  }, [sessions]);
 
   const createWorkout = async () => {
     try {
@@ -184,7 +186,9 @@ export default function Dashboard() {
             </div>
           )}
 
-          {sessions && <AllSessionInfo sessions={sessions} />}
+          {sessions && (
+            <AllSessionInfo sessions={sessions} setSessionInfo={setSessions} />
+          )}
           {!isExerciseLoading &&
             sessions &&
             sessions?.length <= 0 &&

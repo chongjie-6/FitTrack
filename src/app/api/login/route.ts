@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
+  // Attempts to log in a user
+
   const data = await request.json();
   const {email, password} = data
   
@@ -20,7 +22,6 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(data);
-  console.log(error)
   if (error) {
     if (error.message === "Invalid login credentials") {
       return Response.json(

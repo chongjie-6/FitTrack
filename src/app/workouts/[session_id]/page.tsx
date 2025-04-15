@@ -306,7 +306,7 @@ export default function SessionPage() {
 
     // When we submit the form, we create an exercise
     const controller = new AbortController();
-    const response = await fetch("/api/exercises", {
+    const response = await fetch("/api/session_exercises", {
       signal: controller.signal,
       method: "POST",
       headers: {

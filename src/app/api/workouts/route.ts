@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 export async function GET() {
+  // Get all workouts associated with this user ordered by their start date
 
     // Make sure the user is logged in 
     const supabase = await createClient();
@@ -20,6 +21,8 @@ export async function GET() {
 }
 
 export async function POST() {
+  // Create session for user 
+
   // Make sure the user is logged in 
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser()

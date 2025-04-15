@@ -2,6 +2,8 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function POST(request: Request,  { params }: { params: Promise<{ session_id: string, session_exercise_id: string }> }) {
+  // Create a set for this session exercise
+
     // Make sure the user is logged in 
     const supabase = await createClient();
     const { data: { user }, error } = await supabase.auth.getUser()
@@ -21,10 +23,11 @@ export async function POST(request: Request,  { params }: { params: Promise<{ se
       return Response.json({message: "There was an error creating your set"}, {status: 500})
   }
   return Response.json({sucess: true, data: data}, {status: 200})
-
 }
 
 export async function DELETE(request: Request,  { params }: { params: Promise<{ session_id: string, session_exercise_id: string }> }) {
+  // Delete this session exercise from the session 
+
   // Make sure the user is logged in 
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser()
@@ -35,8 +38,8 @@ export async function DELETE(request: Request,  { params }: { params: Promise<{ 
 // If the user is logged in, then we can delete from database
 const { session_exercise_id } = await params
 
-// Now we can create a session row in the database
-const { data, error: deleteError } = await supabase.from("session_exercises").delete().eq("session_exercise_id", session_exercise_id)
+// Now we can delete a session row in the database
+const { data, error: deleteError } = await supabase.from("session_exercises").delete().eq("session_exercise_id", session_exercise_id).select("session_exercise_id").single()
 
 // Error response
 if (deleteError){

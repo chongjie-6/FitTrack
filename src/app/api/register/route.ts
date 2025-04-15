@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
+  // Attempts to create a user
+  
   const data = await request.json();
   const { email, password, first_name, last_name } = data
 

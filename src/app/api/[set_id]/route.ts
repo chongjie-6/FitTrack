@@ -2,12 +2,14 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function PATCH(request: Request) {
-    // Make sure the user is logged in 
-    const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (error || !user) {
-      redirect('/login')
-    }
+  // Updates an existing set for an exercise
+
+  // Make sure the user is logged in 
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error || !user) {
+    redirect('/login')
+  }
 
   // If the user is logged in, then we can post to database
   const {set_id, value, field} = await request.json();
@@ -24,6 +26,8 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ set_id: string }>}) {
+  // Deletes a set from an exercise
+
   // Make sure the user is logged in 
   const supabase = await createClient();
   const { data: { user }, error } = await supabase.auth.getUser()

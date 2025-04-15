@@ -2,6 +2,8 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function GET(request: Request,  { params }: { params: Promise<{ session_id: string }> }) {
+  // Get all session exercises for this session 
+
     const {session_id} = await params
     
     // Make sure the user is logged in 

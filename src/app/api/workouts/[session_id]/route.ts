@@ -1,6 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 export async function GET(request: Request,  { params }: { params: Promise<{ session_id: string }> }) {
+  // Get session info associated with this session 
+
     const {session_id} = await params
     
     // Make sure the user is logged in 
@@ -25,6 +27,8 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
 }
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ session_id: string }> }) {
+  // Modify this session 
+
   const {session_id} = await params
   
   // Make sure the user is logged in 
@@ -43,5 +47,26 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ sessio
       return Response.json({message: "There was an error ending your session"}, {status: 500})
   }
   return Response.json({sucess: true, data: session_data}, {status: 200})
+
+}
+
+export async function DELETE(req: Request, { params }: { params: Promise<{ session_id: string }> }) {
+  // Delete a session 
+  const {session_id} = await params
+  
+  // Make sure the user is logged in 
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error || !user) {
+    redirect('/login')
+  }
+  
+  // If the user is logged in, then we can delete from database 
+  const {data: deletedID, error: deleteError} = await supabase.from("sessions").delete().eq("session_id",session_id).select("session_id").single()
+  // Error response
+  if (deleteError){
+      return Response.json({message: "There was an error deleting your session"}, {status: 500})
+  }
+  return Response.json({sucess: true, data: deletedID}, {status: 200})
 
 }

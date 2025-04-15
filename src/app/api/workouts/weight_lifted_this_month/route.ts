@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 export async function GET() {
+  // Get all sets performed by this user across all sessions this month 
 
     // Make sure the user is logged in 
     const supabase = await createClient();
