@@ -15,7 +15,8 @@ export default function Dashboard() {
   const [weightsThisMonth, setWeightsThisMonth] = useState<null | number>();
   const [hoursThisMonth, setHoursThisMonth] = useState<null | number>();
   const [user, setUser] = useState<User | null>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isSummaryLoading, setIsSummaryLoading] = useState(true);
+  const [isExerciseLoading, setIsExerciseLoading] = useState(true);
   const [, setCreateError] = useState("");
   const handleCardClick = (session_id: string) => {
     router.push(`/workouts/${session_id}`);
@@ -52,7 +53,7 @@ export default function Dashboard() {
           );
         }
         setSessions(workouts.data);
-        setIsLoading(false);
+        setIsExerciseLoading(false);
       } catch (e) {
         console.log("Error: ", e);
       }
@@ -134,6 +135,7 @@ export default function Dashboard() {
         );
 
         setWeightsThisMonth(totalWeight);
+        setIsSummaryLoading(false);
       } catch (e) {
         console.log("Error: ", e);
       }
@@ -182,7 +184,7 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {isLoading ? (
+        {isSummaryLoading ? (
           <div className="summary_layout">
             <Skeleton className="h-[100px] w-full rounded-xl" />
             <Skeleton className="h-[100px] w-full rounded-xl" />
@@ -200,7 +202,7 @@ export default function Dashboard() {
       <section>
         <h1 className="text-3xl font-semibold mb-4">Workouts</h1>
         <div className="space-y-3">
-          {isLoading && (
+          {isExerciseLoading && (
             <div className="space-y-5">
               <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
               <Skeleton className="h-[75px] w-full rounded-xl"></Skeleton>
@@ -214,7 +216,7 @@ export default function Dashboard() {
               handleCardClick={handleCardClick}
             />
           )}
-          {!isLoading &&
+          {!isExerciseLoading &&
             sessions &&
             sessions?.length <= 0 &&
             "You have no workouts."}
