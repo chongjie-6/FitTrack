@@ -182,19 +182,19 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {isLoading && (
+        {isLoading ? (
           <div className="summary_layout">
             <Skeleton className="h-[100px] w-full rounded-xl" />
             <Skeleton className="h-[100px] w-full rounded-xl" />
             <Skeleton className="h-[100px] w-full rounded-xl" />
           </div>
+        ) : (
+          <Summary
+            workoutsThisMonth={workoutsThisMonth}
+            hoursThisMonth={hoursThisMonth}
+            weightsThisMonth={weightsThisMonth}
+          />
         )}
-
-        <Summary
-          workoutsThisMonth={workoutsThisMonth}
-          hoursThisMonth={hoursThisMonth}
-          weightsThisMonth={weightsThisMonth}
-        />
       </section>
 
       <section>
