@@ -19,7 +19,6 @@ export function AllSessionInfo({
   };
   return (
     <>
-      {" "}
       {sessions.map((session) => (
         <div
           key={session.session_id}

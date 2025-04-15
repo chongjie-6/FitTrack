@@ -208,14 +208,16 @@ export default function Dashboard() {
             </div>
           )}
 
-          {sessions && sessions?.length > 0 ? (
+          {sessions && (
             <AllSessionInfo
               sessions={sessions}
               handleCardClick={handleCardClick}
             />
-          ) : (
-            "You have no workouts."
           )}
+          {!isLoading &&
+            sessions &&
+            sessions?.length <= 0 &&
+            "You have no workouts."}
         </div>
       </section>
     </div>
