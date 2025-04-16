@@ -80,7 +80,7 @@ export function AllSessionInfo({
             </div>
           </Link>
           <div
-            className="absolute top-6 right-3 cursor-pointer border-2 border-black rounded-xl hover:bg-gray-400 transition-colors"
+            className="absolute top-6 right-3 cursor-pointer hover:border border-black rounded-xl hover:bg-gray-400 transition-colors"
             onClick={() => {
               handleDropDown(session.session_id);
             }}
