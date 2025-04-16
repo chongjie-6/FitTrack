@@ -15,41 +15,41 @@ export default function LandingPage() {
         </nav>
       </header>
 
-      <section className="text-white flex flex-col sm:flex-row mt-20 mx-auto w-full max-w-7xl px-4 justify-center align-top">
-        <div className="w-full space-y-5 mt-5 text-center sm:text-left">
-          <h1 className="font-extrabold text-4xl sm:text-5xl leading-tight">
+      <section className="text-white flex flex-col md:flex-row mt-20 mx-auto max-w-7xl justify-start items-start px-4">
+        <div className="space-y-5 text-center md:text-left md:w-1/2 mb-12 pr-5">
+          <h1 className="font-extrabold text-4xl md:text-5xl">
             Track Your Fitness Journey Like Never Before
           </h1>
-          <p className="text-lg">
+          <p className="text-md max-w-lg mx-auto md:mx-0">
             FitTrack helps you monitor your workouts, nutrition, and progress
             all in one place. Set goals, track achievements, and transform your
             fitness journey.
           </p>
-          <button className="btn px-6 py-3 border-2 bg-blue-200 text-black font-semibold rounded-full">
+          <button className="btn px-6 py-3 border-2 bg-blue-200 text-black font-semibold rounded-full hover:bg-blue-300 transition-colors">
             Sign Up For Free
           </button>
         </div>
 
-        <div className="relative w-full">
-          {/*Desktop Image */}
-          <div className="hidden sm:block">
+        <div className="relative w-full md:w-1/2 h-96 sm:h-112 md:h-96 lg:h-112">
+          <div className="hidden md:block relative h-full">
             <Image
               src="/prototype.png"
-              quality={100}
-              fill={true}
               alt="Desktop App Preview"
-              objectFit="contain"
+              className="object-contain object-top"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              priority
             />
           </div>
 
-          {/*Mobile Image */}
-          <div className="block sm:hidden">
+          <div className="md:hidden relative h-full">
             <Image
               src="/mobile.png"
-              quality={100}
-              fill={true}
               alt="Mobile App Preview"
-              objectFit="contain"
+              className="object-contain object-top"
+              fill
+              sizes="100vw"
+              priority
             />
           </div>
         </div>
