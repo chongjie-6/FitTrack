@@ -6,46 +6,46 @@ const CARD_INFO = [
     icon: "🏋️",
     title: "Comprehensive Tracking",
     description:
-      "Track workouts, nutrition, sleep, and more with our intuitive dashboard and detailed metrics.",
+      "Track workouts, nutrition, and sleep with our intuitive dashboard that displays detailed metrics and insights.",
   },
   {
     id: 2,
     title: "Progress Tracking",
     icon: "📊",
     description:
-      "Get access to visual graphs and metrics showing improvements over time.",
+      "Visualize your fitness journey with interactive graphs and metrics that show improvements and trends over time.",
   },
   {
     id: 3,
     icon: "📹",
     title: "Video Demonstrations",
     description:
-      "Video demonstrations for each exercise for proper form and guidance.",
+      "Access detailed video demonstrations for every exercise to ensure proper form and maximize your workout results.",
   },
   {
     id: 4,
     icon: "🤝",
     title: "Community Support",
     description:
-      "Ask our friendly community for overload tips and general fitness enquiries.",
+      "Connect with our friendly community to share tips, get answers to fitness questions, and find ongoing motivation.",
   },
   {
     id: 5,
     title: "Workout Library",
     icon: "📖",
     description:
-      "Get access to pre-designed workouts or create your own custom routines.",
+      "Browse our extensive collection of pre-designed workout routines or build and save your own custom fitness plans.",
   },
   {
     id: 6,
     title: "Challenge Mode",
     icon: "💪",
     description:
-      "Join time-limited fitness challenges to stay motivated and compete with friends.",
+      "Boost motivation by joining time-limited fitness challenges where you can compete with friends and fellow users.",
   },
 ];
 
-export default function LandingGrid() {
+export default function   LandingGrid() {
   return (
     <div className="landing_grid">
       {CARD_INFO.map((card) => (
