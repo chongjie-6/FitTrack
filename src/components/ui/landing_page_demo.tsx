@@ -25,7 +25,7 @@ export default function LandingPageDemo() {
       <div className="relative w-full md:w-1/2 h-96 sm:h-112 md:h-96 lg:h-112">
         <div className="hidden md:block relative h-full">
           <Image
-            src={"/public/desktop.png"}
+            src={"/desktop.PNG"}
             alt="Desktop App Preview"
             className="object-contain object-top"
             fill
@@ -36,7 +36,7 @@ export default function LandingPageDemo() {
 
         <div className="md:hidden relative h-full">
           <Image
-            src={"/public/mobile.png"}
+            src={"/mobile.PNG"}
             alt="Mobile App Preview"
             className="object-contain object-top"
             fill
