@@ -1,8 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
-import mobilePNG from "/mobile.png";
-import desktopPNG from "/desktop.png";
+import Link from 'next/link';
 
 export default function LandingPageDemo() {
   return (
@@ -27,7 +25,7 @@ export default function LandingPageDemo() {
       <div className="relative w-full md:w-1/2 h-96 sm:h-112 md:h-96 lg:h-112">
         <div className="hidden md:block relative h-full">
           <Image
-            src={desktopPNG}
+            src={"/public/desktop.png"}
             alt="Desktop App Preview"
             className="object-contain object-top"
             fill
@@ -38,7 +36,7 @@ export default function LandingPageDemo() {
 
         <div className="md:hidden relative h-full">
           <Image
-            src={mobilePNG}
+            src={"/public/mobile.png"}
             alt="Mobile App Preview"
             className="object-contain object-top"
             fill
