@@ -13,19 +13,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Register() {
   const router = useRouter();
   const [error, setError] = useState("");
-
-  const onRegisterClick = () => {
-    const registerButton = document.getElementById("register_btn");
-    if (registerButton) {
-      registerButton.innerHTML = "Registering user...";
-    }
-  };
+  const registerRef = useRef<HTMLButtonElement>(null);
 
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email" }),
@@ -54,6 +48,9 @@ export default function Register() {
   });
 
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (registerRef.current) {
+      registerRef.current.innerHTML = "Registering user...";
+    }
     const response = await fetch("/api/register", {
       method: "POST",
       headers: {
@@ -65,9 +62,8 @@ export default function Register() {
 
     if (!response.ok || !data.success) {
       setError(data.data);
-      const registerButton = document.getElementById("register_btn");
-      if (registerButton) {
-        registerButton.innerHTML = "Sign Up";
+      if (registerRef.current) {
+        registerRef.current.innerHTML = "Sign Up";
       }
       return;
     }
@@ -142,12 +138,7 @@ export default function Register() {
                 </FormItem>
               )}
             />
-            <Button
-              type="submit"
-              className="w-full"
-              id="register_btn"
-              onClick={onRegisterClick}
-            >
+            <Button type="submit" className="w-full" ref={registerRef}>
               Sign Up
             </Button>
           </form>

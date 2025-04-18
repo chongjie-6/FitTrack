@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -23,6 +23,7 @@ export default function Home() {
     email: z.string().email({ message: "Please enter a valid email" }),
     password: z.string(),
   });
+  const loginRef = useRef<HTMLButtonElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -32,14 +33,10 @@ export default function Home() {
     },
   });
 
-  const onLoginClick = () => {
-    const loginButton = document.getElementById("login_btn");
-    if (loginButton) {
-      loginButton.innerHTML = "Logging you in...";
-    }
-  };
-
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
+    if (loginRef.current) {
+      loginRef.current.innerHTML = "Logging you in...";
+    }
     const response = await fetch("/api/login", {
       method: "POST",
       headers: {
@@ -51,9 +48,8 @@ export default function Home() {
 
     if (!response.ok || !data.success) {
       setError(data.data);
-      const loginButton = document.getElementById("login_btn");
-      if (loginButton) {
-        loginButton.innerHTML = "Log In";
+      if (loginRef.current) {
+        loginRef.current.innerHTML = "Log In";
       }
 
       return;
@@ -105,7 +101,7 @@ export default function Home() {
               type="submit"
               className="w-full sm:mb-5"
               id="login_btn"
-              onClick={onLoginClick}
+              ref={loginRef}
             >
               Log In
             </Button>

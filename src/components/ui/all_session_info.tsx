@@ -5,9 +5,13 @@ import Link from "next/link";
 export function AllSessionInfo({
   sessions,
   setSessionInfo,
+  setWeightsThisMonth,
 }: {
   sessions: Array<Tables<"sessions">>;
   setSessionInfo: React.Dispatch<SetStateAction<Array<Tables<"sessions">>>>;
+  setWeightsThisMonth: React.Dispatch<
+    SetStateAction<number | null | undefined>
+  >;
 }) {
   const determineWorkoutTime = (hour: number) => {
     if (hour < 12) {
@@ -19,7 +23,6 @@ export function AllSessionInfo({
     }
   };
   const handleDropDown = async (session_id: string) => {
-    console.log("Dropdown");
     const controller = new AbortController();
     try {
       const response = await fetch(`/api/workouts/${session_id}`, {
@@ -33,11 +36,24 @@ export function AllSessionInfo({
       }
 
       const deletedSession = await response.json();
+      console.log(deletedSession.data);
       // Now we have to update our sessions
       setSessionInfo((prev) =>
         prev.filter(
           (session) => session.session_id != deletedSession.data.session_id
         )
+      );
+
+      // Now find the sum of all deleted sets
+      setWeightsThisMonth((prev) =>
+        prev
+          ? prev -
+            deletedSession.data.sets.reduce(
+              (sum: number, set: Tables<"session_sets">) =>
+                sum + set.set_weight * set.set_reps,
+              0
+            )
+          : prev
       );
     } catch (e) {
       console.log(e);

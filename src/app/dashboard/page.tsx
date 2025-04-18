@@ -121,7 +121,7 @@ export default function Dashboard() {
       }
     };
     fetchWeightsLifted();
-  }, [sessions]);
+  }, []);
 
   const createWorkout = async () => {
     try {
@@ -187,7 +187,11 @@ export default function Dashboard() {
           )}
 
           {sessions && (
-            <AllSessionInfo sessions={sessions} setSessionInfo={setSessions} />
+            <AllSessionInfo
+              sessions={sessions}
+              setSessionInfo={setSessions}
+              setWeightsThisMonth={setWeightsThisMonth}
+            />
           )}
           {!isExerciseLoading &&
             sessions &&
