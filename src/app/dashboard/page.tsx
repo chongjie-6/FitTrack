@@ -35,28 +35,25 @@ export default function Dashboard() {
   }, [router]);
 
   // fetch all sessions
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        const response = await fetch("/api/workouts", {
-          method: "GET",
-          credentials: "include",
-        });
-        const workouts = await response.json();
+  const fetchWorkouts = async () => {
+    try {
+      const response = await fetch("/api/workouts", {
+        method: "GET",
+        credentials: "include",
+      });
+      const workouts = await response.json();
 
-        if (!response.ok) {
-          throw new Error(
-            "Could not fetch your workouts, Please try again later."
-          );
-        }
-        setSessions(workouts.data);
-        setIsExerciseLoading(false);
-      } catch (e) {
-        console.log("Error: ", e);
+      if (!response.ok) {
+        throw new Error(
+          "Could not fetch your workouts, Please try again later."
+        );
       }
-    };
-    fetchWorkouts();
-  }, []);
+      setSessions(workouts.data);
+      setIsExerciseLoading(false);
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
 
   useEffect(() => {
     // Once we have fetched all data, we can run a function to update the training time
@@ -89,26 +86,28 @@ export default function Dashboard() {
   }, [sessions]);
 
   // fetch weights lifted this month
-  useEffect(() => {
-    const fetchWeightsLifted = async () => {
-      try {
-        const response = await fetch("/api/workouts/weight_lifted_this_month", {
-          method: "GET",
-          credentials: "include",
-        });
-        const weights = await response.json();
 
-        if (!response.ok) {
-          throw new Error("Could not fetch your workouts weights this month.");
-        }
-        setWeightsThisMonth(weights.data.totalWeight);
-        setIsSummaryLoading(false);
-      } catch (e) {
-        console.log("Error: ", e);
+  const fetchWeightsLifted = async () => {
+    try {
+      const response = await fetch("/api/workouts/weight_lifted_this_month", {
+        method: "GET",
+        credentials: "include",
+      });
+      const weights = await response.json();
+
+      if (!response.ok) {
+        throw new Error("Could not fetch your workouts weights this month.");
       }
-    };
-    fetchWeightsLifted();
-  }, []);
+      setWeightsThisMonth(weights.data.totalWeight);
+      setIsSummaryLoading(false);
+    } catch (e) {
+      console.log("Error: ", e);
+    }
+  };
+  useEffect(() => {
+    fetchWeightsLifted()
+    fetchWorkouts()
+  },[]);
 
   const createWorkout = async () => {
     try {
