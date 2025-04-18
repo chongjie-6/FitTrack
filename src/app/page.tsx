@@ -8,7 +8,6 @@ export default function LandingPage() {
       <Header />
 
       <div className="demo_container">
-        {/* Example of application and main headings */}
         <LandingPageDemo />
 
         <section className="bg-zinc-800 w-full space-y-15 items-center flex flex-col py-20">
@@ -17,7 +16,7 @@ export default function LandingPage() {
             <LandingGrid></LandingGrid>
           </div>
         </section>
-        
+
         <Footer></Footer>
       </div>
     </>
