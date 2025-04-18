@@ -45,7 +45,7 @@ const CARD_INFO = [
   },
 ];
 
-export default function   LandingGrid() {
+export default function LandingGrid() {
   return (
     <div className="landing_grid">
       {CARD_INFO.map((card) => (

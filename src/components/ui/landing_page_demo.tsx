@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 export default function LandingPageDemo() {
   return (
-    <section className="text-white flex flex-col md:flex-row mt-20 max-w-7xl justify-start items-start px-4">
+    <section className="text-white flex flex-col md:flex-row mt-20 max-w-7xl justify-start items-start px-4 py-20">
       <div className="space-y-5 text-center md:text-left md:w-1/2 mb-12 pr-5">
         <h1 className="font-extrabold text-4xl md:text-5xl">
           Track Your Fitness Journey Like Never Before

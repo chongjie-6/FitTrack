@@ -8,7 +8,7 @@ export default function LandingCard({
   icon: string;
 }) {
   return (
-    <div className="landing_card">
+    <div className="landing_card flex flex-col justify-center">
       <p className="text-3xl">{icon}</p>
       <h3 className="text-2xl font-bold">{title}</h3>
       <p className="text-gray-300">{description}</p>

@@ -167,13 +167,16 @@
     @apply p-2 w-full border-2 rounded-xl 
   }
   .demo_container{
-    @apply flex flex-col items-center justify-center mx-auto space-y-20 text-center
+    @apply flex flex-col items-center justify-center mx-auto text-center
   }
   .landing_grid{
     @apply grid auto-rows-fr grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7
   }
   .landing_card{
-    @apply text-balance space-y-3 overflow-auto h-full min-h-52 min-w-0 hover:shadow-xl hover:-translate-y-0.5 hover:scale-105 transition-all duration-75 bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:shadow-zinc-500
+    @apply text-balance space-y-3 h-full min-h-64 min-w-0 hover:shadow-xl hover:-translate-y-0.5 hover:scale-105 transition-all duration-75 bg-zinc-900 border border-zinc-700 rounded-lg p-4 hover:shadow-zinc-500
+  }
+  .landing_banner{
+    @apply text-balance space-y-6 bg-gradient-to-r from-gray-900 to-blue-950 items-center w-full text-center flex py-40
   }
   
 }
