@@ -96,25 +96,12 @@ export default function Dashboard() {
           method: "GET",
           credentials: "include",
         });
-        const workouts = await response.json();
+        const weights = await response.json();
 
         if (!response.ok) {
           throw new Error("Could not fetch your workouts weights this month.");
         }
-
-        const session_sets = workouts.data;
-        let totalWeight = 0;
-        // Loop through each session and sum up the weights
-        session_sets.forEach(
-          (session: {
-            session_sets: { set_weight: number; set_reps: number }[];
-          }) => {
-            session.session_sets.forEach((set) => {
-              totalWeight += set.set_weight * set.set_reps || 0;
-            });
-          }
-        );
-        setWeightsThisMonth(totalWeight);
+        setWeightsThisMonth(weights.data.totalWeight);
         setIsSummaryLoading(false);
       } catch (e) {
         console.log("Error: ", e);

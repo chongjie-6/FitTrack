@@ -1,28 +1,43 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 export async function GET() {
-  // Get all sets performed by this user across all sessions this month 
+// Get all sets performed by this user across all sessions this month 
+  // Make sure the user is logged in 
+  const supabase = await createClient();
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) {
+    redirect('/login')
+  }
 
-    // Make sure the user is logged in 
-    const supabase = await createClient();
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      redirect('/login')
+  const { data, error } = await supabase
+  .from("session_sets")
+  .select(`
+    set_weight,
+    set_reps,
+    session_exercises!inner(
+      session_id,
+      sessions!inner(
+        user_id
+      )
+    )
+  `)
+  .eq("session_exercises.sessions.user_id", user.id)
+  .gte("session_exercises.sessions.session_start_date", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString());
+  
+  // Error response
+  if (error) {
+    return Response.json({ message: "Error fetching count" }, { status: 500 });
+  }
+
+  let totalWeight = 0;
+  data.forEach(set => {
+    totalWeight += (set.set_weight || 0) * (set.set_reps || 0);
+  });
+  
+  return Response.json({ 
+    success: true, 
+    data: {
+      totalWeight
     }
-
-    // If the user is logged in, then we can fetch from database
-    // select all sessions that a user has done this month
-    const {data, error} = await supabase.from("sessions").select("session_id").eq("user_id",user.id).gte("session_start_date", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
-    
-    // convert into an array of values
-    const session_ids = data?.map(session => session.session_id) || [];
-
-    // select all set_weights for sets done in the last month 
-    const session_data = await supabase.from("session_exercises").select("session_sets(set_weight, set_reps)").in("session_id", session_ids)
-    
-    // Error response
-    if (error){
-        return Response.json({message: "Error fetching count"}, {status: 500})
-    }
-    return Response.json({sucess: true, data: session_data.data}, {status: 200})
+  }, { status: 200 });
 }

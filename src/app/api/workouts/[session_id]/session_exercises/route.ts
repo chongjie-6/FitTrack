@@ -18,9 +18,26 @@ export async function GET(request: Request,  { params }: { params: Promise<{ ses
 
     const { data: workouts, error: workoutError } = await supabase
     .from("session_exercises")
-    .select("*, exercises(*), session_sets(*)")
+    .select(`
+      session_exercise_id,
+      session_id,
+      exercise_id,
+      exercises (
+        exercise_id,
+        exercise_name,
+        exercise_description
+      ),
+      session_sets (
+        set_id,
+        session_exercise_id,
+        set_number,
+        set_weight,
+        set_reps,
+        set_rest_time
+      )
+    `)
     .eq("session_id", session_id)
-    .order("set_number", { ascending: true, referencedTable: "session_sets"});
+    .order("set_number", { ascending: true, referencedTable: "session_sets" });
     // Error response
     if (workoutError){
         return Response.json({message: "There was an error fetching your workouts"}, {status: 500})
