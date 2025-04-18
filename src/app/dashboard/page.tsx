@@ -105,9 +105,8 @@ export default function Dashboard() {
     }
   };
   useEffect(() => {
-    fetchWeightsLifted()
-    fetchWorkouts()
-  },[]);
+    Promise.all([fetchWeightsLifted(), fetchWorkouts()]);
+  }, []);
 
   const createWorkout = async () => {
     try {
