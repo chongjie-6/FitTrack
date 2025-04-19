@@ -71,7 +71,7 @@ export default function RegisterForm({ registerAction }: RegisterFormProps) {
         return;
       }
     } catch (err) {
-      console.error("Login error:", err);
+      console.error("Register error:", err);
       setError("An unexpected error occurred. Please try again.");
     }
   };

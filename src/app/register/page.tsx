@@ -2,7 +2,6 @@ import RegisterForm from "@/components/register_form";
 import { createClient } from "@/utils/supabase/server";
 import { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Register | FitTrack",
@@ -65,13 +64,6 @@ async function registerAction({
 }
 
 export default async function Register() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (user) {
-    redirect("/dashboard");
-  }
   return (
     <div className="text-center w-full max-w-2xl mx-auto mt-20">
       <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md mt-20 sm:mt-0 p-5">
