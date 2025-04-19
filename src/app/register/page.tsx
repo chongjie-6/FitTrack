@@ -1,74 +1,77 @@
-"use client";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import RegisterForm from "@/components/register_form";
+import { createClient } from "@/utils/supabase/server";
+import { Metadata } from "next";
 import Link from "next/link";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
-export default function Register() {
-  const router = useRouter();
-  const [error, setError] = useState("");
-  const registerRef = useRef<HTMLButtonElement>(null);
+export const metadata: Metadata = {
+  title: "Register | FitTrack",
+  description: "Register for a FitTrack account",
+};
 
-  const formSchema = z.object({
-    email: z.string().email({ message: "Please enter a valid email" }),
-    password: z
-      .string()
-      .min(8, { message: "Password must contain more than 8 characters" })
-      .max(30, { message: "Password must contain less than 30 characters" }),
-    first_name: z
-      .string()
-      .min(2, { message: "First name must be longer than 2 characters" })
-      .max(30, { message: "First name must be shorter than 30 characters" }),
-    last_name: z
-      .string()
-      .min(2, { message: "Last name must be longer than 2 characters" })
-      .max(30, { message: "Last name must be shorter than 30 characters" }),
-  });
+async function registerAction({
+  email,
+  password,
+  first_name,
+  last_name,
+}: {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+}): Promise<{ success: boolean; data: string }> {
+  "use server";
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      first_name: "",
-      last_name: "",
+  // Basic validation
+  if (!email) {
+    return { success: false, data: "Please provide an email address" };
+  }
+  if (!password) {
+    return { success: false, data: "Please provide a valid password" };
+  }
+  if (!first_name) {
+    return { success: false, data: "Please provide an valid first name" };
+  }
+  if (!first_name) {
+    return { success: false, data: "Please provide an valid last name" };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        first_name: first_name,
+        last_name: last_name,
+      },
     },
   });
 
-  const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (registerRef.current) {
-      registerRef.current.innerHTML = "Registering user...";
-    }
-    const response = await fetch("/api/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-    const data = await response.json();
+  if (error && error.status == 422) {
+    return {
+      success: false,
+      data: "User with that email already exists.",
+    };
+  }
 
-    if (!response.ok || !data.success) {
-      setError(data.data);
-      if (registerRef.current) {
-        registerRef.current.innerHTML = "Sign Up";
-      }
-      return;
-    }
-    router.push("/email_confirmation");
-  };
+  if (error) {
+    return {
+      success: false,
+      data: "Unable to register at this time. Please try again later.",
+    };
+  }
+  return { success: true, data: "Registering..." };
+}
+
+export default async function Register() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    redirect("/dashboard");
+  }
   return (
     <div className="text-center w-full max-w-2xl mx-auto mt-20">
       <section className="sm:border-gray-200 sm:border-2 sm:p-10 rounded-md mt-20 sm:mt-0 p-5">
@@ -76,73 +79,8 @@ export default function Register() {
         <p className="py-5 text-gray-200">
           Register now to start tracking your workouts today!
         </p>
-        {<h3 className="text-red-400">{error}</h3>}
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onFormSubmit)}
-            className="space-y-4"
-          >
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter your email..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter your password..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="first_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="First Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="last_name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Last Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full" ref={registerRef}>
-              Sign Up
-            </Button>
-          </form>
-        </Form>
+
+        <RegisterForm registerAction={registerAction}></RegisterForm>
       </section>
       <div className="flex flex-col items-center mt-5 sm:border-gray-200 sm:border-2 sm:p-5 rounded-md">
         <p>Have an account?</p>

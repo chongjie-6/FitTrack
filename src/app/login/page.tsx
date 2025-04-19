@@ -2,6 +2,7 @@ import LoginForm from "@/components/ui/login_form";
 import { Metadata } from "next";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Login | FitTrack",
@@ -57,9 +58,9 @@ export default async function LoginPage() {
       <section className="w-full">
         <div className="flex flex-col items-center sm:border-gray-200 rounded-md sm:border-2 mt-5 py-5">
           <p>Don&apos;t have an account? </p>
-          <a href="/register" className="text-blue-500 hover:text-blue-400">
+          <Link href="/register" className="text-blue-500 hover:text-blue-400">
             Sign Up
-          </a>
+          </Link>
         </div>
       </section>
     </div>
