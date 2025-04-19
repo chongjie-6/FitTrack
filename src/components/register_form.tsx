@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
 type RegisterFormProps = {
   registerAction: (params: {
@@ -27,8 +28,9 @@ type RegisterFormProps = {
 };
 
 export default function RegisterForm({ registerAction }: RegisterFormProps) {
+  const router = useRouter();
   const [error, setError] = useState("");
-  const registerRef = useRef<HTMLButtonElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email" }),
@@ -58,6 +60,7 @@ export default function RegisterForm({ registerAction }: RegisterFormProps) {
 
   const onFormSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      setIsLoading(true);
       setError("");
 
       const response = registerAction({
@@ -70,7 +73,11 @@ export default function RegisterForm({ registerAction }: RegisterFormProps) {
         setError((await response).data || "Register failed. Please try again.");
         return;
       }
+      if ((await response).success) {
+        router.push("/email_confirmation");
+      }
     } catch (err) {
+      setIsLoading(false);
       console.error("Register error:", err);
       setError("An unexpected error occurred. Please try again.");
     }
@@ -136,8 +143,8 @@ export default function RegisterForm({ registerAction }: RegisterFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" ref={registerRef}>
-          Sign Up
+        <Button type="submit" className="w-full">
+          {isLoading ? "Signing Up..." : "Sign Up"}
         </Button>
       </form>
     </Form>
