@@ -6,10 +6,16 @@ export function AllSessionInfo({
   sessions,
   setSessionInfo,
   setWeightsThisMonth,
+  setHoursThisMonth,
+  setWorkoutsThisMonth,
 }: {
   sessions: Array<Tables<"sessions">>;
   setSessionInfo: React.Dispatch<SetStateAction<Array<Tables<"sessions">>>>;
   setWeightsThisMonth: React.Dispatch<
+    SetStateAction<number | null | undefined>
+  >;
+  setHoursThisMonth: React.Dispatch<SetStateAction<number | null | undefined>>;
+  setWorkoutsThisMonth: React.Dispatch<
     SetStateAction<number | null | undefined>
   >;
 }) {
@@ -36,12 +42,10 @@ export function AllSessionInfo({
       }
 
       const deletedSession = await response.json();
-      console.log(deletedSession.data);
+      const session_data = deletedSession.data.session_data;
       // Now we have to update our sessions
       setSessionInfo((prev) =>
-        prev.filter(
-          (session) => session.session_id != deletedSession.data.session_id
-        )
+        prev.filter((session) => session.session_id != session_data.session_id)
       );
 
       // Now find the sum of all deleted sets
@@ -55,6 +59,30 @@ export function AllSessionInfo({
             )
           : prev
       );
+
+      setWorkoutsThisMonth((prev) =>
+        prev &&
+        new Date().getMonth ===
+          new Date(session_data.session_start_date).getMonth
+          ? prev - 1
+          : prev
+      );
+
+      setHoursThisMonth((prev) => {
+        if (!prev || !session_data.session_end_date) {
+          return prev;
+        }
+
+        const durationInHours =
+          (new Date(session_data.session_end_date).getTime() -
+            new Date(session_data.session_start_date).getTime()) /
+          3600000;
+
+        const updated = prev - durationInHours;
+
+        // Round to 2 decimal places
+        return Math.round(updated * 100) / 100;
+      });
     } catch (e) {
       console.log(e);
     }

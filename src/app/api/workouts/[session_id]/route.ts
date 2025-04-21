@@ -69,11 +69,11 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ sessi
   const {data: setData} = await supabase.from("session_sets").select("set_weight, set_reps").in("session_exercise_id", session_exercises);
   
   // Now we can delete from database
-  const {error: deleteError} = await supabase.from("sessions").delete().eq("session_id",session_id)
+  const {data:session_data, error: deleteError} = await supabase.from("sessions").delete().eq("session_id",session_id).select("session_id, session_start_date, session_end_date").single()
   // Error response
   if (deleteError){
       return Response.json({message: "There was an error deleting your session"}, {status: 500})
   }
-  return Response.json({sucess: true, data: {session_id: session_id, sets:setData}}, {status: 200})
+  return Response.json({sucess: true, data: {session_data: session_data, sets:setData}}, {status: 200})
 
 }
