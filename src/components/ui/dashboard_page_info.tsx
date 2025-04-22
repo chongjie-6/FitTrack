@@ -8,7 +8,6 @@ import { createWorkoutAction } from "@/app/dashboard/page";
 import { redirect } from "next/navigation";
 
 interface DashboardPageProps {
-  createWorkoutAction: () => void;
   initialWorkoutsThisMonth: number;
   initialHoursThisMonth: number;
   initialWeightsThisMonth: number | undefined;

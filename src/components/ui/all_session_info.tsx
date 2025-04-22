@@ -1,6 +1,7 @@
 import React, { SetStateAction } from "react";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
+import { deleteWorkoutAction } from "@/app/dashboard/page";
 
 export function AllSessionInfo({
   sessions,
@@ -29,20 +30,14 @@ export function AllSessionInfo({
     }
   };
   const handleDropDown = async (session_id: string) => {
-    const controller = new AbortController();
     try {
-      const response = await fetch(`/api/workouts/${session_id}`, {
-        method: "DELETE",
-        signal: controller.signal,
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Could not delete your exercise.");
+      const response = deleteWorkoutAction(session_id);
+      const deletedSession = await response;
+      if (!deletedSession) {
+        return;
       }
 
-      const deletedSession = await response.json();
-      const session_data = deletedSession.data.session_data;
+      const session_data = deletedSession.session_data;
       // Now we have to update our sessions
       setSessionInfo((prev) =>
         prev.filter((session) => session.session_id != session_data.session_id)
@@ -52,9 +47,10 @@ export function AllSessionInfo({
       setWeightsThisMonth((prev) =>
         prev
           ? prev -
-            deletedSession.data.sets.reduce(
-              (sum: number, set: Tables<"session_sets">) =>
-                sum + set.set_weight * set.set_reps,
+            deletedSession.sets.reduce(
+              (sum: number, set: { set_weight: number; set_reps: number }) => {
+                return sum + set.set_weight * set.set_reps;
+              },
               0
             )
           : prev
@@ -86,8 +82,6 @@ export function AllSessionInfo({
     } catch (e) {
       console.log(e);
     }
-
-    return () => controller.abort();
   };
   return (
     <>
