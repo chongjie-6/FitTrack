@@ -1,10 +1,9 @@
 "use server";
-import { redirect } from "next/navigation";
 import { Tables } from "../../../database.types";
-import getUser from "../api/auth/route";
 import { User } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/server";
 import DashboardPage from "@/components/ui/dashboard_page_info";
+import getUser from "../actions/getUser";
 
 export async function fetchSessions(user: User) {
   try {
@@ -94,88 +93,6 @@ export async function fetchWeightLifted(user: User) {
     return totalWeight;
   } catch (e) {
     console.log("Error: ", e);
-  }
-}
-
-export async function createWorkoutAction() {
-  "use server";
-  try {
-    // Create session for user
-    const supabase = await createClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      redirect("/login");
-    }
-
-    // Now we can create a session row in the database
-    const { data: session_id, error: insertError } = await supabase
-      .from("sessions")
-      .insert({ user_id: user.id })
-      .select("session_id")
-      .single();
-
-    if (insertError) {
-      throw new Error("Could not create your workout. Please try again later.");
-    }
-
-    // Successfully created workout, navigate to newly created workout
-    return `/workouts/${session_id.session_id}`;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-export async function deleteWorkoutAction(session_id: string) {
-  "use server";
-  try {
-    // Delete a workout
-    // Make sure the user is logged in
-    const supabase = await createClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      redirect("/login");
-    }
-
-    // First get all the exercises associated with this session
-    const { data: data } = await supabase
-      .from("session_exercises")
-      .select("session_exercise_id")
-      .eq("session_id", session_id)
-      .select("session_exercise_id");
-
-    // Now we get all the sets for all exercises associated with this session
-    const session_exercises = data
-      ? Object.values(data).map((exercise) => exercise.session_exercise_id)
-      : [];
-
-    const { data: setData } = await supabase
-      .from("session_sets")
-      .select("set_weight, set_reps")
-      .in("session_exercise_id", session_exercises);
-
-    // Now we can delete from database
-    const { data: session_data, error: deleteError } = await supabase
-      .from("sessions")
-      .delete()
-      .eq("session_id", session_id)
-      .select("session_id, session_start_date, session_end_date")
-      .single();
-
-    if (!setData || !session_data || deleteError) {
-      throw new Error("Could not delete your exercise.");
-    }
-
-    return { session_data: session_data, sets: setData };
-  } catch (e) {
-    console.log(e);
   }
 }
 

@@ -4,8 +4,8 @@ import { AllSessionInfo } from "./all_session_info";
 import { Summary } from "./summary";
 import { Tables } from "../../../database.types";
 import { useState } from "react";
-import { createWorkoutAction } from "@/app/dashboard/page";
 import { redirect } from "next/navigation";
+import { createWorkoutAction } from "@/app/actions/createWorkout";
 
 interface DashboardPageProps {
   initialWorkoutsThisMonth: number;

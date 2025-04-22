@@ -1,7 +1,7 @@
 import React, { SetStateAction } from "react";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
-import { deleteWorkoutAction } from "@/app/dashboard/page";
+import { deleteWorkoutAction } from "@/app/actions/deleteWorkout";
 
 export function AllSessionInfo({
   sessions,

@@ -6,11 +6,11 @@ export default async function getUser(): Promise<User> {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser();
-    
+
     if (error || !data?.user) {
       redirect("/login");
     }
-    
+
     return data.user;
   } catch (error) {
     console.error("Error getting user:", error);
