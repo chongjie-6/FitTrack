@@ -109,11 +109,11 @@ export default async function Dashboard() {
   const { hoursThisMonth, workoutsThisMonth } = timeAndWorkoutsThisMonth;
   return (
     <DashboardPage
-      initialWorkoutsThisMonth={workoutsThisMonth}
-      initialHoursThisMonth={hoursThisMonth}
-      initialWeightsThisMonth={weightsThisMonth}
+    workoutsThisMonth={workoutsThisMonth}
+    hoursThisMonth={hoursThisMonth}
+    weightsThisMonth={weightsThisMonth}
       user={user}
-      initialSessions={sessions || []}
+      sessions={sessions || []}
     ></DashboardPage>
   );
 }

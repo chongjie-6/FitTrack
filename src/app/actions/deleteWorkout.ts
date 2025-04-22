@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function deleteWorkoutAction(session_id: string) {
@@ -44,7 +45,7 @@ export async function deleteWorkoutAction(session_id: string) {
     if (!setData || !session_data || deleteError) {
       throw new Error("Could not delete your exercise.");
     }
-
+    revalidatePath("/dsahboard")
     return { session_data: session_data, sets: setData };
   } catch (e) {
     console.log(e);
