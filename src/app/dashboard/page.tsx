@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/server";
 import DashboardPage from "@/components/ui/dashboard_page_info";
 import getUser from "../actions/getUser";
 
-export async function fetchSessions(user: User) {
+async function fetchSessions(user: User) {
   try {
     const supabase = await createClient();
     const { data: sessions, error: workoutError } = await supabase
@@ -23,7 +23,7 @@ export async function fetchSessions(user: User) {
   }
 }
 
-export async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
+async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
   // Once we have fetched all data, we can run a function to update the training time
   const currentMonth = new Date().getMonth();
 
@@ -56,7 +56,7 @@ export async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
   };
 }
 
-export async function fetchWeightLifted(user: User) {
+async function fetchWeightLifted(user: User) {
   try {
     const supabase = await createClient();
     const { data: weights, error } = await supabase
