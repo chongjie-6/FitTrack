@@ -6,7 +6,7 @@ import React from "react";
 export function WorkOutBtn({
   onWorkoutCreateClick,
 }: {
-  onWorkoutCreateClick: () => Promise<string>;
+  onWorkoutCreateClick: () => Promise<string | undefined>;
 }) {
   const router = useRouter();
   const onBtnClick = async () => {
