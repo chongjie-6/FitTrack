@@ -71,7 +71,7 @@ async function fetchAllExercises(user: User) {
 export default async function SessionPage({
   params,
 }: {
-  params: { session_id: string };
+  params: Promise<{ session_id: string }>;
 }) {
   // Get user and session_id through params
   const user = await getUser();
