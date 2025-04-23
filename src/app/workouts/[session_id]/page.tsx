@@ -4,9 +4,10 @@ import { User } from "@supabase/supabase-js";
 import getUser from "@/app/actions/getUser";
 import { modifyWorkoutAction } from "@/app/actions/sessions/modifyWorkout";
 import { SessionExercises } from "@/components/ui/session_exercises";
-import { Modal } from "@/components/ui/modal";
 import { addSessionExerciseAction } from "@/app/actions/session_exercise/addSessionExercise";
 import { endWorkoutAction } from "@/app/actions/sessions/endWorkout";
+import { Modal } from "@/components/ui/modal";
+import { addExercisesAction } from "@/app/actions/exercises/addExercisesAction";
 
 async function fetchWorkoutSession(session_id: string) {
   try {
@@ -108,6 +109,7 @@ export default async function SessionPage({
         session_id={sessionInfo.session_id}
         allExercises={allExercises || []}
         addSessionExerciseAction={addSessionExerciseAction}
+        addExercisesAction={addExercisesAction}
       />
     </div>
   );
