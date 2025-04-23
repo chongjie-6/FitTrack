@@ -1,14 +1,16 @@
-"use server";
+"use client";
 import { DeleteDropdown } from "./deleteDropdown";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
 import { deleteWorkoutAction } from "@/app/actions/sessions/deleteWorkout";
+import { useState } from "react";
 
-export async function AllSessionInfo({
+export function AllSessionInfo({
   sessions,
 }: {
   sessions: Array<Tables<"sessions">>;
 }) {
+  const [sessionsInfo, setSessionsInfo] = useState(sessions);
   const determineWorkoutTime = (hour: number) => {
     if (hour < 12) {
       return "Morning Workout";
@@ -20,7 +22,7 @@ export async function AllSessionInfo({
   };
   return (
     <>
-      {sessions.map((session) => (
+      {sessionsInfo.map((session) => (
         <div key={session.session_id} className="relative">
           <Link
             prefetch={true}
@@ -55,6 +57,7 @@ export async function AllSessionInfo({
           <DeleteDropdown
             handleDropDown={deleteWorkoutAction}
             session_id={session.session_id}
+            setSessionsInfo = {setSessionsInfo}
           />
         </div>
       ))}

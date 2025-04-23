@@ -1,16 +1,24 @@
 "use client";
 import React from "react";
+import { Tables } from "../../../database.types";
 export function DeleteDropdown({
   handleDropDown,
   session_id,
+  setSessionsInfo,
 }: {
   handleDropDown: (session_id: string) => void;
   session_id: string;
+  setSessionsInfo: React.Dispatch<
+    React.SetStateAction<Array<Tables<"sessions">>>
+  >;
 }) {
   return (
     <div
       className="absolute top-6 right-3 cursor-pointer hover:border border-black rounded-xl hover:bg-gray-400 transition-colors"
       onClick={() => {
+        setSessionsInfo((prev) =>
+          prev.filter((session) => session.session_id !== session_id)
+        );
         handleDropDown(session_id);
       }}
     >

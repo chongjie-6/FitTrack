@@ -98,7 +98,7 @@ export default async function SessionPage({
         modifyWorkoutAction={modifyWorkoutAction}
         endWorkoutAction={endWorkoutAction}
       />
-      {/* Section showing all exercises their sets */}
+      {/* Section showing all exercises and their sets */}
       <section>
         <SessionExercises sessionExercises={sessionExercises || []} />
       </section>
