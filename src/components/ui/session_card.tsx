@@ -1,31 +1,32 @@
+"use client";
 import { Tables } from "../../../database.types";
 
 export default function SessionCard({
   exercise,
-  addSet,
-  removeSet,
-  modifySet,
-  removeExercise,
+  modifySetAction,
+  addSetAction,
+  deleteSessionExerciseAction,
+  removeSetAction,
 }: {
   exercise: Tables<"session_exercises"> & {
     exercises: Tables<"exercises">;
     session_sets: Array<Tables<"session_sets">>;
   };
-  addSet: (session_exercise_id: string, set_number: number) => void;
-  removeSet: (set_id: string) => void;
-  modifySet: (
+  modifySetAction: (
     set_id: string,
     value: number,
     field: "set_weight" | "set_reps" | "set_rest_time"
   ) => void;
-  removeExercise: (session_exercise_id: string) => void;
+  addSetAction: (session_exercise_id: string, set_number: number) => void;
+  deleteSessionExerciseAction: (session_exercise_id: string) => void;
+  removeSetAction: (delete_set_id: string) => void;
 }) {
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     set: Tables<"session_sets">,
     field: "set_weight" | "set_reps" | "set_rest_time"
   ) => {
-    modifySet(set.set_id || "", Number(e.target.value), field);
+    modifySetAction(set.set_id || "", Number(e.target.value), field);
   };
   return (
     <div
@@ -38,7 +39,9 @@ export default function SessionCard({
             {exercise.exercises.exercise_name}
           </h3>
           <svg
-            onClick={() => removeExercise(exercise.session_exercise_id)}
+            onClick={() =>
+              deleteSessionExerciseAction(exercise.session_exercise_id)
+            }
             xmlns="http://www.w3.org/2000/svg"
             width="30"
             height="30"
@@ -93,7 +96,7 @@ export default function SessionCard({
                 placeholder="0"
               ></input>
               <svg
-                onClick={() => removeSet(set.set_id || "")}
+                onClick={() => removeSetAction(set.set_id || "")}
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -109,7 +112,10 @@ export default function SessionCard({
       <button
         className="btn"
         onClick={() =>
-          addSet(exercise.session_exercise_id, exercise.session_sets.length + 1)
+          addSetAction(
+            exercise.session_exercise_id,
+            exercise.session_sets.length + 1
+          )
         }
       >
         Add Set

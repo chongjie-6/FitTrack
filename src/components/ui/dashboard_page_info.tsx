@@ -2,7 +2,7 @@ import { User } from "@supabase/supabase-js";
 import { AllSessionInfo } from "./all_session_info";
 import { Summary } from "./summary";
 import { Tables } from "../../../database.types";
-import { createWorkoutAction } from "@/app/actions/createWorkout";
+import { createWorkoutAction } from "@/app/actions/sessions/createWorkout";
 import { WorkOutBtn } from "./workoutBtn";
 
 interface DashboardPageProps {

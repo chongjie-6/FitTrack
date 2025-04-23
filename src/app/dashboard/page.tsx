@@ -10,9 +10,10 @@ async function fetchSessions(user: User) {
     const supabase = await createClient();
     const { data: sessions, error: workoutError } = await supabase
       .from("sessions")
-      .select("*")
+      .select("session_id, session_name, session_start_date, session_end_date")
       .eq("user_id", user.id)
-      .order("session_start_date", { ascending: false });
+      .order("session_start_date", { ascending: false })
+      .select();
 
     if (workoutError) {
       throw new Error("Could not fetch your workouts, Please try again later.");
@@ -109,9 +110,9 @@ export default async function Dashboard() {
   const { hoursThisMonth, workoutsThisMonth } = timeAndWorkoutsThisMonth;
   return (
     <DashboardPage
-    workoutsThisMonth={workoutsThisMonth}
-    hoursThisMonth={hoursThisMonth}
-    weightsThisMonth={weightsThisMonth}
+      workoutsThisMonth={workoutsThisMonth}
+      hoursThisMonth={hoursThisMonth}
+      weightsThisMonth={weightsThisMonth}
       user={user}
       sessions={sessions || []}
     ></DashboardPage>

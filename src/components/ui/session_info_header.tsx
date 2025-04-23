@@ -1,27 +1,29 @@
-import React from "react";
+"use client";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
 export function SessionInfoHeader({
   sessionInfo,
-  modifySession,
+  modifyWorkoutAction,
 }: {
-  sessionInfo: Tables<"sessions"> | undefined;
-  modifySession: (args: { value: string; field: string }) => void;
+  sessionInfo: Tables<"sessions">;
+  modifyWorkoutAction: (
+    value: string,
+    field: string,
+    session_id: string
+  ) => Promise<void>;
 }) {
   const onChange = (
     field: string,
     e?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (field === "session_end_date") {
-      modifySession({
-        value: new Date().toISOString(),
+      modifyWorkoutAction(
+        new Date().toISOString(),
         field,
-      });
+        sessionInfo?.session_id
+      );
     } else {
-      modifySession({
-        value: e?.target.value || "",
-        field,
-      });
+      modifyWorkoutAction(e?.target.value || "", field, sessionInfo.session_id);
     }
   };
   return (

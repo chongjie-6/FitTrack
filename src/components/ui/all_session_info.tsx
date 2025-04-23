@@ -2,7 +2,7 @@
 import { DeleteDropdown } from "./deleteDropdown";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
-import { deleteWorkoutAction } from "@/app/actions/deleteWorkout";
+import { deleteWorkoutAction } from "@/app/actions/sessions/deleteWorkout";
 
 export async function AllSessionInfo({
   sessions,

@@ -1,5 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function createWorkoutAction() {
@@ -25,6 +26,7 @@ export async function createWorkoutAction() {
     if (insertError) {
       throw new Error("Could not create your workout. Please try again later.");
     }
+    revalidatePath("/");
 
     // Successfully created workout, navigate to newly created workout
     return `/workouts/${session_id.session_id}`;

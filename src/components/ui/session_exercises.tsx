@@ -1,12 +1,11 @@
-import React from "react";
 import SessionCard from "./session_card";
 import { Tables } from "../../../database.types";
-export function SessionExercises({
+import { modifySetAction } from "@/app/actions/session_sets/modifySessionSet";
+import { addSetAction } from "@/app/actions/session_sets/addSessionSets";
+import { deleteSessionExerciseAction } from "@/app/actions/session_exercise/deleteSessionExercise";
+import { removeSetAction } from "@/app/actions/session_sets/removeSessionSet";
+export async function SessionExercises({
   sessionExercises,
-  addSet,
-  modifySet,
-  removeSet,
-  removeExercise,
 }: {
   sessionExercises: Array<
     Tables<"session_exercises"> & {
@@ -14,14 +13,6 @@ export function SessionExercises({
       session_sets: Array<Tables<"session_sets">>;
     }
   >;
-  addSet: (session_exercise_id: string, set_number: number) => void;
-  modifySet: (
-    set_id: string,
-    value: number,
-    field: "set_weight" | "set_reps" | "set_rest_time"
-  ) => void;
-  removeSet: (set_id: string) => void;
-  removeExercise: (session_exercise_id: string) => void;
 }) {
   return (
     <>
@@ -29,10 +20,10 @@ export function SessionExercises({
         <SessionCard
           key={exercise.session_exercise_id}
           exercise={exercise}
-          addSet={addSet}
-          removeSet={removeSet}
-          modifySet={modifySet}
-          removeExercise={removeExercise}
+          modifySetAction={modifySetAction}
+          addSetAction={addSetAction}
+          deleteSessionExerciseAction={deleteSessionExerciseAction}
+          removeSetAction={removeSetAction}
         />
       ))}
     </>
