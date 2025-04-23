@@ -13,7 +13,7 @@ export async function deleteSessionExerciseAction(session_exercise_id: string) {
           if (deleteError){
               throw new Error("There was an error deleting your exercise from the session.")
           }
-          revalidatePath("/")
+          revalidatePath("/workouts")
     }
     catch(e){
         console.log(e)

@@ -1,6 +1,5 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
 
 export async function modifySetAction(
   set_id: string,
@@ -16,7 +15,6 @@ export async function modifySetAction(
     if (updateError) {
       throw new Error("There was an error modifying your set");
     }
-    revalidatePath("/");
   } catch (e) {
     console.log(e);
   }

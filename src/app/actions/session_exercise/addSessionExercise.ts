@@ -15,6 +15,6 @@ export async function addSessionExerciseAction(
   if (workoutError) {
     throw new Error("There was an error adding your exercise.");
   }
-  revalidatePath("/");
+  revalidatePath("/workouts");
   return data;
 }

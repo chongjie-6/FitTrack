@@ -13,7 +13,7 @@ export async function addSetAction(session_exercise_id: string, set_number: numb
     if (insertError) {
       throw new Error("Could not add your set.");
     }
-    revalidatePath("/");
+    revalidatePath("/workouts")
   } catch (e) {
     console.log(e);
   }

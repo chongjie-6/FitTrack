@@ -13,7 +13,7 @@ export async function removeSetAction(delete_set_id: string) {
     if (deleteError) {
       throw new Error("Could not delete your set.");
     }
-    revalidatePath("/");
+    revalidatePath("/workouts");
   } catch (e) {
     console.log(e);
   }

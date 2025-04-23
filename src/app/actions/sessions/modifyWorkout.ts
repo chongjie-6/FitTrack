@@ -1,6 +1,5 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
 
 export async function modifyWorkoutAction(value: string, field: string, session_id: string) {
     try{
@@ -13,7 +12,6 @@ export async function modifyWorkoutAction(value: string, field: string, session_
         if (workoutError){
             throw new Error("Could not modify your session.")
         }
-        revalidatePath("/");
     }
     catch(e){
         console.log(e)
