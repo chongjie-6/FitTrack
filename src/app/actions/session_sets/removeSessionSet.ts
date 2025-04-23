@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function removeSetAction(delete_set_id: string) {
+  "use server"
   try {
     const supabase = await createClient();
     const { error: deleteError } = await supabase

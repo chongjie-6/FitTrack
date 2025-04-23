@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function deleteWorkoutAction(session_id: string) {
+  "use server"
   try {
     // Delete a workout
     // Make sure the user is logged in

@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
 export async function createWorkoutAction() {
+  "use server"
   try {
     // Create session for user
     const supabase = await createClient();

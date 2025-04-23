@@ -6,6 +6,7 @@ export async function addSessionExerciseAction(
   session_id: string,
   exercise_id: string
 ) {
+  "use server"
   const supabase = await createClient();
   const { data, error: workoutError } = await supabase
     .from("session_exercises")

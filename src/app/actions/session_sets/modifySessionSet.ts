@@ -6,6 +6,7 @@ export async function modifySetAction(
   value: number,
   field: "set_weight" | "set_reps" | "set_rest_time"
 ) {
+  "use server"
   try {
     const supabase = await createClient();
     const { error: updateError } = await supabase

@@ -1,18 +1,20 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
-export async function modifyWorkoutAction(value: string, field: string, session_id: string) {
+export async function endWorkoutAction(session_id: string) {
     "use server"
     try{
         const supabase = await createClient();
         const {error: workoutError } = await supabase
           .from("sessions")
-          .update({ [field]: value })
+          .update({ session_end_date : new Date().toISOString() })
           .eq("session_id", session_id)
 
         if (workoutError){
-            throw new Error("Could not modify your session.")
+            throw new Error("Could not end your session.")
         }
+        revalidatePath("/workouts")
     }
     catch(e){
         console.log(e)

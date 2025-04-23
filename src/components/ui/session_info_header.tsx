@@ -4,6 +4,7 @@ import Link from "next/link";
 export function SessionInfoHeader({
   sessionInfo,
   modifyWorkoutAction,
+  endWorkoutAction,
 }: {
   sessionInfo: Tables<"sessions">;
   modifyWorkoutAction: (
@@ -11,6 +12,7 @@ export function SessionInfoHeader({
     field: string,
     session_id: string
   ) => Promise<void>;
+  endWorkoutAction: (session_id: string) => void;
 }) {
   const onChange = (
     field: string,
@@ -118,7 +120,7 @@ export function SessionInfoHeader({
             ) : (
               <button
                 className="btn rounded-xl border-2 ring p-1"
-                onClick={() => onChange("session_end_date")}
+                onClick={() => endWorkoutAction(sessionInfo.session_id)}
               >
                 End Workout
               </button>

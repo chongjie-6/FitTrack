@@ -6,6 +6,7 @@ import { modifyWorkoutAction } from "@/app/actions/sessions/modifyWorkout";
 import { SessionExercises } from "@/components/ui/session_exercises";
 import { Modal } from "@/components/ui/modal";
 import { addSessionExerciseAction } from "@/app/actions/session_exercise/addSessionExercise";
+import { endWorkoutAction } from "@/app/actions/sessions/endWorkout";
 
 async function fetchWorkoutSession(session_id: string) {
   try {
@@ -95,6 +96,7 @@ export default async function SessionPage({
       <SessionInfoHeader
         sessionInfo={sessionInfo}
         modifyWorkoutAction={modifyWorkoutAction}
+        endWorkoutAction={endWorkoutAction}
       />
       {/* Section showing all exercises their sets */}
       <section>
