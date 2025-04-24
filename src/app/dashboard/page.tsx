@@ -25,6 +25,7 @@ async function fetchSessions(user: User) {
 }
 
 async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
+  
   // Once we have fetched all data, we can run a function to update the training time
   const currentMonth = new Date().getMonth();
 
@@ -60,38 +61,21 @@ async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
 async function fetchWeightLifted(user: User) {
   try {
     const supabase = await createClient();
-    const { data: weights, error } = await supabase
-      .from("session_sets")
-      .select(
-        `
-      set_weight,
-      set_reps,
-      session_exercises!inner(
-        session_id,
-        sessions!inner(
-          user_id
-        )
-      )
-    `
-      )
-      .eq("session_exercises.sessions.user_id", user.id)
-      .gte(
-        "session_exercises.sessions.session_start_date",
-        new Date(
+    const { data: weights, error } = await supabase.rpc(
+      "weight_lifted_this_month",
+      {
+        user_uuid: user.id,
+        month_start: new Date(
           new Date().getFullYear(),
           new Date().getMonth(),
           1
-        ).toISOString()
-      );
-
-    const totalWeight =
-      weights?.reduce((sum, set) => {
-        return sum + set.set_reps * set.set_weight;
-      }, 0) || 0;
+        ).toISOString(),
+      }
+    );
     if (error) {
       throw new Error("Could not fetch your workouts weights this month.");
     }
-    return totalWeight;
+    return weights;
   } catch (e) {
     console.log("Error: ", e);
   }
