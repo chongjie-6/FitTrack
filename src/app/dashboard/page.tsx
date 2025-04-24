@@ -25,7 +25,6 @@ async function fetchSessions(user: User) {
 }
 
 async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
-  
   // Once we have fetched all data, we can run a function to update the training time
   const currentMonth = new Date().getMonth();
 
