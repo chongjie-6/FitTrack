@@ -6,14 +6,13 @@ import React from "react";
 export function WorkOutBtn({
   onWorkoutCreateClick,
 }: {
-  onWorkoutCreateClick: () => Promise<string | undefined>;
+  onWorkoutCreateClick: (session_id: string) => Promise<void>;
 }) {
   const router = useRouter();
   const onBtnClick = async () => {
-    const path = await onWorkoutCreateClick();
-    if (path) {
-      router.push(path);
-    }
+    const session_id = crypto.randomUUID();
+    onWorkoutCreateClick(session_id);
+    router.push(`/workouts/${session_id}`);
   };
   return (
     <button

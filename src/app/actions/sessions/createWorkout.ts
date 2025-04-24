@@ -2,7 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export async function createWorkoutAction() {
+export async function createWorkoutAction(session_id: string) {
   "use server"
   try {
     // Create session for user
@@ -17,9 +17,9 @@ export async function createWorkoutAction() {
     }
 
     // Now we can create a session row in the database
-    const { data: session_id, error: insertError } = await supabase
+    const { error: insertError } = await supabase
       .from("sessions")
-      .insert({ user_id: user.id })
+      .insert({ session_id: session_id, user_id: user.id })
       .select("session_id")
       .single();
     
@@ -27,8 +27,6 @@ export async function createWorkoutAction() {
       throw new Error("Could not create your workout. Please try again later.");
     }
 
-    // Successfully created workout, navigate to newly created workout
-    return `/workouts/${session_id.session_id}`;
   } catch (e) {
     console.log(e);
   }
