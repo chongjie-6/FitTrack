@@ -1,21 +1,29 @@
 "use client";
-import React from "react";
+
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 export function WorkOutBtn({
   onWorkoutCreateClick,
 }: {
-  onWorkoutCreateClick: (session_id: string) => Promise<void>;
+  onWorkoutCreateClick: () => Promise<string | undefined>;
 }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const onBtnClick = async () => {
-    const session_id = crypto.randomUUID();
-    await onWorkoutCreateClick(session_id);
+    setLoading(true);
+    const path = await onWorkoutCreateClick();
+    if (path) {
+      router.push(path);
+    }
   };
   return (
     <button
       onClick={onBtnClick}
       className="p-3 bg-gray-500 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
     >
-      Start Workout
+      {loading ? "Creating Workout" : "Create Workout"}
     </button>
   );
 }

@@ -27,8 +27,8 @@ export async function createWorkoutAction() {
       throw new Error("Could not create your workout. Please try again later.");
     }
     // Successfully created workout, navigate to newly created workout
-    redirect(`/workouts/${session_id.session_id}`)
-    
+    return(`/workouts/${session_id.session_id}`)
+
   } catch (e) {
     console.log(e);
   }
