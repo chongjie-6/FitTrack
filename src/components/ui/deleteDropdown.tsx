@@ -34,14 +34,15 @@ export function DeleteDropdown({
           ) {
             // If our deleted session has an end date
             if (sessionToDelete.session_end_date) {
+
+              const start = new Date(
+                sessionToDelete.session_start_date
+              ).getTime();
+
+              const end = new Date(sessionToDelete.session_end_date).getTime();
+              
               const durationInHours =
-                Math.round(
-                  ((new Date(sessionToDelete.session_end_date).getTime() -
-                    new Date(sessionToDelete.session_start_date).getTime()) /
-                    (1000 * 60 * 60) /
-                    60) *
-                    100
-                ) / 100; // convert ms to hours
+                Math.round(((end - start) / (1000 * 60 * 60)) * 100) / 100;
               setHoursThisMonthState(
                 (prevHours) => prevHours - durationInHours
               );
