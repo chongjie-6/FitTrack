@@ -1,6 +1,4 @@
 "use client";
-
-import { useRouter } from "next/navigation";
 import React from "react";
 
 export function WorkOutBtn({
@@ -8,11 +6,9 @@ export function WorkOutBtn({
 }: {
   onWorkoutCreateClick: (session_id: string) => Promise<void>;
 }) {
-  const router = useRouter();
   const onBtnClick = async () => {
     const session_id = crypto.randomUUID();
     onWorkoutCreateClick(session_id);
-    router.push(`/workouts/${session_id}`);
   };
   return (
     <button
