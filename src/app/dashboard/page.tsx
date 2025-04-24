@@ -102,7 +102,7 @@ export default async function Dashboard() {
     <DashboardPage
       workoutsThisMonth={workoutsThisMonth}
       hoursThisMonth={hoursThisMonth}
-      weightsThisMonth={weightsThisMonth}
+      weightsThisMonth={weightsThisMonth || 0}
       user={user}
       sessions={sessions || []}
     ></DashboardPage>

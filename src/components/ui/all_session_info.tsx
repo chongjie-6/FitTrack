@@ -3,12 +3,18 @@ import { DeleteDropdown } from "./deleteDropdown";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
 import { deleteWorkoutAction } from "@/app/actions/sessions/deleteWorkout";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export function AllSessionInfo({
   sessions,
+  setHoursThisMonthState,
+  setWeightsThisMonthState,
+  setWorkoutsThisMonthState,
 }: {
   sessions: Array<Tables<"sessions">>;
+  setHoursThisMonthState: Dispatch<SetStateAction<number>>;
+  setWeightsThisMonthState: Dispatch<SetStateAction<number>>;
+  setWorkoutsThisMonthState: Dispatch<SetStateAction<number>>;
 }) {
   const [sessionsInfo, setSessionsInfo] = useState(sessions);
   const determineWorkoutTime = (hour: number) => {
@@ -57,7 +63,10 @@ export function AllSessionInfo({
           <DeleteDropdown
             handleDropDown={deleteWorkoutAction}
             session_id={session.session_id}
-            setSessionsInfo = {setSessionsInfo}
+            setSessionsInfo={setSessionsInfo}
+            setHoursThisMonthState={setHoursThisMonthState}
+            setWeightsThisMonthState={setWeightsThisMonthState}
+            setWorkoutsThisMonthState={setWorkoutsThisMonthState}
           />
         </div>
       ))}
