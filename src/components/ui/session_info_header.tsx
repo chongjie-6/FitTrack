@@ -54,7 +54,7 @@ export function SessionInfoHeader({
       {sessionInformation && (
         <>
           <input
-            defaultValue={sessionInformation?.session_name}
+            defaultValue={sessionInformation?.session_name || ""}
             onChange={(e) => onChange("session_name", e)}
             placeholder="Name"
             className="text-2xl font-bold input_field mt-5"
