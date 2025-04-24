@@ -8,7 +8,7 @@ export function WorkOutBtn({
 }) {
   const onBtnClick = async () => {
     const session_id = crypto.randomUUID();
-    onWorkoutCreateClick(session_id);
+    await onWorkoutCreateClick(session_id);
   };
   return (
     <button
