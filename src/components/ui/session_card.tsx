@@ -78,21 +78,21 @@ export default function SessionCard({
                 onChange={(e) => onChange(e, set, "set_weight")}
                 type="number"
                 className="col-span-2"
-                defaultValue={set.set_weight}
+                defaultValue={set.set_weight || 0}
                 placeholder="0"
               ></input>
               <input
                 onChange={(e) => onChange(e, set, "set_reps")}
                 type="number"
                 className="col-span-2"
-                defaultValue={set.set_reps}
+                defaultValue={set.set_reps || 0}
                 placeholder="0"
               ></input>
               <input
                 onChange={(e) => onChange(e, set, "set_rest_time")}
                 type="number"
                 className="col-span-2"
-                defaultValue={set.set_rest_time}
+                defaultValue={set.set_rest_time || 0}
                 placeholder="0"
               ></input>
               <svg
