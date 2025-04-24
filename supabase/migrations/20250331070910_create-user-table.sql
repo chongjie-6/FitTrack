@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS users CASCADE;
 -- Create the users table
 CREATE TABLE users (
     user_id uuid NOT NULL REFERENCES auth.users ON DELETE CASCADE,
@@ -12,6 +13,7 @@ ALTER TABLE
     users ENABLE ROW LEVEL SECURITY;
 
 -- Create function to insert a row into users table
+DROP FUNCTION IF EXISTS public.create_user() CASCADE;
 CREATE FUNCTION public.create_user() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
     search_path = public AS $$ BEGIN
@@ -37,6 +39,7 @@ END;
 $$;
 
 -- Create trigger to call function when a user is created
+DROP TRIGGER IF EXISTS on_user_created ON auth.users;
 CREATE TRIGGER on_user_created
 AFTER
 INSERT

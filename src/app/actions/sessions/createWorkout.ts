@@ -22,7 +22,7 @@ export async function createWorkoutAction() {
       .insert({ user_id: user.id })
       .select("session_id")
       .single();
-
+    
     if (insertError) {
       throw new Error("Could not create your workout. Please try again later.");
     }

@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS session_exercises CASCADE;
+
 CREATE TABLE session_exercises (
     session_exercise_id uuid DEFAULT gen_random_uuid(),
     session_id uuid NOT NULL REFERENCES SESSIONS ON DELETE CASCADE,
@@ -29,7 +31,8 @@ CREATE POLICY "Authenticated users can access their session exercises" ON sessio
     )
 );
 
-CREATE FUNCTION public.set_exercise_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
+CREATE
+OR REPLACE FUNCTION public.set_exercise_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
     search_path = public AS $$ BEGIN NEW.session_exercise_order = COALESCE(
         (
@@ -49,6 +52,7 @@ END;
 
 $$;
 
-CREATE TRIGGER set_exercise_order BEFORE
+CREATE
+OR REPLACE TRIGGER set_exercise_order BEFORE
 INSERT
     ON session_exercises FOR EACH ROW EXECUTE FUNCTION public.set_exercise_order();

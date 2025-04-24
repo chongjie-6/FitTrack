@@ -60,21 +60,28 @@ async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
 async function fetchWeightLifted(user: User) {
   try {
     const supabase = await createClient();
-    const { data: weights, error } = await supabase.rpc(
-      "weight_lifted_this_month",
-      {
-        user_uuid: user.id,
-        month_start: new Date(
+    const { data: weights, error } = await supabase
+      .from("sessions")
+      .select("session_weight_lifted")
+      .eq("user_id", user.id)
+      .gte(
+        "session_start_date",
+        new Date(
           new Date().getFullYear(),
           new Date().getMonth(),
           1
-        ).toISOString(),
-      }
-    );
+        ).toISOString()
+      );
+
+    console.log(weights);
     if (error) {
       throw new Error("Could not fetch your workouts weights this month.");
     }
-    return weights;
+    const totalWeights = (weights ?? []).reduce(
+      (sum, session) => sum + (session.session_weight_lifted ?? 0),
+      0
+    );
+    return totalWeights;
   } catch (e) {
     console.log("Error: ", e);
   }

@@ -50,7 +50,7 @@ END;
 
 $$;
 
-CREATE TRIGGER update_session_weight_lifted
+CREATE OR REPLACE TRIGGER update_session_weight_lifted
 AFTER
 INSERT
     OR
