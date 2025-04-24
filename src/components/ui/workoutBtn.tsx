@@ -21,6 +21,7 @@ export function WorkOutBtn({
   return (
     <button
       onClick={onBtnClick}
+      disabled={loading}
       className="p-3 bg-gray-500 rounded-lg hover:bg-gray-700 transition-colors duration-200 cursor-pointer"
     >
       {loading ? "Creating Workout" : "Create Workout"}
