@@ -32,7 +32,7 @@ CREATE POLICY "Authenticated users can access their session exercises" ON sessio
 CREATE
 OR REPLACE FUNCTION public.set_exercise_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
-    search_path = " " AS $ $ BEGIN NEW.session_exercise_order = COALESCE(
+    search_path = " " AS $$ BEGIN NEW.session_exercise_order = COALESCE(
         (
             SELECT
                 MAX(session_exercise_order) + 1
@@ -48,7 +48,7 @@ RETURN NEW;
 
 END;
 
-$ $;
+$$;
 
 CREATE
 OR REPLACE TRIGGER set_exercise_order BEFORE
