@@ -16,18 +16,15 @@ export async function addExercisesAction(
       throw new Error("Not authenticated. Please log in to delete exercises.");
     }
     
-    const { data, error: workoutError } = await supabase
+    const { error: workoutError } = await supabase
       .from("exercises")
       .delete()
       .eq("exercise_id" ,exercise_id)
-      .select()
-      .single();
       
     if (workoutError) {
       throw new Error("There was an error adding your exercise.");
     }
     revalidatePath("/workouts")
-    return data;
   }
   catch(e){
     console.log(e)

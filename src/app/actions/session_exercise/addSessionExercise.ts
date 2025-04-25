@@ -9,16 +9,13 @@ export async function addSessionExerciseAction(
   "use server"
   try{
     const supabase = await createClient();
-    const { data, error: workoutError } = await supabase
+    const { error: workoutError } = await supabase
       .from("session_exercises")
       .insert({ session_id: session_id, exercise_id: exercise_id })
-      .select("*, exercises(*)")
-      .single();
     if (workoutError) {
       throw new Error("There was an error adding your exercise.");
     }
     revalidatePath("/workouts");
-    return data;
   }
   catch(e){
     console.log(e)

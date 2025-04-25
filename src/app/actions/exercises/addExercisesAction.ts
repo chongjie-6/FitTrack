@@ -16,7 +16,7 @@ export async function addExercisesAction(
       throw new Error("Not authenticated. Please log in to add exercises.");
     }
     
-    const { data, error: workoutError } = await supabase
+    const { error: workoutError } = await supabase
       .from("exercises")
       .insert({ 
         exercise_name: exercise_name, 
@@ -30,7 +30,6 @@ export async function addExercisesAction(
       throw new Error("There was an error adding your exercise.");
     }
     revalidatePath("/workouts")
-    return data;
   }
   catch(e){
     console.log(e)

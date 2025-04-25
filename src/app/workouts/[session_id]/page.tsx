@@ -100,9 +100,7 @@ export default async function SessionPage({
         endWorkoutAction={endWorkoutAction}
       />
       {/* Section showing all exercises and their sets */}
-      <section>
-        <SessionExercises sessionExercises={sessionExercises || []} />
-      </section>
+      <SessionExercises sessionExercises={sessionExercises || []} />
 
       {/* Button and modal components */}
       <Modal
