@@ -2,7 +2,7 @@
 CREATE
 OR REPLACE FUNCTION public.calculate_session_weight_lifted() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
-    search_path = public AS $$ DECLARE session_id_var UUID;
+    search_path = " " AS $$ DECLARE session_id_var UUID;
 
 BEGIN -- Determine which session needs updating based on the operation
 IF TG_OP = 'DELETE' THEN -- For DELETE operations, get session_id from the session_exercise the set belonged to

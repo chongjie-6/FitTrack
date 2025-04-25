@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS EXERCISES CASCADE;
 CREATE TABLE EXERCISES (
     exercise_id uuid DEFAULT gen_random_uuid(),
     exercise_name text NOT NULL DEFAULT format(''),

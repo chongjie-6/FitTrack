@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS sessions CASCADE;
-
 CREATE TABLE sessions (
     session_id uuid DEFAULT gen_random_uuid(),
     workout_id uuid NULL REFERENCES WORKOUTS ON DELETE CASCADE,

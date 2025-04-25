@@ -1,5 +1,3 @@
-DROP TABLE IF EXISTS session_exercises CASCADE;
-
 CREATE TABLE session_exercises (
     session_exercise_id uuid DEFAULT gen_random_uuid(),
     session_id uuid NOT NULL REFERENCES SESSIONS ON DELETE CASCADE,
@@ -18,7 +16,10 @@ CREATE POLICY "Authenticated users can access their session exercises" ON sessio
         FROM
             sessions
         WHERE
-            user_id = auth.uid()
+            user_id = (
+                SELECT
+                    auth.uid()
+            )
     )
 ) WITH CHECK (
     session_id IN (
@@ -27,14 +28,17 @@ CREATE POLICY "Authenticated users can access their session exercises" ON sessio
         FROM
             sessions
         WHERE
-            user_id = auth.uid()
+            user_id = (
+                SELECT
+                    auth.uid()
+            )
     )
 );
 
 CREATE
 OR REPLACE FUNCTION public.set_exercise_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
-    search_path = public AS $$ BEGIN NEW.session_exercise_order = COALESCE(
+    search_path = " " AS $$ BEGIN NEW.session_exercise_order = COALESCE(
         (
             SELECT
                 MAX(session_exercise_order) + 1

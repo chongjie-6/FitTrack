@@ -1,12 +1,11 @@
-DROP TABLE IF EXISTS session_sets CASCADE;
-
 CREATE TABLE session_sets (
     set_id uuid DEFAULT gen_random_uuid(),
     set_number INTEGER NOT NULL,
     set_weight INTEGER NULL,
     set_reps INTEGER NULL,
     set_rest_time INTEGER NULL,
-    session_exercise_id uuid references session_exercises ON DELETE CASCADE
+    session_exercise_id uuid references session_exercises ON DELETE CASCADE,
+    PRIMARY KEY(set_id)
 );
 
 ALTER TABLE
@@ -20,7 +19,7 @@ CREATE POLICY "Authenticated users can access their session sets" ON session_set
             session_exercises se
             JOIN sessions s ON se.session_id = s.session_id
         WHERE
-            s.user_id = auth.uid()
+            s.user_id = (SELECT auth.uid())
     )
 ) WITH CHECK (
     session_exercise_id IN (
@@ -30,14 +29,14 @@ CREATE POLICY "Authenticated users can access their session sets" ON session_set
             session_exercises se
             JOIN sessions s ON se.session_id = s.session_id
         WHERE
-            s.user_id = auth.uid()
+            s.user_id = (SELECT auth.uid())
     )
 );
 
 CREATE
 OR REPLACE FUNCTION public.set_set_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
-    search_path = public AS $$ BEGIN NEW.set_number = COALESCE(
+    search_path = " " AS $$ BEGIN NEW.set_number = COALESCE(
         (
             SELECT
                 MAX(set_number) + 1
