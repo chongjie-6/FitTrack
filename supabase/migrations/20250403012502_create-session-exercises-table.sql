@@ -16,10 +16,7 @@ CREATE POLICY "Authenticated users can access their session exercises" ON sessio
         FROM
             sessions
         WHERE
-            user_id = (
-                SELECT
-                    auth.uid()
-            )
+            user_id = auth.uid()
     )
 ) WITH CHECK (
     session_id IN (
@@ -28,17 +25,14 @@ CREATE POLICY "Authenticated users can access their session exercises" ON sessio
         FROM
             sessions
         WHERE
-            user_id = (
-                SELECT
-                    auth.uid()
-            )
+            user_id = auth.uid()
     )
 );
 
 CREATE
 OR REPLACE FUNCTION public.set_exercise_order() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
-    search_path = " " AS $$ BEGIN NEW.session_exercise_order = COALESCE(
+    search_path = " " AS $ $ BEGIN NEW.session_exercise_order = COALESCE(
         (
             SELECT
                 MAX(session_exercise_order) + 1
@@ -54,7 +48,7 @@ RETURN NEW;
 
 END;
 
-$$;
+$ $;
 
 CREATE
 OR REPLACE TRIGGER set_exercise_order BEFORE
