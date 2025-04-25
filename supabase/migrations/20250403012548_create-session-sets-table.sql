@@ -1,3 +1,5 @@
+BEGIN;
+
 CREATE TABLE session_sets (
     set_id uuid DEFAULT gen_random_uuid(),
     set_number INTEGER NOT NULL,
@@ -19,7 +21,7 @@ CREATE POLICY "Authenticated users can access their session sets" ON session_set
             session_exercises se
             JOIN sessions s ON se.session_id = s.session_id
         WHERE
-            s.user_id = (SELECT auth.uid())
+            s.user_id = auth.uid()
     )
 ) WITH CHECK (
     session_exercise_id IN (
@@ -29,7 +31,7 @@ CREATE POLICY "Authenticated users can access their session sets" ON session_set
             session_exercises se
             JOIN sessions s ON se.session_id = s.session_id
         WHERE
-            s.user_id = (SELECT auth.uid())
+            s.user_id = auth.uid()
     )
 );
 
@@ -58,3 +60,5 @@ CREATE
 OR REPLACE TRIGGER set_set_order BEFORE
 INSERT
     ON session_sets FOR EACH ROW EXECUTE FUNCTION public.set_set_order();
+
+COMMIT;

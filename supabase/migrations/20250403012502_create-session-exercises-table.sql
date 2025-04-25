@@ -1,7 +1,9 @@
+BEGIN;
+
 CREATE TABLE session_exercises (
     session_exercise_id uuid DEFAULT gen_random_uuid(),
-    session_id uuid NOT NULL REFERENCES SESSIONS ON DELETE CASCADE,
-    exercise_id uuid NOT NULL REFERENCES EXERCISES ON DELETE CASCADE,
+    session_id uuid NOT NULL REFERENCES sessions ON DELETE CASCADE,
+    exercise_id uuid NOT NULL REFERENCES exercises ON DELETE CASCADE,
     session_exercise_order INTEGER NOT NULL,
     PRIMARY KEY(session_exercise_id)
 );
@@ -54,3 +56,5 @@ CREATE
 OR REPLACE TRIGGER set_exercise_order BEFORE
 INSERT
     ON session_exercises FOR EACH ROW EXECUTE FUNCTION public.set_exercise_order();
+
+COMMIT;

@@ -1,6 +1,8 @@
-CREATE TABLE EXERCISES (
+BEGIN;
+
+CREATE TABLE exercises (
     exercise_id uuid DEFAULT gen_random_uuid(),
-    exercise_name text NOT NULL DEFAULT format(''),
+    exercise_name text NOT NULL DEFAULT '',
     exercise_description text null,
     user_id uuid NOT NULL references users on delete cascade,
     PRIMARY KEY (exercise_id)
@@ -9,14 +11,6 @@ CREATE TABLE EXERCISES (
 ALTER TABLE
     exercises ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated users can create exercises" ON EXERCISES FOR ALL TO AUTHENTICATED USING (
-    (
-        SELECT
-            AUTH.UID()
-    ) = USER_ID
-) WITH CHECK (
-    (
-        SELECT
-            AUTH.UID()
-    ) = USER_ID
-);
+CREATE POLICY "Authenticated users can create exercises" ON exercises FOR ALL TO authenticated USING ((auth.uid()) = user_id) WITH CHECK ((auth.uid()) = user_id);
+
+COMMIT;

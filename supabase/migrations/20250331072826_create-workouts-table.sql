@@ -1,23 +1,16 @@
+BEGIN;
 
-CREATE TABLE WORKOUTS (
-    WORKOUT_ID UUID DEFAULT GEN_RANDOM_UUID(),
-    WORKOUT_NAME TEXT NOT NULL DEFAULT format(''),
-    WORKOUT_DESCRIPTION TEXT NULL,
-    USER_ID UUID REFERENCES USERS ON DELETE CASCADE,
-    PRIMARY KEY (WORKOUT_ID)
+CREATE TABLE workouts (
+    workout_id UUID DEFAULT gen_random_uuid(),
+    workout_name TEXT NOT NULL DEFAULT '',
+    workout_description TEXT NULL,
+    user_id UUID REFERENCES users ON DELETE CASCADE,
+    PRIMARY KEY (workout_id)
 );
 
 ALTER TABLE
-    WORKOUTS ENABLE ROW LEVEL SECURITY;
+    workouts ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated users can create workouts" ON WORKOUTS FOR ALL TO AUTHENTICATED USING (
-    (
-        SELECT
-            AUTH.UID()
-    ) = USER_ID
-) WITH CHECK (
-    (
-        SELECT
-            AUTH.UID()
-    ) = USER_ID
-);
+CREATE POLICY "Authenticated users can create workouts" ON workouts FOR ALL TO authenticated USING ((auth.uid()) = user_id) WITH CHECK ((auth.uid()) = user_id);
+
+COMMIT;

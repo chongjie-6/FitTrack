@@ -1,7 +1,9 @@
+BEGIN;
+
 CREATE TABLE sessions (
     session_id uuid DEFAULT gen_random_uuid(),
-    workout_id uuid NULL REFERENCES WORKOUTS ON DELETE CASCADE,
-    session_name text NULL DEFAULT format(''),
+    workout_id uuid NULL REFERENCES workouts ON DELETE CASCADE,
+    session_name text NULL DEFAULT '',
     session_start_date timestamptz NOT NULL DEFAULT now(),
     session_end_date timestamptz NULL,
     session_notes text NULL,
@@ -11,16 +13,8 @@ CREATE TABLE sessions (
 );
 
 ALTER TABLE
-    PUBLIC.SESSIONS ENABLE ROW LEVEL SECURITY;
+    sessions ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can create or modify their sessions" ON SESSIONS FOR ALL TO AUTHENTICATED USING (
-    (
-        SELECT
-            AUTH.UID()
-    ) = USER_ID
-) WITH CHECK (
-    (
-        SELECT
-            AUTH.UID()
-    ) = USER_ID
-);
+CREATE POLICY "Users can create or modify their sessions" ON sessions FOR ALL TO authenticated USING ((auth.uid()) = user_id) WITH CHECK ((auth.uid()) = user_id);
+
+COMMIT;

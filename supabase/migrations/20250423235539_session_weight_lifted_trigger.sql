@@ -1,4 +1,5 @@
--- Create a function to calculate and update total weight lifted for a session
+BEGIN;
+
 CREATE
 OR REPLACE FUNCTION public.calculate_session_weight_lifted() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
@@ -50,13 +51,15 @@ END;
 
 $$;
 
-CREATE OR REPLACE TRIGGER update_session_weight_lifted
+CREATE
+OR REPLACE TRIGGER update_session_weight_lifted
 AFTER
 INSERT
     OR
 UPDATE
     OR DELETE ON session_sets FOR EACH ROW EXECUTE FUNCTION public.calculate_session_weight_lifted();
 
+-- Update all existing sessions
 UPDATE
     sessions s
 SET
@@ -74,3 +77,5 @@ SET
         ),
         0
     );
+
+COMMIT;
