@@ -27,12 +27,14 @@ async function fetchSessions(user: User) {
 async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
   // Once we have fetched all data, we can run a function to update the training time
   const currentMonth = new Date().getMonth();
-
+  const currentYear = new Date().getFullYear();
+  
   // Filter only the workouts that are started this month
   const workoutsThisMonth = sessions.filter(
     (workout: Tables<"sessions">) =>
       workout.session_start_date &&
-      new Date(workout.session_start_date).getMonth() === currentMonth
+      new Date(workout.session_start_date).getMonth() === currentMonth &&
+      new Date(workout.session_start_date).getFullYear() === currentYear
   );
 
   // Sum up the total training time for this month
@@ -69,10 +71,7 @@ async function fetchWeightLifted(user: User) {
       .from("sessions")
       .select("session_weight_lifted")
       .eq("user_id", user.id)
-      .gte(
-        "session_start_date",
-        month
-      );
+      .gte("session_start_date", month);
 
     console.log(weights);
     if (error) {
