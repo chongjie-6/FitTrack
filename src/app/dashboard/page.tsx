@@ -59,6 +59,11 @@ async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
 
 async function fetchWeightLifted(user: User) {
   try {
+    const month = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1
+    ).toISOString();
     const supabase = await createClient();
     const { data: weights, error } = await supabase
       .from("sessions")
@@ -66,11 +71,7 @@ async function fetchWeightLifted(user: User) {
       .eq("user_id", user.id)
       .gte(
         "session_start_date",
-        new Date(
-          new Date().getFullYear(),
-          new Date().getMonth(),
-          1
-        ).toISOString()
+        month
       );
 
     console.log(weights);

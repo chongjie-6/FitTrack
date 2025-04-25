@@ -5,10 +5,11 @@ import { revalidatePath } from "next/cache";
 export async function endWorkoutAction(session_id: string) {
     "use server"
     try{
+        const end_date = new Date().toISOString()
         const supabase = await createClient();
         const {error: workoutError } = await supabase
           .from("sessions")
-          .update({ session_end_date : new Date().toISOString() })
+          .update({ session_end_date : end_date })
           .eq("session_id", session_id)
 
         if (workoutError){
