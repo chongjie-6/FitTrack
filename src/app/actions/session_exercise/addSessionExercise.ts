@@ -13,7 +13,7 @@ export async function addSessionExerciseAction(
       .from("session_exercises")
       .insert({ session_id: session_id, exercise_id: exercise_id })
     if (workoutError) {
-      return workoutError
+      throw new Error(workoutError.message);
     }
     revalidatePath("/workouts");
   }
