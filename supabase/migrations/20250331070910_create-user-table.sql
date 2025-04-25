@@ -1,4 +1,4 @@
--- Drop all tables
+BEGIN-- Drop all tables
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS WORKOUTS CASCADE;
 DROP TABLE IF EXISTS EXERCISES CASCADE;
@@ -23,7 +23,7 @@ ALTER TABLE
 DROP FUNCTION IF EXISTS public.create_user() CASCADE;
 CREATE FUNCTION public.create_user() RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER
 SET
-    search_path = " " AS $$ BEGIN
+    search_path = public AS $$ BEGIN
 INSERT INTO
     public.users (
         user_id,
