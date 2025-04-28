@@ -28,7 +28,7 @@ async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
   // Once we have fetched all data, we can run a function to update the training time
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
-  
+
   // Filter only the workouts that are started this month
   const workoutsThisMonth = sessions.filter(
     (workout: Tables<"sessions">) =>
