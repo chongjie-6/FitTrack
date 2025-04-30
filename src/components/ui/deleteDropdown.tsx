@@ -40,8 +40,7 @@ export function DeleteDropdown({
 
               const end = new Date(sessionToDelete.session_end_date).getTime();
 
-              const durationInHours =
-                Math.round(((end - start) / (1000 * 60 * 60)) * 100) / 100;
+              const durationInHours = (end - start) / (1000 * 60 * 60);
 
               setHoursThisMonthState(
                 (prevHours) => prevHours - durationInHours
