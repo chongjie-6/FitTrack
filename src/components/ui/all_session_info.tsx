@@ -2,21 +2,14 @@
 import { DeleteDropdown } from "./deleteDropdown";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
-import { deleteWorkoutAction } from "@/app/actions/sessions/deleteWorkout";
-import { Dispatch, SetStateAction, useState } from "react";
 
 export function AllSessionInfo({
   sessions,
-  setHoursThisMonthState,
-  setWeightsThisMonthState,
-  setWorkoutsThisMonthState,
+  handleSessionInfoChange,
 }: {
   sessions: Array<Tables<"sessions">>;
-  setHoursThisMonthState: Dispatch<SetStateAction<number>>;
-  setWeightsThisMonthState: Dispatch<SetStateAction<number>>;
-  setWorkoutsThisMonthState: Dispatch<SetStateAction<number>>;
+  handleSessionInfoChange: (session_id: string) => void;
 }) {
-  const [sessionsInfo, setSessionsInfo] = useState(sessions);
   const determineWorkoutTime = (hour: number) => {
     if (hour < 12) {
       return "Morning Workout";
@@ -26,9 +19,10 @@ export function AllSessionInfo({
       return "Night Workout";
     }
   };
+
   return (
     <>
-      {sessionsInfo.map((session) => (
+      {sessions.map((session) => (
         <div key={session.session_id} className="relative">
           <Link
             prefetch={true}
@@ -61,12 +55,8 @@ export function AllSessionInfo({
             </div>
           </Link>
           <DeleteDropdown
-            handleDropDown={deleteWorkoutAction}
-            session_id={session.session_id}
-            setSessionsInfo={setSessionsInfo}
-            setHoursThisMonthState={setHoursThisMonthState}
-            setWeightsThisMonthState={setWeightsThisMonthState}
-            setWorkoutsThisMonthState={setWorkoutsThisMonthState}
+            session={session}
+            handleSessionInfoChange={handleSessionInfoChange}
           />
         </div>
       ))}
