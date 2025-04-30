@@ -52,9 +52,9 @@ async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
     },
     0
   );
-  const hoursThisMonth = Math.round((totalTrainingTime / 60) * 100) / 100;
+  // const hoursThisMonth = Math.round((totalTrainingTime / 60) * 100) / 100;
   return {
-    hoursThisMonth: hoursThisMonth,
+    hoursThisMonth: totalTrainingTime,
     workoutsThisMonth: workoutsThisMonth.length,
   };
 }
