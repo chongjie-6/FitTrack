@@ -11,7 +11,7 @@ export function Header() {
         </p>
         <Link
           href={"/login"}
-          className="btn p-3 border-2 bg-blue-200 rounded-full"
+          className="btn p-3 border-2 bg-blue-500 rounded-full text-black"
         >
           Login
         </Link>
