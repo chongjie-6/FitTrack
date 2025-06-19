@@ -1,110 +1,56 @@
 "use server";
-import { Tables } from "../../../database.types";
-import { User } from "@supabase/supabase-js";
-import { createClient } from "@/utils/supabase/server";
-import DashboardPage from "@/components/ui/dashboard_page_info";
 import getUser from "../actions/getUser";
-
-async function fetchSessions(user: User) {
-  try {
-    const supabase = await createClient();
-    const { data: sessions, error: workoutError } = await supabase
-      .from("sessions")
-      .select("session_id, session_name, session_start_date, session_end_date")
-      .eq("user_id", user.id)
-      .order("session_start_date", { ascending: false })
-      .select();
-
-    if (workoutError) {
-      throw new Error("Could not fetch your workouts, Please try again later.");
-    }
-    return sessions;
-  } catch (e) {
-    console.log("Error: ", e);
-  }
-}
-
-async function fetchMonthlyData(sessions: Array<Tables<"sessions">>) {
-  // Once we have fetched all data, we can run a function to update the training time
-  const currentMonth = new Date().getMonth();
-  const currentYear = new Date().getFullYear();
-
-  // Filter only the workouts that are started this month
-  const workoutsThisMonth = sessions.filter(
-    (workout: Tables<"sessions">) =>
-      workout.session_start_date &&
-      new Date(workout.session_start_date).getMonth() === currentMonth &&
-      new Date(workout.session_start_date).getFullYear() === currentYear
-  );
-
-  // Sum up the total training time for this month
-  const totalTrainingTime = workoutsThisMonth.reduce(
-    (sum: number, workout: Tables<"sessions">) => {
-      if (!workout.session_end_date) {
-        return sum;
-      }
-      return (
-        sum +
-        (new Date(workout.session_end_date).getTime() -
-          new Date(workout.session_start_date).getTime()) /
-          60000
-      );
-    },
-    0
-  );
-  // const hoursThisMonth = Math.round((totalTrainingTime / 60) * 100) / 100;
-  return {
-    hoursThisMonth: totalTrainingTime,
-    workoutsThisMonth: workoutsThisMonth.length,
-  };
-}
-
-async function fetchWeightLifted(user: User) {
-  try {
-    const month = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
-    ).toISOString();
-    const supabase = await createClient();
-    const { data: weights, error } = await supabase
-      .from("sessions")
-      .select("session_weight_lifted")
-      .eq("user_id", user.id)
-      .gte("session_start_date", month);
-
-    console.log(weights);
-    if (error) {
-      throw new Error("Could not fetch your workouts weights this month.");
-    }
-    const totalWeights = (weights ?? []).reduce(
-      (sum, session) => sum + (session.session_weight_lifted ?? 0),
-      0
-    );
-    return totalWeights;
-  } catch (e) {
-    console.log("Error: ", e);
-  }
-}
+import { Header } from "@/components/ui/header";
+import { fetchWeightLifted } from "../actions/user/getUserWeightLifted";
+import { fetchTrainingTime } from "../actions/user/getUserTrainingTime";
+import { fetchSessions } from "../actions/user/getUserSessions";
+import { WorkOutBtn } from "@/components/ui/workoutBtn";
+import { createWorkoutAction } from "../actions/sessions/createWorkout";
+import { Summary } from "@/components/ui/summary";
+import { AllSessionInfo } from "@/components/ui/all_session_info";
 
 export default async function Dashboard() {
+  // Verify user
   const user = await getUser();
-  const sessions = await fetchSessions(user);
-  const timeAndWorkoutsThisMonthData = fetchMonthlyData(sessions || []);
-  const weightsThisMonthData = fetchWeightLifted(user);
+
+  // Get all sessions and monthly summaries
+  const sessions = await fetchSessions();
+  const timeAndWorkoutsThisMonthData = fetchTrainingTime(sessions || []);
+  const weightsThisMonthData = fetchWeightLifted();
   const [weightsThisMonth, timeAndWorkoutsThisMonth] = await Promise.all([
     weightsThisMonthData,
     timeAndWorkoutsThisMonthData,
   ]);
-
   const { hoursThisMonth, workoutsThisMonth } = timeAndWorkoutsThisMonth;
   return (
-    <DashboardPage
-      workoutsThisMonth={workoutsThisMonth}
-      hoursThisMonth={hoursThisMonth}
-      weightsThisMonth={weightsThisMonth || 0}
-      user={user}
-      sessions={sessions || []}
-    ></DashboardPage>
+    <>
+      <Header />
+      <div className="mt-17 p-5 sm:p-10 flex flex-col justify-center max-w-3xl mx-auto">
+        <section className="w-full mb-8">
+          <h1 className="text-3xl font-semibold">Dashboard</h1>
+          <div className="flex justify-between items-center text-gray-300 text-sm">
+            <h2 className="text-sm">
+              Welcome Back {user && user.user_metadata.first_name}! Here&apos;s
+              your monthly summary!
+            </h2>
+            <WorkOutBtn onWorkoutCreateClick={createWorkoutAction} />
+          </div>
+
+          <Summary
+            workoutsThisMonth={workoutsThisMonth}
+            hoursThisMonth={hoursThisMonth}
+            weightsThisMonth={weightsThisMonth}
+          />
+        </section>
+
+        <section>
+          <h2 className="text-3xl font-semibold mb-4">Workouts</h2>
+          <div className="space-y-3">
+            {sessions && <AllSessionInfo sessions={sessions} />}
+            {sessions && sessions?.length <= 0 && "You have no workouts."}
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

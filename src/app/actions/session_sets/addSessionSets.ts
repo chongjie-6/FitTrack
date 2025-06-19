@@ -1,9 +1,15 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import getUser from "../getUser";
 import { revalidatePath } from "next/cache";
 
-export async function addSetAction(session_exercise_id: string, set_number: number) {
-  "use server"
+export async function addSetAction(
+  session_exercise_id: string,
+  set_number: number
+) {
+  // Verify user
+  await getUser();
+  
   try {
     const supabase = await createClient();
     const { error: insertError } = await supabase.from("session_sets").insert({
@@ -14,8 +20,8 @@ export async function addSetAction(session_exercise_id: string, set_number: numb
     if (insertError) {
       throw new Error("Could not add your set.");
     }
-    revalidatePath("/workouts")
+    revalidatePath("/workouts");
   } catch (e) {
-    console.log(e);
+    throw new Error(e as string);
   }
 }

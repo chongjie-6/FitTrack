@@ -1,14 +1,11 @@
-"use client";
 import { DeleteDropdown } from "./deleteDropdown";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
 
 export function AllSessionInfo({
   sessions,
-  handleSessionInfoChange,
 }: {
   sessions: Array<Tables<"sessions">>;
-  handleSessionInfoChange: (session_id: string) => void;
 }) {
   const determineWorkoutTime = (hour: number) => {
     if (hour < 12) {
@@ -56,7 +53,6 @@ export function AllSessionInfo({
           </Link>
           <DeleteDropdown
             session={session}
-            handleSessionInfoChange={handleSessionInfoChange}
           />
         </div>
       ))}

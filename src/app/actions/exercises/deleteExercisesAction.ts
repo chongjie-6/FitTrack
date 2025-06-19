@@ -1,33 +1,35 @@
-"use server"
+"use server";
 import { createClient } from "@/utils/supabase/server";
+import getUser from "../getUser";
 import { revalidatePath } from "next/cache";
 
-export async function addExercisesAction(
-  exercise_id: string
-) {
-  "use server"
-  try{
+export async function addExercisesAction(exercise_id: string) {
+  // Verify user
+  await getUser();
+
+  try {
     const supabase = await createClient();
-  
+
     // Get the current user from the session
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
     if (userError || !user) {
       throw new Error("Not authenticated. Please log in to delete exercises.");
     }
-    
+
     const { error: workoutError } = await supabase
       .from("exercises")
       .delete()
-      .eq("exercise_id" ,exercise_id)
-      
+      .eq("exercise_id", exercise_id);
+
     if (workoutError) {
-      throw new Error("There was an error adding your exercise.");
+      throw new Error("There was an error deleting your exercise.");
     }
     revalidatePath("/workouts")
+  } catch (e) {
+    throw new Error(e as string);
   }
-  catch(e){
-    console.log(e)
-  }
-
 }

@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { User } from "@supabase/supabase-js";
 
 export default async function getUser(): Promise<User> {
-  "use server"
   try {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser();

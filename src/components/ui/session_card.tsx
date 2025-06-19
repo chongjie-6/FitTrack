@@ -1,25 +1,17 @@
 "use client";
+import { modifySetAction } from "@/app/actions/session_sets/modifySessionSet";
 import { Tables } from "../../../database.types";
+import { deleteSessionExerciseAction } from "@/app/actions/session_exercise/deleteSessionExercise";
+import { removeSetAction } from "@/app/actions/session_sets/removeSessionSet";
+import { addSetAction } from "@/app/actions/session_sets/addSessionSets";
 
 export default function SessionCard({
   exercise,
-  modifySetAction,
-  addSetAction,
-  deleteSessionExerciseAction,
-  removeSetAction,
 }: {
   exercise: Tables<"session_exercises"> & {
     exercises: Tables<"exercises">;
     session_sets: Array<Tables<"session_sets">>;
   };
-  modifySetAction: (
-    set_id: string,
-    value: number,
-    field: "set_weight" | "set_reps" | "set_rest_time"
-  ) => void;
-  addSetAction: (session_exercise_id: string, set_number: number) => void;
-  deleteSessionExerciseAction: (session_exercise_id: string) => void;
-  removeSetAction: (delete_set_id: string) => void;
 }) {
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement>,

@@ -1,87 +1,24 @@
 import { SessionInfoHeader } from "@/components/ui/session_info_header";
-import { createClient } from "@/utils/supabase/server";
-import { User } from "@supabase/supabase-js";
 import getUser from "@/app/actions/getUser";
-import { modifyWorkoutAction } from "@/app/actions/sessions/modifyWorkout";
 import { SessionExercises } from "@/components/ui/session_exercises";
 import { addSessionExerciseAction } from "@/app/actions/session_exercise/addSessionExercise";
-import { endWorkoutAction } from "@/app/actions/sessions/endWorkout";
 import { Modal } from "@/components/ui/modal";
 import { addExercisesAction } from "@/app/actions/exercises/addExercisesAction";
-
-async function fetchWorkoutSession(session_id: string) {
-  try {
-    const supabase = await createClient();
-    const { data: workouts, error: workoutError } = await supabase
-      .from("sessions")
-      .select(
-        "session_id, session_name, session_notes, session_start_date, session_end_date"
-      )
-      .eq("session_id", session_id)
-      .select()
-      .single();
-
-    // Error response
-    if (workoutError) {
-      throw new Error("Unable to get your session");
-    }
-    return workouts;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function fetchSessionExercises(session_id: string) {
-  try {
-    const supabase = await createClient();
-    const { data: workouts, error: workoutError } = await supabase
-      .from("session_exercises")
-      .select(`*, exercises (*),session_sets (*)`)
-      .eq("session_id", session_id)
-      .order("set_number", {
-        ascending: true,
-        referencedTable: "session_sets",
-      });
-    // Error response
-    if (workoutError) {
-      throw new Error(
-        "There was an error getting your exercises for this session."
-      );
-    }
-    return workouts;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function fetchAllExercises(user: User) {
-  try {
-    const supabase = await createClient();
-    const { data, error: workoutError } = await supabase
-      .from("exercises")
-      .select("*")
-      .eq("user_id", user.id);
-    // Error response
-    if (workoutError) {
-      throw new Error("There was an error fetching your exercises.");
-    }
-    return data;
-  } catch (e) {
-    console.log(e);
-  }
-}
+import { fetchWorkoutSession } from "@/app/actions/sessions/getSession";
+import { fetchAllExercises } from "@/app/actions/user/getUserExercises";
+import { fetchSessionExercises } from "@/app/actions/session_exercise/getSessionExercises";
 export default async function SessionPage({
   params,
 }: {
   params: Promise<{ session_id: string }>;
 }) {
   // Get user and session_id through params
-  const user = await getUser();
+  await getUser();
   const { session_id } = await params;
 
   // Create promises to fetch data
   const sessionData = fetchWorkoutSession(session_id);
-  const exerciseData = fetchAllExercises(user);
+  const exerciseData = fetchAllExercises();
   const sessionSetsData = fetchSessionExercises(session_id);
 
   // Resolve promises
@@ -96,8 +33,6 @@ export default async function SessionPage({
       {/* Section showing session info */}
       <SessionInfoHeader
         sessionInfo={sessionInfo}
-        modifyWorkoutAction={modifyWorkoutAction}
-        endWorkoutAction={endWorkoutAction}
       />
       {/* Section showing all exercises and their sets */}
       <SessionExercises sessionExercises={sessionExercises || []} />

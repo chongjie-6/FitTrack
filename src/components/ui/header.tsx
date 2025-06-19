@@ -3,7 +3,7 @@ import React from "react";
 
 export function Header() {
   return (
-    <header className="sm:fixed top-0 left-0 right-0 bg-gray-300 shadow-md z-50 border-b-2 opacity-100 sm:opacity-97">
+    <header className="sm:fixed top-0 left-0 right-0 bg-zinc-800 shadow-md z-50 border-b-2 opacity-100 sm:opacity-97">
       <nav className="flex items-center justify-around h-16 sm:h-20">
         <p className="text-xl sm:text-3xl font-bold">
           <span className="text-blue-600">Fit</span>

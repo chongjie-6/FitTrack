@@ -1,9 +1,12 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
+import getUser from "../getUser";
 import { revalidatePath } from "next/cache";
 
 export async function removeSetAction(delete_set_id: string) {
-  "use server"
+  // Verify user
+  await getUser();
+
   try {
     const supabase = await createClient();
     const { error: deleteError } = await supabase
@@ -16,6 +19,6 @@ export async function removeSetAction(delete_set_id: string) {
     }
     revalidatePath("/workouts");
   } catch (e) {
-    console.log(e);
+    throw new Error(e as string);
   }
 }

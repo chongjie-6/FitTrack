@@ -2,9 +2,12 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import getUser from "../getUser";
 
 export async function deleteWorkoutAction(session_id: string) {
-  "use server"
+  // Verify user
+  await getUser();
+
   try {
     // Delete a workout
     // Make sure the user is logged in
@@ -22,13 +25,13 @@ export async function deleteWorkoutAction(session_id: string) {
     const { error: deleteError } = await supabase
       .from("sessions")
       .delete()
-      .eq("session_id", session_id)
+      .eq("session_id", session_id);
 
     if (deleteError) {
       throw new Error("Could not delete your exercise.");
     }
-    revalidatePath("/dashboard")
+    revalidatePath("/dashboard");
   } catch (e) {
-    console.log(e);
+    throw new Error(e as string);
   }
 }

@@ -1,47 +1,13 @@
-"use client";
-import { useState } from "react";
 import { Tables } from "../../../database.types";
 import Link from "next/link";
+import EndWorkoutBtn from "./end_workout_btn";
+import SessionNameInput from "./session_name_input";
+import SessionDescriptionInput from "./session_description_input";
 export function SessionInfoHeader({
   sessionInfo,
-  modifyWorkoutAction,
-  endWorkoutAction,
 }: {
   sessionInfo: Tables<"sessions">;
-  modifyWorkoutAction: (
-    value: string,
-    field: string,
-    session_id: string
-  ) => Promise<void>;
-  endWorkoutAction: (session_id: string) => void;
 }) {
-  const [sessionInformation, setSessionInformation] = useState(sessionInfo);
-  const onChange = (
-    field: string,
-    e?: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (field === "session_end_date") {
-      modifyWorkoutAction(
-        new Date().toISOString(),
-        field,
-        sessionInformation?.session_id
-      );
-    } else {
-      modifyWorkoutAction(
-        e?.target.value || "",
-        field,
-        sessionInformation.session_id
-      );
-    }
-  };
-  function handleOnClick(): void {
-    setSessionInformation((prev) => ({
-      ...prev,
-      session_end_date: new Date().toISOString(),
-    }));
-    endWorkoutAction(sessionInformation.session_id);
-  }
-
   return (
     <>
       <Link
@@ -51,24 +17,20 @@ export function SessionInfoHeader({
       >
         &lt; Back to Dashboard
       </Link>
-      {sessionInformation && (
+      {sessionInfo && (
         <>
-          <input
-            defaultValue={sessionInformation?.session_name || ""}
-            onChange={(e) => onChange("session_name", e)}
-            placeholder="Name"
-            className="text-2xl font-bold input_field mt-5"
-          ></input>
-          <textarea
-            placeholder="Notes"
-            onChange={(e) => onChange("session_notes", e)}
-            defaultValue={sessionInformation?.session_notes || ""}
-            className="text-gray-300 italic my-2 input_field max-h-36 field-sizing-content"
-          ></textarea>
+          <SessionNameInput
+            session_name={sessionInfo.session_name || ""}
+            session_id={sessionInfo.session_id}
+          />
+          <SessionDescriptionInput
+            session_notes={sessionInfo.session_notes || ""}
+            session_id={sessionInfo.session_id}
+          />
         </>
       )}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between text-sm text-gray-400 mb-5">
-        {sessionInformation && (
+        {sessionInfo && (
           <>
             <div className="flex items-center mb-2 sm:mb-0">
               <svg
@@ -87,7 +49,7 @@ export function SessionInfoHeader({
               </svg>
               <span>
                 Start Time:{" "}
-                {new Date(sessionInformation.session_start_date).toLocaleString(
+                {new Date(sessionInfo.session_start_date).toLocaleString(
                   "en-US",
                   {
                     year: "numeric",
@@ -100,7 +62,7 @@ export function SessionInfoHeader({
                 )}
               </span>
             </div>
-            {sessionInformation.session_end_date ? (
+            {sessionInfo.session_end_date ? (
               <div className="flex items-center">
                 <svg
                   className="w-4 h-4 mr-1"
@@ -118,7 +80,7 @@ export function SessionInfoHeader({
                 </svg>
                 <span>
                   End Time:{" "}
-                  {new Date(sessionInformation.session_end_date).toLocaleString(
+                  {new Date(sessionInfo.session_end_date).toLocaleString(
                     "en-US",
                     {
                       year: "numeric",
@@ -132,12 +94,9 @@ export function SessionInfoHeader({
                 </span>
               </div>
             ) : (
-              <button
-                className="btn rounded-xl border-2 ring p-1"
-                onClick={handleOnClick}
-              >
-                End Workout
-              </button>
+              <EndWorkoutBtn
+                session_id={sessionInfo.session_id}
+              ></EndWorkoutBtn>
             )}
           </>
         )}
