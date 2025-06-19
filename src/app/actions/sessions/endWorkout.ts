@@ -19,6 +19,7 @@ export async function endWorkoutAction(session_id: string) {
       throw new Error("Could not end your session.");
     }
     revalidatePath("/dashboard");
+    revalidatePath(`/workouts/${session_id}`);
   } catch (e) {
     throw new Error(e as string);
   }

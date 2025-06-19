@@ -31,6 +31,7 @@ export async function deleteWorkoutAction(session_id: string) {
       throw new Error("Could not delete your exercise.");
     }
     revalidatePath("/dashboard");
+    revalidatePath(`/workouts/${session_id}`);
   } catch (e) {
     throw new Error(e as string);
   }

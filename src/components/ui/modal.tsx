@@ -3,20 +3,14 @@ import React, { useRef } from "react";
 import { Tables } from "../../../database.types";
 import { Label } from "./label";
 import { ExerciseModal } from "./exercise_modal";
+import { addSessionExerciseAction } from "@/app/actions/session_exercise/addSessionExercise";
 
 export function Modal({
   allExercises,
   session_id,
-  addSessionExerciseAction,
-  addExercisesAction,
 }: {
   session_id: string;
   allExercises: Array<Tables<"exercises">>;
-  addSessionExerciseAction: (session_id: string, exercise_id: string) => void;
-  addExercisesAction: (
-    exercise_name: string,
-    exercise_description: string
-  ) => void;
 }) {
   const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -91,7 +85,7 @@ export function Modal({
             );
           })}
         </form>
-        <ExerciseModal addExercisesAction={addExercisesAction}></ExerciseModal>
+        <ExerciseModal></ExerciseModal>
       </dialog>
     </>
   );

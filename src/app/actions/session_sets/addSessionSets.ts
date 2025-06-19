@@ -5,11 +5,12 @@ import { revalidatePath } from "next/cache";
 
 export async function addSetAction(
   session_exercise_id: string,
-  set_number: number
+  set_number: number,
+  session_id: string
 ) {
   // Verify user
   await getUser();
-  
+
   try {
     const supabase = await createClient();
     const { error: insertError } = await supabase.from("session_sets").insert({
@@ -20,7 +21,7 @@ export async function addSetAction(
     if (insertError) {
       throw new Error("Could not add your set.");
     }
-    revalidatePath("/workouts");
+    revalidatePath(`/workouts/${session_id}`);
   } catch (e) {
     throw new Error(e as string);
   }

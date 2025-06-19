@@ -18,7 +18,12 @@ export default function SessionCard({
     set: Tables<"session_sets">,
     field: "set_weight" | "set_reps" | "set_rest_time"
   ) => {
-    modifySetAction(set.set_id || "", Number(e.target.value), field);
+    modifySetAction(
+      exercise.session_id,
+      set.set_id || "",
+      Number(e.target.value),
+      field
+    );
   };
   return (
     <div
@@ -32,7 +37,10 @@ export default function SessionCard({
           </h3>
           <svg
             onClick={() =>
-              deleteSessionExerciseAction(exercise.session_exercise_id)
+              deleteSessionExerciseAction(
+                exercise.session_exercise_id,
+                exercise.session_id
+              )
             }
             xmlns="http://www.w3.org/2000/svg"
             width="30"
@@ -88,7 +96,9 @@ export default function SessionCard({
                 placeholder="0"
               ></input>
               <svg
-                onClick={() => removeSetAction(set.set_id || "")}
+                onClick={() =>
+                  removeSetAction(set.set_id || "", exercise.session_id)
+                }
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -106,7 +116,8 @@ export default function SessionCard({
         onClick={() =>
           addSetAction(
             exercise.session_exercise_id,
-            exercise.session_sets.length + 1
+            exercise.session_sets.length + 1,
+            exercise.session_id
           )
         }
       >

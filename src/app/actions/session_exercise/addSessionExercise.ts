@@ -10,7 +10,7 @@ export async function addSessionExerciseAction(
 ) {
   // Verify user
   await getUser();
-  
+
   try {
     const supabase = await createClient();
     const { error: workoutError } = await supabase
@@ -19,7 +19,7 @@ export async function addSessionExerciseAction(
     if (workoutError) {
       throw new Error(workoutError.message);
     }
-    revalidatePath("/workouts")
+    revalidatePath(`/workouts/${session_id}`);
   } catch (e) {
     throw new Error(e as string);
   }

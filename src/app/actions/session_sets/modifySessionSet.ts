@@ -4,6 +4,7 @@ import getUser from "../getUser";
 import { revalidatePath } from "next/cache";
 
 export async function modifySetAction(
+  session_id: string,
   set_id: string,
   value: number,
   field: "set_weight" | "set_reps" | "set_rest_time"
@@ -20,7 +21,8 @@ export async function modifySetAction(
     if (updateError) {
       throw new Error("There was an error modifying your set");
     }
-    revalidatePath("/workouts");
+    revalidatePath(`/workouts/${session_id}`);
+    revalidatePath(`/dashboard`);
   } catch (e) {
     throw new Error(e as string);
   }

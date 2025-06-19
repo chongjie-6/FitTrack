@@ -21,7 +21,8 @@ export async function modifyWorkoutAction(
     if (workoutError) {
       throw new Error("Could not modify your session.");
     }
-    revalidatePath("/dashboard")
+    revalidatePath("/dashboard");
+    revalidatePath(`/workouts/${session_id}`);
   } catch (e) {
     throw new Error(e as string);
   }

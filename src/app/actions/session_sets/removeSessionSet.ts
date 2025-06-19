@@ -3,7 +3,10 @@ import { createClient } from "@/utils/supabase/server";
 import getUser from "../getUser";
 import { revalidatePath } from "next/cache";
 
-export async function removeSetAction(delete_set_id: string) {
+export async function removeSetAction(
+  delete_set_id: string,
+  session_id: string
+) {
   // Verify user
   await getUser();
 
@@ -17,7 +20,8 @@ export async function removeSetAction(delete_set_id: string) {
     if (deleteError) {
       throw new Error("Could not delete your set.");
     }
-    revalidatePath("/workouts");
+    revalidatePath(`/workouts/${session_id}`);
+    revalidatePath(`/dashboard`);
   } catch (e) {
     throw new Error(e as string);
   }

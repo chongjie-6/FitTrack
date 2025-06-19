@@ -2,15 +2,9 @@
 import React, { useRef } from "react";
 import { Input } from "./input";
 import { Label } from "./label";
+import { addExercisesAction } from "@/app/actions/exercises/addExercisesAction";
 
-export function ExerciseModal({
-  addExercisesAction,
-}: {
-  addExercisesAction: (
-    exercise_name: string,
-    exercise_description: string
-  ) => void;
-}) {
+export function ExerciseModal() {
   const exerciseModalRef = useRef<HTMLDialogElement>(null);
 
   const handleExerciseModalOpen = () => {

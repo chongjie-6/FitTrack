@@ -24,7 +24,7 @@ export async function fetchSessionExercises(session_id: string) {
       }
       return workouts;
     };
-    const data = unstable_cache(fetchData, [], {
+    const data = unstable_cache(fetchData, [session_id], {
       revalidate: 3600,
     });
     return data();

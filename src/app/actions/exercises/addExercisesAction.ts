@@ -1,7 +1,7 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
 import getUser from "../getUser";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export async function addExercisesAction(
   exercise_name: string,
@@ -36,7 +36,7 @@ export async function addExercisesAction(
     if (workoutError) {
       throw new Error("There was an error adding your exercise.");
     }
-    revalidatePath("/workouts")
+    revalidateTag("exercises");
   } catch (e) {
     throw new Error(e as string);
   }
