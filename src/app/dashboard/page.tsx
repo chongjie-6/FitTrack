@@ -25,7 +25,7 @@ export default async function Dashboard() {
   return (
     <>
       <Header />
-      <div className="mt-17 p-5 sm:p-10 flex flex-col justify-center max-w-3xl mx-auto">
+      <div className="mt-17 p-5 sm:p-10 flex flex-col justify-center max-w-3xl mx-auto animate-fade-in">
         <section className="w-full mb-8">
           <h1 className="text-3xl font-semibold">Dashboard</h1>
           <div className="flex justify-between items-center text-gray-300 text-sm">

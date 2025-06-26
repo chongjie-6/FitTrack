@@ -1,6 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import getUser from "../getUser";
 
 export async function deleteSessionExerciseAction(
@@ -12,6 +12,15 @@ export async function deleteSessionExerciseAction(
 
   try {
     const supabase = await createClient();
+
+    const data = await supabase
+      .from("sessions")
+      .select("*")
+      .eq("session_id", session_id)
+      .single();
+
+    console.log(data.data);
+
     const { error: deleteError } = await supabase
       .from("session_exercises")
       .delete()
@@ -21,8 +30,17 @@ export async function deleteSessionExerciseAction(
         "There was an error deleting your exercise from the session."
       );
     }
-    revalidatePath("/dashboard");
+
+    const data2 = await supabase
+      .from("sessions")
+      .select("*")
+      .eq("session_id", session_id)
+      .single();
+
+    console.log(data2.data);
+
     revalidatePath(`/workouts/${session_id}`);
+    revalidateTag("totalWeights");
   } catch (e) {
     throw new Error(e as string);
   }

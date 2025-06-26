@@ -7,7 +7,6 @@ CREATE TABLE sessions (
     session_start_date timestamptz NOT NULL DEFAULT now(),
     session_end_date timestamptz NULL,
     session_notes text NULL,
-    session_weight_lifted INTEGER NOT NULL DEFAULT 0,
     user_id uuid NOT NULL REFERENCES users ON DELETE CASCADE,
     PRIMARY KEY(session_id)
 );

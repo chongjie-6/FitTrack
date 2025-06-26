@@ -41,7 +41,7 @@ export async function fetchTrainingTime(sessions: Array<Tables<"sessions">>) {
       };
     };
     const data = unstable_cache(fetchData, [], {
-      tags: ["trainingTime"],
+      tags: ["summary"],
       revalidate: 3600,
     });
     return data();

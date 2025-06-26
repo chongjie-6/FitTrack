@@ -27,11 +27,9 @@ export default async function SessionPage({
   ]);
 
   return (
-    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-full min-h-screen">
+    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-full min-h-screen animate-fade-in">
       {/* Section showing session info */}
-      <SessionInfoHeader
-        sessionInfo={sessionInfo}
-      />
+      <SessionInfoHeader sessionInfo={sessionInfo} />
       {/* Section showing all exercises and their sets */}
       <SessionExercises sessionExercises={sessionExercises || []} />
 

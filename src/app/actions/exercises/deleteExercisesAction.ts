@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import getUser from "../getUser";
 import { revalidateTag } from "next/cache";
 
-export async function addExercisesAction(exercise_id: string) {
+export async function deleteExercisesAction(exercise_id: string) {
   // Verify user
   await getUser();
 

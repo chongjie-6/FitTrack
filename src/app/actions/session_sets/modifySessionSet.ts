@@ -1,7 +1,7 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
 import getUser from "../getUser";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function modifySetAction(
   session_id: string,
@@ -22,7 +22,7 @@ export async function modifySetAction(
       throw new Error("There was an error modifying your set");
     }
     revalidatePath(`/workouts/${session_id}`);
-    revalidatePath(`/dashboard`);
+    revalidateTag("totalWeights");
   } catch (e) {
     throw new Error(e as string);
   }
