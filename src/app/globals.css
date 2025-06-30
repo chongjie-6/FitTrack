@@ -182,7 +182,7 @@
     animation: fadeIn 1s ease-in;
   }
   .animate-slide-left {
-    animation: slideLeft 0.5s ease-in;
+    animation: slideLeft 0.5s forwards;
   }
   @keyframes fadeIn {
     0% {

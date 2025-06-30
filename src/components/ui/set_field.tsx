@@ -27,15 +27,14 @@ export default function SetFields({
 
   const [clicked, setClicked] = useState(false);
   const playAnimation = (set_id: string, session_id: string) => {
-    setClicked((prev) => !prev);
-    setTimeout(() => removeSetAction(set_id || "", session_id), 500);
+    setClicked(true);
+    removeSetAction(set_id || "", session_id);
   };
   return (
     <div
       className={`grid grid-cols-8 bg-gray-700 bg-opacity-30 p-2 rounded text-white font-semibold font-mono ${
-        clicked && `animate-slide-left`
+        clicked ? `animate-slide-left` : ``
       }`}
-      key={set.set_id}
     >
       <span className="col-span-1">{index + 1}</span>
       <input

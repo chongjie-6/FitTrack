@@ -59,7 +59,7 @@ export default function SessionCard({
             <SetFields
               set={set}
               session_id={exercise.session_id}
-              key={index}
+              key={set.set_id}
               index={index}
             ></SetFields>
           ))}
