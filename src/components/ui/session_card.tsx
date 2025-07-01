@@ -15,7 +15,7 @@ export default function SessionCard({
   return (
     <div
       key={exercise.session_exercise_id}
-      className="mb-6 bg-gray-800 rounded-lg p-4 shadow"
+      className="mb-6 bg-gray-900 rounded-lg p-4 shadow"
     >
       <div className="border-b border-gray-700 pb-2 mb-3">
         <div className="inline-flex w-full justify-between">
@@ -64,7 +64,7 @@ export default function SessionCard({
             ></SetFields>
           ))}
       </div>
-      
+
       <button
         className="btn"
         onClick={() =>

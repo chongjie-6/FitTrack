@@ -29,7 +29,8 @@ export async function fetchWeightLifted() {
         )
       );
 
-      const totalWeights = setWeights?.reduce((sum, weight) => sum + weight, 0);
+      const totalWeights =
+        setWeights?.reduce((sum, weight) => sum + weight, 0) || 0;
       if (error) {
         throw new Error("Could not fetch your workouts weights this month.");
       }

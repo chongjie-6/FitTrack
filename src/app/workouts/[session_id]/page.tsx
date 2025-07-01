@@ -27,17 +27,19 @@ export default async function SessionPage({
   ]);
 
   return (
-    <div className="sm:mt-20 sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-900 sm:rounded-lg shadow-lg h-full min-h-screen animate-fade-in">
-      {/* Section showing session info */}
-      <SessionInfoHeader sessionInfo={sessionInfo} />
-      {/* Section showing all exercises and their sets */}
-      <SessionExercises sessionExercises={sessionExercises || []} />
+    <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className=" sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-800/90 backdrop-blur-sm sm:rounded-lg shadow-lg h-full min-h-screen animate-fade-in">
+        {/* Section showing session info */}
+        <SessionInfoHeader sessionInfo={sessionInfo} />
+        {/* Section showing all exercises and their sets */}
+        <SessionExercises sessionExercises={sessionExercises || []} />
 
-      {/* Button and modal components */}
-      <Modal
-        session_id={sessionInfo.session_id}
-        allExercises={allExercises || []}
-      />
+        {/* Button and modal components */}
+        <Modal
+          session_id={sessionInfo.session_id}
+          allExercises={allExercises || []}
+        />
+      </div>
     </div>
   );
 }
