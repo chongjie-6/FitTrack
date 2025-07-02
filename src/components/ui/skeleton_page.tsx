@@ -2,7 +2,7 @@ import { Skeleton } from "./skeleton";
 
 export function SkeletonPage() {
   return (
-    <div className="flex flex-col items-center px-4 sm:px-10 py-10 space-y-6">
+    <div className="flex flex-col items-center px-4 sm:px-10 py-10 space-y-6 w-full min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <div className="w-full max-w-2xl space-y-4">
         <Skeleton className="h-10 w-3/4 rounded-lg" />
 

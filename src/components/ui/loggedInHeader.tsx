@@ -39,10 +39,12 @@ export function LoggedInHeader({ user }: HeaderProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 pb-10 ${
         scrolled
           ? "bg-slate-900/95 backdrop-blur-lg border-b border-slate-700/50 shadow-lg"
-          : "bg-transparent"
+          : !isMenuOpen
+          ? "bg-transparent"
+          : "bg-slate-900/95 backdrop-blur-lg border-b border-slate-700/50 shadow-lg"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

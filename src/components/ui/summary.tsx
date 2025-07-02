@@ -57,8 +57,8 @@ export function Summary({
         </div>
         <div className="text-3xl font-bold text-white mb-1">
           {hoursThisMonth > 1
-            ? `${hoursThisMonth.toPrecision(2)}h`
-            : `${Math.round((hoursThisMonth * 100) / 60)} mins`}
+            ? `${(hoursThisMonth / 60).toPrecision(3)}h`
+            : `${hoursThisMonth} mins`}
         </div>
         <div className="text-sm text-slate-400">Training Time</div>
       </div>

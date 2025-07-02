@@ -1,5 +1,5 @@
 import Footer from "@/components/ui/footer";
-import { Header } from "@/components/ui/header";
+import { Header } from "@/components/ui/landingHeader";
 import LandingPageDemo from "@/components/ui/landing_page_demo";
 import LandingGrid from "@/components/ui/landing_page_grid";
 import Link from "next/link";

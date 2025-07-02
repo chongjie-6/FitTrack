@@ -27,7 +27,7 @@ export default async function SessionPage({
   ]);
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 py-20">
       <div className=" sm:mb-10 mx-auto max-w-3xl p-5 pt-10 sm:p-10 bg-gray-800/90 backdrop-blur-sm sm:rounded-lg shadow-lg h-full min-h-screen animate-fade-in">
         {/* Section showing session info */}
         <SessionInfoHeader sessionInfo={sessionInfo} />
