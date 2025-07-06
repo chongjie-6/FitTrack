@@ -1,3 +1,4 @@
+"use server"
 import { createClient } from "@/utils/supabase/server";
 import { unstable_cache } from "next/cache";
 import getUser from "../getUser";

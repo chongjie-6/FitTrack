@@ -3,6 +3,7 @@ import Link from "next/link";
 import EndWorkoutBtn from "./end_workout_btn";
 import SessionNameInput from "./session_name_input";
 import SessionDescriptionInput from "./session_description_input";
+import DuplicateWorkoutButton from "./duplicateWorkoutButton";
 export function SessionInfoHeader({
   sessionInfo,
 }: {
@@ -10,13 +11,16 @@ export function SessionInfoHeader({
 }) {
   return (
     <>
-      <Link
-        href={"/dashboard"}
-        prefetch={true}
-        className="text-blue-500 hover:text-blue-400 font-bold hidden sm:block w-fit"
-      >
-        &lt; Back to Dashboard
-      </Link>
+      <div className="flex flex-row justify-between">
+        <Link
+          href={"/dashboard"}
+          prefetch={true}
+          className="text-blue-500 hover:text-blue-400 font-bold hidden sm:block w-fit"
+        >
+          &lt; Back to Dashboard
+        </Link>
+        <DuplicateWorkoutButton sessionId={sessionInfo.session_id} />
+      </div>
       {sessionInfo && (
         <>
           <SessionNameInput
