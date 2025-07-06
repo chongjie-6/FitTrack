@@ -29,27 +29,20 @@ export async function DuplicateWorkoutAction(sessionId: string) {
         .select("session_exercise_id")
         .single();
 
-      if (response) {
+      if (response.status == 201) {
         exercise.session_sets.forEach(async (set: Tables<"session_sets">) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { set_id, session_exercise_id, ...rest } = set;
-          console.log(
-            await supabase.from("session_sets").insert({
-              session_exercise_id: response.data?.session_exercise_id,
-              ...rest,
-            })
-          );
+          await supabase.from("session_sets").insert({
+            session_exercise_id: response.data?.session_exercise_id,
+            ...rest,
+          });
         });
       }
     });
 
-    // Insert all the sets for each exercise
-    // oldSessionData.forEach((exercise) => {
-    //   exercise.session_sets.forEach(async (set: Tables<"session_sets">) => {
-    //     const { set_id, session_exercise_id, ...rest } = set;
-    //     await console.log(supabase.from("session_sets").insert({ ...rest }));
-    //   });
-    // });
+    // Finally, once session has been duplicated we return the path
+    return path;
   } catch (e) {
     throw new Error(e as string);
   }

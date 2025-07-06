@@ -1,14 +1,18 @@
 "use client";
 
 import { DuplicateWorkoutAction } from "@/app/actions/sessions/duplicateWorkout";
+import { useRouter } from "next/navigation";
+
 
 export default function DuplicateWorkoutButton({
   sessionId,
 }: {
   sessionId: string;
 }) {
-  const onDuplicateClick = () => {
-    const response = DuplicateWorkoutAction(sessionId);
+  const router = useRouter();
+  const onDuplicateClick = async () => {
+    const path = await DuplicateWorkoutAction(sessionId);
+    router.push(path);
   };
 
   return (
